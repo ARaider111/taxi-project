@@ -1,3 +1,108 @@
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
+from django.contrib.auth.base_user import BaseUserManager
 
-# Create your models here.
+
+class UserManager(BaseUserManager):
+    def create_user(self, login, password=None, **extra_fields):
+        if not login:
+            raise ValueError("Login обязателен")
+        user = self.model(login=login, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, login, password=None, **extra_fields):
+        extra_fields.setdefault("is_active", True)
+        extra_fields.setdefault("role", "admin")
+        return self.create_user(login, password, **extra_fields)
+
+
+class User(AbstractBaseUser, PermissionsMixin):
+    user_id = models.AutoField("ID", primary_key=True)
+
+    login = models.CharField("Логин", max_length=128, unique=True)
+    password = models.CharField("Пароль", max_length=128)
+    lname = models.CharField("Фамилия", max_length=128)
+    fname = models.CharField("Имя", max_length=128)
+    patronimyc = models.CharField("Отчество", max_length=128, blank=True, null=True)
+    phone = models.CharField("Телефон", max_length=12, unique=True)
+
+    is_active = models.BooleanField("Активен", default=True)
+
+    ROLE_CHOICES = [
+        ("admin", "Admin"),
+        ("dispatcher", "Dispatcher"),
+    ]
+    role = models.CharField(
+        "Роль",
+        max_length=16,
+        choices=ROLE_CHOICES,
+        default="dispatcher",
+    )
+
+    objects = UserManager()
+
+    USERNAME_FIELD = "login"     
+    REQUIRED_FIELDS = []          
+
+    class Meta:
+        db_table = "users"
+        verbose_name = "Пользователь"
+        verbose_name_plural = "Пользователи"
+
+    def __str__(self):
+        return f"{self.lname} {self.fname}"
+
+
+class Driver(models.Model):
+    driver_id = models.AutoField("ID", primary_key=True)
+
+    lname = models.CharField("Фамилия", max_length=128)
+    fname = models.CharField("Имя", max_length=128)
+    patronimyc = models.CharField("Отчество", max_length=128, blank=True, null=True)
+    phone = models.CharField("Телефон", max_length=12, unique=True)
+
+    car_model = models.CharField("Модель авто", max_length=128)
+    car_number = models.CharField("Номер авто", max_length=8)
+
+    STATUS_CHOICES = [
+        ("В ожидании", "В ожидании"),
+        ("В работе", "В работе"),
+        ("Вне работы", "Вне работы"),
+    ]
+    status = models.CharField(
+        "Статус",
+        max_length=16,
+        choices=STATUS_CHOICES,
+        default="В ожидании",
+    )
+
+    is_blacklist = models.BooleanField("В чёрном списке", default=False)
+
+    class Meta:
+        db_table = "drivers"
+        verbose_name = "Водитель"
+        verbose_name_plural = "Водители"
+
+    def __str__(self):
+        return f"{self.lname} {self.fname}"
+
+
+class Client(models.Model):
+    client_id = models.AutoField("ID", primary_key=True)
+
+    lname = models.CharField("Фамилия", max_length=128)
+    fname = models.CharField("Имя", max_length=128)
+    patronimyc = models.CharField("Отчество", max_length=128, blank=True, null=True)
+    phone = models.CharField("Телефон", max_length=12, unique=True)
+
+    is_blacklist = models.BooleanField("В чёрном списке", default=False)
+
+    class Meta:
+        db_table = "clients"
+        verbose_name = "Клиент"
+        verbose_name_plural = "Клиенты"
+
+    def __str__(self):
+        return f"{self.lname} {self.fname}"
