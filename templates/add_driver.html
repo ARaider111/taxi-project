@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Добавить водителя</title>
+</head>
+<body>
+    <h1>Добавить водителя</h1>
+    <a href="{% url 'dashboard' %}">← Назад к панели</a>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <p>
+            <label>Фамилия:<br>
+                <input type="text" name="lname" required maxlength="128">
+            </label>
+        </p>
+
+        <p>
+            <label>Имя:<br>
+                <input type="text" name="fname" required maxlength="128">
+            </label>
+        </p>
+
+        <p>
+            <label>Отчество:<br>
+                <input type="text" name="patronimyc" maxlength="128">
+            </label>
+        </p>
+
+        <p>
+            <label>Телефон:<br>
+                <input type="text" name="phone" required maxlength="12">
+            </label>
+        </p>
+
+        <p>
+            <label>Модель авто:<br>
+                <input type="text" name="car_model" required maxlength="128">
+            </label>
+        </p>
+
+        <p>
+            <label>Номер авто:<br>
+                <input type="text" name="car_number" required maxlength="8">
+            </label>
+        </p>
+
+        <p>
+            <button type="submit">Сохранить</button>
+        </p>
+    </form>
+</body>
+</html>

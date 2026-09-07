@@ -29,6 +29,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     phone = models.CharField("Телефон", max_length=12, unique=True)
 
     is_active = models.BooleanField("Активен", default=True)
+    is_archive = models.BooleanField("В архиве", default=False)
 
     ROLE_CHOICES = [
         ("admin", "Admin"),
@@ -79,6 +80,7 @@ class Driver(models.Model):
     )
 
     is_blacklist = models.BooleanField("В чёрном списке", default=False)
+    is_archive = models.BooleanField("В архиве", default=False)
 
     class Meta:
         db_table = "drivers"

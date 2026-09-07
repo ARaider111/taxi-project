@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Редактировать водителя</title>
+</head>
+<body>
+    <h1>Редактировать водителя</h1>
+    <a href="{% url 'dashboard' %}">← Назад к панели</a>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <p>
+            <label>Фамилия:<br>
+                <input type="text" name="lname" required maxlength="128"
+                       value="{{ driver.lname }}">
+            </label>
+        </p>
+
+        <p>
+            <label>Имя:<br>
+                <input type="text" name="fname" required maxlength="128"
+                       value="{{ driver.fname }}">
+            </label>
+        </p>
+
+        <p>
+            <label>Отчество:<br>
+                <input type="text" name="patronimyc" maxlength="128"
+                       value="{{ driver.patronimyc|default:'' }}">
+            </label>
+        </p>
+
+        <p>
+            <label>Телефон:<br>
+                <input type="text" name="phone" required maxlength="12"
+                       value="{{ driver.phone }}">
+            </label>
+        </p>
+
+        <p>
+            <label>Модель авто:<br>
+                <input type="text" name="car_model" required maxlength="128"
+                       value="{{ driver.car_model }}">
+            </label>
+        </p>
+
+        <p>
+            <label>Номер авто:<br>
+                <input type="text" name="car_number" required maxlength="8"
+                       value="{{ driver.car_number }}">
+            </label>
+        </p>
+
+        <p>
+            <label>Статус:<br>
+                <select name="status">
+                    <option value="В ожидании" {% if driver.status == "В ожидаении" %}selected{% endif %}>В ожидаении</option>
+                    <option value="В работе" {% if driver.status == "В работе" %}selected{% endif %}>В работе</option>
+                    <option value="Вне работы" {% if driver.status == "Вне работы" %}selected{% endif %}>Вне работы</option>
+                </select>
+            </label>
+        </p>
+
+        <p>
+            <label>
+                <input type="checkbox" name="is_blacklist" {% if driver.is_blacklist %}checked{% endif %}>
+                В чёрном списке
+            </label>
+        </p>
+
+        <p>
+            <button type="submit">Сохранить</button>
+        </p>
+    </form>
+</body>
+</html>

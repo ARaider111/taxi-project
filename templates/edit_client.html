@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Редактировать клиента</title>
+</head>
+<body>
+    <h1>Редактировать клиента</h1>
+    <a href="{% url 'dashboard' %}">← Назад к панели</a>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <p>
+            <label>Фамилия:<br>
+                <input type="text" name="lname" required maxlength="128"
+                       value="{{ client.lname }}">
+            </label>
+        </p>
+
+        <p>
+            <label>Имя:<br>
+                <input type="text" name="fname" required maxlength="128"
+                       value="{{ client.fname }}">
+            </label>
+        </p>
+
+        <p>
+            <label>Отчество:<br>
+                <input type="text" name="patronimyc" maxlength="128"
+                       value="{{ client.patronimyc|default:'' }}">
+            </label>
+        </p>
+
+        <p>
+            <label>Телефон:<br>
+                <input type="text" name="phone" required maxlength="12"
+                       value="{{ client.phone }}">
+            </label>
+        </p>
+
+        <p>
+            <label>
+                <input type="checkbox" name="is_blacklist" {% if client.is_blacklist %}checked{% endif %}>
+                В чёрном списке
+            </label>
+        </p>
+
+        <p>
+            <button type="submit">Сохранить</button>
+        </p>
+    </form>
+</body>
+</html>

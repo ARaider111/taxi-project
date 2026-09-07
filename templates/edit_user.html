@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Редактировать пользователя</title>
+</head>
+<body>
+    <h1>Редактировать пользователя</h1>
+    <a href="{% url 'dashboard' %}">← Назад к панели</a>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <p>
+            <label>Логин:<br>
+                <input type="text" name="login" required maxlength="128"
+                       value="{{ user_obj.login }}">
+            </label>
+        </p>
+
+        <p>
+            <label>Новый пароль (оставьте пустым, чтобы не менять):<br>
+                <input type="password" name="password" maxlength="128">
+            </label>
+        </p>
+
+        <p>
+            <label>Фамилия:<br>
+                <input type="text" name="lname" required maxlength="128"
+                       value="{{ user_obj.lname }}">
+            </label>
+        </p>
+
+        <p>
+            <label>Имя:<br>
+                <input type="text" name="fname" required maxlength="128"
+                       value="{{ user_obj.fname }}">
+            </label>
+        </p>
+
+        <p>
+            <label>Отчество:<br>
+                <input type="text" name="patronimyc" maxlength="128"
+                       value="{{ user_obj.patronimyc|default:'' }}">
+            </label>
+        </p>
+
+        <p>
+            <label>Телефон:<br>
+                <input type="text" name="phone" required maxlength="12"
+                       value="{{ user_obj.phone }}">
+            </label>
+        </p>
+
+        <p>
+            <label>Роль:<br>
+                <select name="role">
+                    <option value="admin" {% if user_obj.role == "admin" %}selected{% endif %}>Admin</option>
+                    <option value="dispatcher" {% if user_obj.role == "dispatcher" %}selected{% endif %}>Dispatcher</option>
+                </select>
+            </label>
+        </p>
+
+        <p>
+            <label>
+                <input type="checkbox" name="is_active" {% if user_obj.is_active %}checked{% endif %}>
+                Активен
+            </label>
+        </p>
+
+        <p>
+            <button type="submit">Сохранить</button>
+        </p>
+    </form>
+</body>
+</html>
