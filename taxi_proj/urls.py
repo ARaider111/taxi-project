@@ -1,26 +1,21 @@
 from django.contrib import admin
 from django.urls import path
-from django.contrib.auth import views as auth_views
 from taxi.views import (
-    index, dashboard, CustomLoginView, add_driver, add_client, add_user, edit_driver, edit_client, 
-    edit_user, toggle_driver_archive, toggle_user_archive, drivers_list, clients_list, users_list, )
+    index, admin_panel, CustomLoginView, add_driver, add_client, add_user, edit_driver, edit_client, edit_shift,
+    edit_user, toggle_driver_archive, toggle_user_archive, drivers_list, clients_list, users_list, shifts_list, add_shift,
+    logout_view)
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
     path("", index, name="index"),
     path(
         "login/",
         CustomLoginView.as_view(),
         name="login",
     ),
-    path(
-        "logout/",
-        auth_views.LogoutView.as_view(next_page="login"),
-        name="logout",
-    ),
-
+    path("logout/", logout_view, name="logout"),
+    
     # Админ‑панель 
-    path("dashboard/", dashboard, name="dashboard"),
+    path("admin/", admin_panel, name="admin_panel"),
 
     # Водители
     path("drivers/", drivers_list, name="drivers_list"),
@@ -38,4 +33,8 @@ urlpatterns = [
     path("users/add/", add_user, name="add_user"),
     path("users/<int:user_id>/edit/", edit_user, name="edit_user"),
     path("users/<int:user_id>/toggle-archive/", toggle_user_archive, name="toggle_user_archive"),
+
+    path("shifts/", shifts_list, name="shifts_list"),
+    path("shifts/add/", add_shift, name="add_shift"),
+    path("shifts/<int:shift_id>/edit/", edit_shift, name="edit_shift"),
 ]

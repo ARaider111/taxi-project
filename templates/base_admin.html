@@ -8,10 +8,11 @@
     <div style="margin-bottom: 20px;">
         <strong>Админ‑панель</strong> |
         Пользователь: {{ user.lname }} {{ user.fname }} ({{ user.role }}) |
-        <a href="{% url 'dashboard' %}">Главная</a> |
+        <a href="{% url 'admin_panel' %}">Главная</a> |
         <a href="{% url 'drivers_list' %}">Водители</a> |
         <a href="{% url 'clients_list' %}">Клиенты</a> |
         <a href="{% url 'users_list' %}">Пользователи</a> |
+        <a href="{% url 'shifts_list' %}">Смены</a> |
         <a href="{% url 'logout' %}">Выйти</a>
     </div>
 

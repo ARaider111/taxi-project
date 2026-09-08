@@ -2,20 +2,19 @@ from django.http import HttpResponse
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from .models import User, Driver, Client
+from .models import User, Driver, Client, Shift
+from django.contrib.auth import logout
 
 
 class CustomLoginView(LoginView):
     template_name = "login.html"
 
     def form_valid(self, form):
-        # Сначала выполняем стандартный логин
         login_result = super().form_valid(form)
         user = self.request.user
 
-        # Явно проверяем роль и редиректим
         if hasattr(user, "role") and user.role == "admin":
-            return redirect("dashboard")
+            return redirect("admin_panel")
 
         return redirect("index")
 
@@ -25,11 +24,11 @@ def index(request):
 
 
 @login_required
-def dashboard(request):
+def admin_panel(request):
     if not hasattr(request.user, "role") or request.user.role != "admin":
         return HttpResponse("Доступ запрещён", status=403)
 
-    return render(request, "dashboard.html")
+    return render(request, "admin_panel.html")
 
 
 @login_required
@@ -58,9 +57,17 @@ def users_list(request):
     users = User.objects.all()
     return render(request, "users_list.html", {"users": users})
 
+
+@login_required
+def shifts_list(request):
+    if not hasattr(request.user, "role") or request.user.role != "admin":
+        return HttpResponse("Доступ запрещён", status=403)
+
+    shifts = Shift.objects.all()
+    return render(request, "shifts_list.html", {"shifts": shifts})
+
 @login_required
 def add_driver(request):
-    # Только для admin
     if not hasattr(request.user, "role") or request.user.role != "admin":
         return HttpResponse("Доступ запрещён", status=403)
 
@@ -82,7 +89,7 @@ def add_driver(request):
             status="Вне работы",
             is_blacklist=False,
         )
-        return redirect("dashboard")
+        return redirect("drivers_list")
 
     return render(request, "add_driver.html")
 
@@ -101,10 +108,9 @@ def edit_driver(request, driver_id):
         driver.car_model = request.POST.get("car_model")
         driver.car_number = request.POST.get("car_number")
         driver.status = request.POST.get("status", driver.status)
-        # чёрный список — чекбокс
         driver.is_blacklist = request.POST.get("is_blacklist") == "on"
         driver.save()
-        return redirect("dashboard")
+        return redirect("drivers_list")
 
     return render(request, "edit_driver.html", {"driver": driver})
 
@@ -114,14 +120,13 @@ def toggle_driver_archive(request, driver_id):
         return HttpResponse("Доступ запрещён", status=403)
 
     driver = Driver.objects.get(pk=driver_id)
-    driver.is_archive = not driver.is_archive  # переключаем
+    driver.is_archive = not driver.is_archive  
     driver.save()
 
-    return redirect("dashboard")
+    return redirect("drivers_list")
 
 @login_required
 def add_client(request):
-    # Только для admin
     if not hasattr(request.user, "role") or request.user.role != "admin":
         return HttpResponse("Доступ запрещён", status=403)
 
@@ -136,9 +141,9 @@ def add_client(request):
             fname=fname,
             patronimyc=patronimyc,
             phone=phone,
-            is_blacklist=False,  # дефолт
+            is_blacklist=False,  
         )
-        return redirect("dashboard")
+        return redirect("clients_list")
 
     return render(request, "add_client.html")
 
@@ -156,7 +161,7 @@ def edit_client(request, client_id):
         client.phone = request.POST.get("phone")
         client.is_blacklist = request.POST.get("is_blacklist") == "on"
         client.save()
-        return redirect("dashboard")
+        return redirect("clients_list")
 
     return render(request, "edit_client.html", {"client": client})
 
@@ -186,7 +191,7 @@ def add_user(request):
             role=role,
             is_active=is_active,
         )
-        return redirect("dashboard")
+        return redirect("users_list")
 
     return render(request, "add_user.html")
 
@@ -207,13 +212,12 @@ def edit_user(request, user_id):
         user_obj.role = request.POST.get("role", user_obj.role)
         user_obj.is_active = request.POST.get("is_active") == "on"
 
-        # Если ввели новый пароль — обновляем
         new_password = request.POST.get("password")
         if new_password:
             user_obj.set_password(new_password)
 
         user_obj.save()
-        return redirect("dashboard")
+        return redirect("users_list")
 
     return render(request, "edit_user.html", {"user_obj": user_obj})
 
@@ -226,4 +230,63 @@ def toggle_user_archive(request, user_id):
     user_obj.is_archive = not user_obj.is_archive
     user_obj.save()
 
-    return redirect("dashboard")
+    return redirect("users_list")
+
+
+@login_required
+def add_shift(request):
+    if not hasattr(request.user, "role") or request.user.role != "admin":
+        return HttpResponse("Доступ запрещён", status=403)
+
+    if request.method == "POST":
+        driver_id = request.POST.get("driver")
+        start_shift = request.POST.get("start_shift")  
+        end_shift = request.POST.get("end_shift")
+
+        opened_user_id = request.user.user_id
+
+        Shift.objects.create(
+            driver_id=driver_id,
+            start_shift=start_shift.replace("T", " "),
+            end_shift=end_shift.replace("T", " "),
+            opened_user_id=opened_user_id,
+        )
+        return redirect("shifts_list")
+
+    drivers = Driver.objects.filter(is_archive=False)
+    return render(request, "add_shift.html", {"drivers": drivers})
+
+
+@login_required
+def edit_shift(request, shift_id):
+    if not hasattr(request.user, "role") or request.user.role != "admin":
+        return HttpResponse("Доступ запрещён", status=403)
+
+    shift = Shift.objects.get(pk=shift_id)
+
+    if request.method == "POST":
+        driver_id = request.POST.get("driver")
+        start_shift = request.POST.get("start_shift")
+        end_shift = request.POST.get("end_shift")
+        closed_user_id = request.POST.get("closed_user") or None
+
+        shift.driver_id = driver_id
+        shift.start_shift = start_shift.replace("T", " ")
+        shift.end_shift = end_shift.replace("T", " ")
+        shift.closed_user_id = closed_user_id if closed_user_id else None
+        shift.save()
+
+        return redirect("shifts_list")
+
+    drivers = Driver.objects.filter(is_archive=False)
+    users = User.objects.filter(is_archive=False)
+    return render(request, "edit_shift.html", {
+        "shift": shift,
+        "drivers": drivers,
+        "users": users,
+    })
+
+
+def logout_view(request):
+    logout(request)
+    return redirect("login")

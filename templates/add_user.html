@@ -6,7 +6,7 @@
 </head>
 <body>
     <h1>Добавить пользователя</h1>
-    <a href="{% url 'dashboard' %}">← Назад к панели</a>
+    <a href="{% url 'users_list' %}">← Назад к панели</a>
 
     <form method="post">
         {% csrf_token %}

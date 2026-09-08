@@ -108,3 +108,41 @@ class Client(models.Model):
 
     def __str__(self):
         return f"{self.lname} {self.fname}"
+
+
+class Shift(models.Model):
+    shift_id = models.AutoField("ID", primary_key=True)
+
+    driver = models.ForeignKey(
+        Driver,
+        on_delete=models.CASCADE,
+        related_name="shifts",
+        verbose_name="Водитель",
+    )
+
+    start_shift = models.DateTimeField("Начало смены")
+    end_shift = models.DateTimeField("Конец смены")
+
+    opened_user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="opened_shifts",
+        verbose_name="Открыл пользователь",
+    )
+
+    closed_user = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="closed_shifts",
+        verbose_name="Закрыл пользователь",
+    )
+
+    class Meta:
+        db_table = "shifts"
+        verbose_name = "Смена"
+        verbose_name_plural = "Смены"
+
+    def __str__(self):
+        return f"Смена {self.driver} с {self.start_shift} по {self.end_shift}"
