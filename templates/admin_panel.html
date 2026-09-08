@@ -1,13 +1,218 @@
-{% extends "base_admin.html" %}
-{% block title %}Админ‑панель — Главная{% endblock %}
+{% load static %}
 
-{% block content %}
-<h1>Админ‑панель</h1>
-<p>Выберите раздел:</p>
-<ul>
-    <li><a href="{% url 'drivers_list' %}">Водители</a></li>
-    <li><a href="{% url 'clients_list' %}">Клиенты</a></li>
-    <li><a href="{% url 'users_list' %}">Пользователи</a></li>
-    <li><a href="{% url 'shifts_list' %}">Смены</a></li>
-</ul>
-{% endblock %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Taxi Control — Админ-панель</title>
+
+    <link rel="stylesheet" href="{% static 'css/admin_panel.css' %}">
+</head>
+
+<body>
+
+<div class="admin-page">
+
+    <!-- ШАПКА -->
+    <header class="admin-header">
+
+        <div class="logo">
+            <div class="logo-icon">🚕</div>
+            <span>Taxi Control</span>
+        </div>
+
+       <div class="header-right">
+
+    <div class="user-info">
+
+        <span class="user-label">
+            Пользователь
+        </span>
+
+        <strong>
+            {{ user.fname }} {{ user.lname }}
+        </strong>
+
+        <span class="user-role">
+            {{ user.role }}
+        </span>
+
+    </div>
+
+
+    <div class="header-buttons">
+
+        <a href="{% url 'admin_panel' %}"
+           class="header-button home-button">
+            🏠 Главная
+        </a>
+
+        <a href="{% url 'logout' %}"
+           class="header-button logout-button">
+            ↪ Выйти
+        </a>
+
+    </div>
+
+</div>
+
+    </header>
+
+
+    <!-- НАВИГАЦИЯ -->
+    <nav class="admin-nav">
+
+        <a href="{% url 'admin_panel' %}">
+            🏠 Главная
+        </a>
+
+        <a href="{% url 'drivers_list' %}">
+            🚕 Водители
+        </a>
+
+        <a href="{% url 'clients_list' %}">
+            👥 Клиенты
+        </a>
+
+        <a href="{% url 'users_list' %}">
+            👤 Пользователи
+        </a>
+
+        <a href="{% url 'shifts_list' %}">
+            🕐 Смены
+        </a>
+
+    </nav>
+
+
+    <!-- ОСНОВНОЙ КОНТЕНТ -->
+    <main class="admin-content">
+
+        <div class="page-heading">
+
+            <span class="heading-label">
+                ДИСПЕТЧЕРСКАЯ СИСТЕМА
+            </span>
+
+            <h1>
+                Админ-панель
+            </h1>
+
+            <p>
+                Управление водителями, клиентами,
+                пользователями и сменами
+            </p>
+
+        </div>
+
+
+        <!-- КАРТОЧКИ -->
+        <div class="admin-menu">
+
+            <a href="{% url 'drivers_list' %}" class="menu-card">
+
+                <div class="menu-icon">
+                    🚕
+                </div>
+
+                <div class="menu-text">
+                    <h2>Водители</h2>
+
+                    <p>
+                        Управление водителями и их статусами
+                    </p>
+                </div>
+
+                <span class="arrow">
+                    →
+                </span>
+
+            </a>
+
+
+            <a href="{% url 'clients_list' %}" class="menu-card">
+
+                <div class="menu-icon">
+                    👥
+                </div>
+
+                <div class="menu-text">
+                    <h2>Клиенты</h2>
+
+                    <p>
+                        Просмотр и управление клиентами
+                    </p>
+                </div>
+
+                <span class="arrow">
+                    →
+                </span>
+
+            </a>
+
+
+            <a href="{% url 'users_list' %}" class="menu-card">
+
+                <div class="menu-icon">
+                    👤
+                </div>
+
+                <div class="menu-text">
+                    <h2>Пользователи</h2>
+
+                    <p>
+                        Управление учетными записями
+                    </p>
+                </div>
+
+                <span class="arrow">
+                    →
+                </span>
+
+            </a>
+
+
+            <a href="{% url 'shifts_list' %}" class="menu-card">
+
+                <div class="menu-icon">
+                    🕐
+                </div>
+
+                <div class="menu-text">
+                    <h2>Смены</h2>
+
+                    <p>
+                        Управление рабочими сменами
+                    </p>
+                </div>
+
+                <span class="arrow">
+                    →
+                </span>
+
+            </a>
+
+        </div>
+
+    </main>
+
+
+    <!-- FOOTER -->
+    <footer class="admin-footer">
+
+        <span>
+            Taxi Control
+        </span>
+
+        <span>
+            Панель администратора · 2026
+        </span>
+
+    </footer>
+
+</div>
+
+</body>
+</html>

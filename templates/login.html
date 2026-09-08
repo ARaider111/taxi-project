@@ -1,6 +1,105 @@
-<form method="post">
-  {% csrf_token %}
-  {{ form.username.label_tag }} {{ form.username }}
-  {{ form.password.label_tag }} {{ form.password }}
-  <button type="submit">Войти</button>
-</form>
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Taxi Control — Вход</title>
+
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+
+<body>
+
+<div class="login-page">
+
+    <div class="login-card">
+
+        <div class="login-info">
+
+            <div class="logo">
+                <div class="logo-icon">🚕</div>
+                <span>Taxi Control</span>
+            </div>
+
+            <div class="info-content">
+
+                <div class="system-status">
+                    <span class="status-dot"></span>
+                    Система работает
+                </div>
+
+                <h1>
+                    Центр управления
+                    <span>такси</span>
+                </h1>
+
+                <p>
+                    Управляйте заказами, водителями и маршрутами
+                    из единой диспетчерской системы.
+                </p>
+
+            </div>
+
+            <div class="info-footer">
+                Панель диспетчера · 2026
+            </div>
+
+        </div>
+
+        <div class="login-form-container">
+
+            <div class="login-form">
+
+                <div class="form-header">
+
+                    <h2>Вход в систему</h2>
+
+                    <p>
+                        Авторизуйтесь для доступа
+                        к диспетчерской панели
+                    </p>
+
+                </div>
+
+                <form method="post">
+
+                    {% csrf_token %}
+
+                    {{ form.non_field_errors }}
+
+                    <div class="form-group">
+                        {{ form.username.label_tag }}
+                        {{ form.username }}
+                        {{ form.username.errors }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form.password.label_tag }}
+                        {{ form.password }}
+                        {{ form.password.errors }}
+                    </div>
+
+                    <button type="submit" class="login-button">
+                        Войти в диспетчерскую
+                        <span>→</span>
+                    </button>
+
+                </form>
+
+                <div class="security">
+                    Защищённое соединение
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

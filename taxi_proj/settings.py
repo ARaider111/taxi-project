@@ -40,6 +40,13 @@ INSTALLED_APPS = [
     'taxi',
 ]
 
+
+STATIC_URL = '/static/',
+
+STATICFILES_DIRS = [
+    BASE_DIR / 'taxi' / 'static',
+]
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -78,7 +85,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "taxi_db",         
         "USER": "postgres",        
-        "PASSWORD": "70esadel", 
+        "PASSWORD": "postgres", 
         "HOST": "localhost",
         "PORT": "5432",
     }
