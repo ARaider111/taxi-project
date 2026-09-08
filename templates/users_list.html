@@ -1,0 +1,43 @@
+{% extends "base_admin.html" %}
+{% block title %}Пользователи{% endblock %}
+
+{% block content %}
+<h1>Пользователи</h1>
+<p>
+    <a href="{% url 'add_user' %}">Добавить пользователя</a>
+</p>
+<table border="1" cellpadding="6">
+    <tr>
+        <th>Логин</th>
+        <th>Фамилия</th>
+        <th>Имя</th>
+        <th>Отчество</th>
+        <th>Телефон</th>
+        <th>Роль</th>
+        <th>Активен</th>
+        <th>Архив</th>
+        <th>Действия</th>
+    </tr>
+    {% for u in users %}
+    <tr>
+        <td>{{ u.login }}</td>
+        <td>{{ u.lname }}</td>
+        <td>{{ u.fname }}</td>
+        <td>{{ u.patronimyc|default:"—" }}</td>
+        <td>{{ u.phone }}</td>
+        <td>{{ u.role }}</td>
+        <td>{{ u.is_active|yesno:"Да,Нет" }}</td>
+        <td>{{ u.is_archive|yesno:"Да,Нет" }}</td>
+        <td>
+            <a href="{% url 'edit_user' u.user_id %}">Редактировать</a>
+            |
+            <a href="{% url 'toggle_user_archive' u.user_id %}">
+                {% if u.is_archive %}Вернуть из архива{% else %}Архивировать{% endif %}
+            </a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="9">Нет пользователей</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}

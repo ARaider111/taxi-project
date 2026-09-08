@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Админ‑панель{% endblock %}</title>
+</head>
+<body>
+    <div style="margin-bottom: 20px;">
+        <strong>Админ‑панель</strong> |
+        Пользователь: {{ user.lname }} {{ user.fname }} ({{ user.role }}) |
+        <a href="{% url 'dashboard' %}">Главная</a> |
+        <a href="{% url 'drivers_list' %}">Водители</a> |
+        <a href="{% url 'clients_list' %}">Клиенты</a> |
+        <a href="{% url 'users_list' %}">Пользователи</a> |
+        <a href="{% url 'logout' %}">Выйти</a>
+    </div>
+
+    {% block content %}{% endblock %}
+</body>
+</html>

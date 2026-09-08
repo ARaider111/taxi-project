@@ -1,0 +1,31 @@
+{% extends "base_admin.html" %}
+{% block title %}Клиенты{% endblock %}
+
+{% block content %}
+<h1>Клиенты</h1>
+<p>
+    <a href="{% url 'add_client' %}">Добавить клиента</a>
+</p>
+<table border="1" cellpadding="6">
+    <tr>
+        <th>Фамилия</th>
+        <th>Имя</th>
+        <th>Телефон</th>
+        <th>Чёрный список</th>
+        <th>Действия</th>
+    </tr>
+    {% for c in clients %}
+    <tr>
+        <td>{{ c.lname }}</td>
+        <td>{{ c.fname }}</td>
+        <td>{{ c.phone }}</td>
+        <td>{{ c.is_blacklist|yesno:"Да,Нет" }}</td>
+        <td>
+            <a href="{% url 'edit_client' c.client_id %}">Редактировать</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5">Нет клиентов</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}

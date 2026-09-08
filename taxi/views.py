@@ -29,15 +29,34 @@ def dashboard(request):
     if not hasattr(request.user, "role") or request.user.role != "admin":
         return HttpResponse("Доступ запрещён", status=403)
 
-    drivers = Driver.objects.all()
-    clients = Client.objects.all()
-    users = User.objects.all()
+    return render(request, "dashboard.html")
 
-    return render(request, "dashboard.html", {
-        "drivers": drivers,
-        "clients": clients,
-        "users": users,
-    })
+
+@login_required
+def drivers_list(request):
+    if not hasattr(request.user, "role") or request.user.role != "admin":
+        return HttpResponse("Доступ запрещён", status=403)
+
+    drivers = Driver.objects.all()
+    return render(request, "drivers_list.html", {"drivers": drivers})
+
+
+@login_required
+def clients_list(request):
+    if not hasattr(request.user, "role") or request.user.role != "admin":
+        return HttpResponse("Доступ запрещён", status=403)
+
+    clients = Client.objects.all()
+    return render(request, "clients_list.html", {"clients": clients})
+
+
+@login_required
+def users_list(request):
+    if not hasattr(request.user, "role") or request.user.role != "admin":
+        return HttpResponse("Доступ запрещён", status=403)
+
+    users = User.objects.all()
+    return render(request, "users_list.html", {"users": users})
 
 @login_required
 def add_driver(request):
