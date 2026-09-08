@@ -14,8 +14,6 @@
 <body>
 
 <div class="admin-page">
-
-    <!-- ШАПКА -->
     <header class="admin-header">
 
         <div class="logo">
@@ -60,8 +58,6 @@
 
     </header>
 
-
-    <!-- НАВИГАЦИЯ -->
     <nav class="admin-nav">
 
         <a href="{% url 'admin_panel' %}">
@@ -85,9 +81,6 @@
         </a>
 
     </nav>
-
-
-    <!-- ОСНОВНОЙ КОНТЕНТ -->
     <main class="admin-content">
 
         <div class="page-heading">
@@ -107,10 +100,7 @@
 
         </div>
 
-
-        <!-- КАРТОЧКИ -->
         <div class="admin-menu">
-
             <a href="{% url 'drivers_list' %}" class="menu-card">
 
                 <div class="menu-icon">
@@ -133,7 +123,6 @@
 
 
             <a href="{% url 'clients_list' %}" class="menu-card">
-
                 <div class="menu-icon">
                     👥
                 </div>
@@ -195,24 +184,15 @@
             </a>
 
         </div>
-
     </main>
-
-
-    <!-- FOOTER -->
     <footer class="admin-footer">
-
         <span>
             Taxi Control
         </span>
-
         <span>
             Панель администратора · 2026
         </span>
-
     </footer>
-
 </div>
-
 </body>
 </html>
