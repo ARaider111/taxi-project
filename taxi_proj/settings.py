@@ -85,7 +85,7 @@ DATABASES = {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": "taxi_db",         
         "USER": "postgres",        
-        "PASSWORD": "postgres", 
+        "PASSWORD": "70esadel", 
         "HOST": "localhost",
         "PORT": "5432",
     }

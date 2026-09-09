@@ -4,6 +4,9 @@ from taxi.views import (
     index, admin_panel, CustomLoginView, add_driver, add_client, add_user, edit_driver, edit_client, edit_shift,
     edit_user, toggle_driver_archive, toggle_user_archive, drivers_list, clients_list, users_list, shifts_list, add_shift,
     logout_view)
+from taxi.views.dispatcher_views import (
+     dispatcher_dashboard, dispatcher_drivers, dispatcher_clients, dispatcher_shifts
+)
 
 urlpatterns = [
     path("", index, name="index"),
@@ -37,4 +40,11 @@ urlpatterns = [
     path("shifts/", shifts_list, name="shifts_list"),
     path("shifts/add/", add_shift, name="add_shift"),
     path("shifts/<int:shift_id>/edit/", edit_shift, name="edit_shift"),
+
+
+    # Диспетчер
+    path("dashboard/", dispatcher_dashboard, name="dispatcher_dashboard"),
+    path("dashboard/drivers/", dispatcher_drivers, name="dispatcher_drivers"),
+    path("dashboard/clients/", dispatcher_clients, name="dispatcher_clients"),
+    path("dashboard/shifts/", dispatcher_shifts, name="dispatcher_shifts"),
 ]

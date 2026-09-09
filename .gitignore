@@ -1,4 +1,4 @@
 venv/
 .venv/
 env/
-settings.py
+taxi_proj/settings.py

@@ -1,0 +1,21 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Главная страница{% endblock %}</title>
+</head>
+<body>
+    <div style="margin-bottom: 20px;">
+        <strong>Главная страница</strong> |
+        Пользователь: {{ user.lname }} {{ user.fname }} ({{ user.role }}) |
+        <a href="{% url 'dispatcher_dashboard' %}">Главная</a> |
+        <a href="{% url 'dispatcher_drivers' %}">Водители</a> |
+        <a href="{% url 'dispatcher_clients' %}">Клиенты</a> |
+        <a href="{% url 'dispatcher_shifts' %}">Смены</a> |
+        <a href="{% url 'logout' %}">Выйти</a>
+    </div>
+
+    {% block content %}{% endblock %}
+</body>
+</html>

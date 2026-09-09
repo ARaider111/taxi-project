@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from .models import User, Driver, Client, Shift
+from taxi.models import User, Driver, Client, Shift
 from django.contrib.auth import logout
 
 
@@ -16,11 +16,10 @@ class CustomLoginView(LoginView):
         if hasattr(user, "role") and user.role == "admin":
             return redirect("admin_panel")
 
+        if hasattr(user, "role") and user.role == "dispatcher":
+            return redirect("dispatcher_dashboard")
+
         return redirect("index")
-
-
-def index(request):
-    return HttpResponse("Главная страница такси-проекта")
 
 
 @login_required

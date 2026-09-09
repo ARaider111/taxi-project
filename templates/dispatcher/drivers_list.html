@@ -1,0 +1,26 @@
+{% extends "dispatcher/base_dispatcher.html" %}
+{% block title %}Водители — Диспетчер{% endblock %}
+
+{% block content %}
+<h1>Водители</h1>
+<table border="1" cellpadding="6">
+    <tr>
+        <th>Фамилия</th>
+        <th>Имя</th>
+        <th>Телефон</th>
+        <th>Авто</th>
+        <th>Статус</th>
+    </tr>
+    {% for d in drivers %}
+    <tr>
+        <td>{{ d.lname }}</td>
+        <td>{{ d.fname }}</td>
+        <td>{{ d.phone }}</td>
+        <td>{{ d.car_model }} {{ d.car_number }}</td>
+        <td>{{ d.status }}</td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="5">Нет водителей</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}
