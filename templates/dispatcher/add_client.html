@@ -1,0 +1,39 @@
+{% extends "dispatcher/base_dispatcher.html" %}
+{% block title %}Добавить клиента{% endblock %}
+
+{% block content %}
+<h1>Добавить клиента</h1>
+<p><a href="{% url 'dispatcher_clients' %}">← Назад к списку</a></p>
+
+<form method="post">
+    {% csrf_token %}
+
+    <p>
+        <label>Фамилия:<br>
+            <input type="text" name="lname" required>
+        </label>
+    </p>
+
+    <p>
+        <label>Имя:<br>
+            <input type="text" name="fname" required>
+        </label>
+    </p>
+
+    <p>
+        <label>Отчество (необязательно):<br>
+            <input type="text" name="patronimyc">
+        </label>
+    </p>
+
+    <p>
+        <label>Телефон:<br>
+            <input type="text" name="phone" required>
+        </label>
+    </p>
+
+    <p>
+        <button type="submit">Создать</button>
+    </p>
+</form>
+{% endblock %}

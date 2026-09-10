@@ -1,15 +1,15 @@
 from django.contrib import admin
 from django.urls import path
 from taxi.views import (
-    index, admin_panel, CustomLoginView, add_driver, add_client, add_user, edit_driver, edit_client, edit_shift,
+     admin_panel, CustomLoginView, add_driver, add_client, add_user, edit_driver, edit_client, edit_shift,
     edit_user, toggle_driver_archive, toggle_user_archive, drivers_list, clients_list, users_list, shifts_list, add_shift,
     logout_view)
 from taxi.views.dispatcher_views import (
-     dispatcher_dashboard, dispatcher_drivers, dispatcher_clients, dispatcher_shifts
+     dispatcher_dashboard, dispatcher_drivers, dispatcher_clients, dispatcher_shifts, dispatcher_add_client,
+    dispatcher_edit_client,  dispatcher_open_shift, dispatcher_close_shift,
 )
 
 urlpatterns = [
-    path("", index, name="index"),
     path(
         "login/",
         CustomLoginView.as_view(),
@@ -46,5 +46,10 @@ urlpatterns = [
     path("dashboard/", dispatcher_dashboard, name="dispatcher_dashboard"),
     path("dashboard/drivers/", dispatcher_drivers, name="dispatcher_drivers"),
     path("dashboard/clients/", dispatcher_clients, name="dispatcher_clients"),
+    path("dashboard/clients/add/", dispatcher_add_client, name="dispatcher_add_client"),
+    path("dashboard/clients/<int:client_id>/edit/", dispatcher_edit_client, name="dispatcher_edit_client"),
     path("dashboard/shifts/", dispatcher_shifts, name="dispatcher_shifts"),
+    path("dashboard/shifts/<int:shift_id>/open/", dispatcher_open_shift, name="dispatcher_open_shift",),
+    path("dashboard/shifts/<int:shift_id>/close/", dispatcher_close_shift, name="dispatcher_close_shift",),
+
 ]

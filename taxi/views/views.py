@@ -232,6 +232,7 @@ def toggle_user_archive(request, user_id):
     return redirect("users_list")
 
 
+
 @login_required
 def add_shift(request):
     if not hasattr(request.user, "role") or request.user.role != "admin":
@@ -242,13 +243,11 @@ def add_shift(request):
         start_shift = request.POST.get("start_shift")  
         end_shift = request.POST.get("end_shift")
 
-        opened_user_id = request.user.user_id
 
         Shift.objects.create(
             driver_id=driver_id,
             start_shift=start_shift.replace("T", " "),
             end_shift=end_shift.replace("T", " "),
-            opened_user_id=opened_user_id,
         )
         return redirect("shifts_list")
 

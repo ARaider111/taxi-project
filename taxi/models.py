@@ -125,7 +125,9 @@ class Shift(models.Model):
 
     opened_user = models.ForeignKey(
         User,
-        on_delete=models.CASCADE,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
         related_name="opened_shifts",
         verbose_name="Открыл пользователь",
     )

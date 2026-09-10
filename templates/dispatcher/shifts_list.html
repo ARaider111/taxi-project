@@ -3,6 +3,8 @@
 
 {% block content %}
 <h1>Смены</h1>
+
+<h2>Все смены</h2>
 <table border="1" cellpadding="6">
     <tr>
         <th>ID</th>
@@ -11,13 +13,20 @@
         <th>Конец</th>
         <th>Открыл</th>
         <th>Закрыл</th>
+        <th>Действия</th>
     </tr>
     {% for s in shifts %}
     <tr>
         <td>{{ s.shift_id }}</td>
         <td>{{ s.driver.lname }} {{ s.driver.fname }}</td>
         <td>{{ s.start_shift|date:"d.m.Y H:i" }}</td>
-        <td>{{ s.end_shift|date:"d.m.Y H:i" }}</td>
+        <td>
+            {% if s.end_shift %}
+                {{ s.end_shift|date:"d.m.Y H:i" }}
+            {% else %}
+                —
+            {% endif %}
+        </td>
         <td>{{ s.opened_user.lname }} {{ s.opened_user.fname }}</td>
         <td>
             {% if s.closed_user %}
@@ -26,9 +35,26 @@
                 —
             {% endif %}
         </td>
+        <td>
+    {% if s.opened_user is None %}
+        <form method="post"
+              action="{% url 'dispatcher_open_shift' s.shift_id %}">
+            {% csrf_token %}
+            <button type="submit">Открыть смену</button>
+        </form>
+    {% elif s.closed_user is None %}
+        <form method="post"
+              action="{% url 'dispatcher_close_shift' s.shift_id %}">
+            {% csrf_token %}
+            <button type="submit">Закрыть смену</button>
+        </form>
+    {% else %}
+        {# Смена уже открыта и закрыта — кнопок нет #}
+    {% endif %}
+    </td>
     </tr>
     {% empty %}
-    <tr><td colspan="6">Нет смен</td></tr>
+    <tr><td colspan="7">Нет смен</td></tr>
     {% endfor %}
 </table>
 {% endblock %}
