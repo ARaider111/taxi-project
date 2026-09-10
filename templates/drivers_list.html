@@ -65,6 +65,10 @@
             <a href="{% url 'toggle_driver_archive' d.driver_id %}">
                 {% if d.is_archive %}Вернуть из архива{% else %}Архивировать{% endif %}
             </a>
+            |
+            <a href="{% url 'toggle_driver_blacklist' d.driver_id %}">
+                {% if d.is_blacklist %}Убрать из ЧС{% else %}Добавить в ЧС{% endif %}
+            </a>
         </td>
     </tr>
     {% empty %}

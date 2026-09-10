@@ -148,3 +148,36 @@ class Shift(models.Model):
 
     def __str__(self):
         return f"Смена {self.driver} с {self.start_shift} по {self.end_shift}"
+
+
+class District(models.Model):
+    district_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=128)
+    base_coefficient = models.DecimalField(max_digits=3, decimal_places=2)
+
+    class Meta:
+        db_table = "districts"
+        verbose_name = "Район"
+        verbose_name_plural = "Районы"
+
+    def __str__(self):
+        return self.name
+
+
+class Street(models.Model):
+    street_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=128)
+    district = models.ForeignKey(
+        District,
+        on_delete=models.CASCADE,
+        db_column="fk_district_id",
+        related_name="streets",
+    )
+
+    class Meta:
+        db_table = "streets"
+        verbose_name = "Улица"
+        verbose_name_plural = "Улицы"
+
+    def __str__(self):
+        return f"{self.name} ({self.district.name})"

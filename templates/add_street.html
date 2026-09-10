@@ -1,0 +1,32 @@
+{% extends "base_admin.html" %}
+{% block title %}Добавить улицу{% endblock %}
+
+{% block content %}
+<h1>Добавить улицу</h1>
+<p><a href="{% url 'streets_list' %}">← Назад к списку</a></p>
+
+<form method="post">
+    {% csrf_token %}
+
+    <p>
+        <label>Название:<br>
+            <input type="text" name="name" required>
+        </label>
+    </p>
+
+    <p>
+        <label>Район:<br>
+            <select name="district" required>
+                <option value="">— выберите район —</option>
+                {% for d in districts %}
+                <option value="{{ d.district_id }}">{{ d.name }}</option>
+                {% endfor %}
+            </select>
+        </label>
+    </p>
+
+    <p>
+        <button type="submit">Создать</button>
+    </p>
+</form>
+{% endblock %}

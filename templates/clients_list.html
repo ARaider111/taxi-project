@@ -36,6 +36,10 @@
         <td>{{ c.is_blacklist|yesno:"Да,Нет" }}</td>
         <td>
             <a href="{% url 'edit_client' c.client_id %}">Редактировать</a>
+            |
+            <a href="{% url 'toggle_client_blacklist' c.client_id %}">
+                {% if c.is_blacklist %}Убрать из ЧС{% else %}Добавить в ЧС{% endif %}
+            </a>
         </td>
     </tr>
     {% empty %}

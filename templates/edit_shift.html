@@ -35,6 +35,19 @@
     </p>
 
     <p>
+        <label>Открыл пользователь:<br>
+            <select name="opened_user">
+                <option value="">— не выбрано —</option>
+                {% for u in users %}
+                <option value="{{ u.user_id }}" {% if shift.opened_user and u.user_id == shift.opened_user.user_id %}selected{% endif %}>
+                    {{ u.lname }} {{ u.fname }} ({{ u.role }})
+                </option>
+                {% endfor %}
+            </select>
+        </label>
+    </p>
+    
+    <p>
         <label>Закрыл пользователь:<br>
             <select name="closed_user">
                 <option value="">— не выбрано —</option>

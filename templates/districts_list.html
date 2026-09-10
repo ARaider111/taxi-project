@@ -1,0 +1,29 @@
+{% extends "base_admin.html" %}
+{% block title %}Районы{% endblock %}
+
+{% block content %}
+<h1>Районы</h1>
+<p>
+    <a href="{% url 'add_district' %}">Добавить район</a>
+</p>
+<table border="1" cellpadding="6">
+    <tr>
+        <th>ID</th>
+        <th>Название</th>
+        <th>Базовый коэффициент</th>
+        <th>Действия</th>
+    </tr>
+    {% for d in districts %}
+    <tr>
+        <td>{{ d.district_id }}</td>
+        <td>{{ d.name }}</td>
+        <td>{{ d.base_coefficient }}</td>
+        <td>
+            <a href="{% url 'edit_district' d.district_id %}">Редактировать</a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="4">Нет районов</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}

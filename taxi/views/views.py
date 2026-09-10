@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from taxi.models import User, Driver, Client, Shift
+from taxi.models import User, Driver, Client, Shift, District, Street
 from django.contrib.auth import logout
 from django.db.models import Q
 
@@ -225,7 +225,6 @@ def edit_driver(request, driver_id):
         driver.car_model = request.POST.get("car_model")
         driver.car_number = request.POST.get("car_number")
         driver.status = request.POST.get("status", driver.status)
-        driver.is_blacklist = request.POST.get("is_blacklist") == "on"
         driver.save()
         return redirect("drivers_list")
 
@@ -238,6 +237,17 @@ def toggle_driver_archive(request, driver_id):
 
     driver = Driver.objects.get(pk=driver_id)
     driver.is_archive = not driver.is_archive  
+    driver.save()
+
+    return redirect("drivers_list")
+
+@login_required
+def toggle_driver_blacklist(request, driver_id):
+    if not hasattr(request.user, "role") or request.user.role != "admin":
+        return HttpResponse("Доступ запрещён", status=403)
+
+    driver = Driver.objects.get(pk=driver_id)
+    driver.is_blacklist = not driver.is_blacklist
     driver.save()
 
     return redirect("drivers_list")
@@ -276,11 +286,22 @@ def edit_client(request, client_id):
         client.fname = request.POST.get("fname")
         client.patronimyc = request.POST.get("patronimyc") or None
         client.phone = request.POST.get("phone")
-        client.is_blacklist = request.POST.get("is_blacklist") == "on"
         client.save()
         return redirect("clients_list")
 
     return render(request, "edit_client.html", {"client": client})
+
+
+@login_required
+def toggle_client_blacklist(request, client_id):
+    if not hasattr(request.user, "role") or request.user.role != "admin":
+        return HttpResponse("Доступ запрещён", status=403)
+
+    client = Client.objects.get(pk=client_id)
+    client.is_blacklist = not client.is_blacklist
+    client.save()
+
+    return redirect("clients_list")
 
 
 @login_required
@@ -384,11 +405,13 @@ def edit_shift(request, shift_id):
         driver_id = request.POST.get("driver")
         start_shift = request.POST.get("start_shift")
         end_shift = request.POST.get("end_shift")
+        opened_user_id = request.POST.get("opened_user") or None
         closed_user_id = request.POST.get("closed_user") or None
 
         shift.driver_id = driver_id
         shift.start_shift = start_shift.replace("T", " ")
         shift.end_shift = end_shift.replace("T", " ")
+        shift.opened_user_id = opened_user_id if opened_user_id else None
         shift.closed_user_id = closed_user_id if closed_user_id else None
         shift.save()
 
@@ -402,7 +425,109 @@ def edit_shift(request, shift_id):
         "users": users,
     })
 
+@login_required
+def districts_list(request):
+    if not hasattr(request.user, "role") or request.user.role != "admin":
+        return HttpResponse("Доступ запрещён", status=403)
+
+    districts = District.objects.all()
+    return render(request, "districts_list.html", {"districts": districts})
+
+
+@login_required
+def add_district(request):
+    if not hasattr(request.user, "role") or request.user.role != "admin":
+        return HttpResponse("Доступ запрещён", status=403)
+
+    if request.method == "POST":
+        name = request.POST.get("name")
+        base_coefficient = request.POST.get("base_coefficient")
+
+        District.objects.create(
+            name=name,
+            base_coefficient=base_coefficient,
+        )
+        return redirect("districts_list")
+
+    return render(request, "add_district.html")
+
+
+@login_required
+def edit_district(request, district_id):
+    if not hasattr(request.user, "role") or request.user.role != "admin":
+        return HttpResponse("Доступ запрещён", status=403)
+
+    district = District.objects.get(pk=district_id)
+
+    if request.method == "POST":
+        district.name = request.POST.get("name")
+        district.base_coefficient = request.POST.get("base_coefficient")
+        district.save()
+        return redirect("districts_list")
+
+    return render(request, "edit_district.html", {"district": district})
+
+
+@login_required
+def streets_list(request):
+    if not hasattr(request.user, "role") or request.user.role != "admin":
+        return HttpResponse("Доступ запрещён", status=403)
+
+    streets = Street.objects.select_related("district").all()
+
+    query = request.GET.get("q", "").strip()
+    if query:
+        streets = streets.filter(
+            Q(name__icontains=query)
+        )
+
+    return render(request, "streets_list.html", {
+        "streets": streets,
+        "query": query,
+    })
+
+
+@login_required
+def add_street(request):
+    if not hasattr(request.user, "role") or request.user.role != "admin":
+        return HttpResponse("Доступ запрещён", status=403)
+
+    if request.method == "POST":
+        name = request.POST.get("name")
+        district_id = request.POST.get("district")
+
+        Street.objects.create(
+            name=name,
+            district_id=district_id,
+        )
+        return redirect("streets_list")
+
+    districts = District.objects.all()
+    return render(request, "add_street.html", {"districts": districts})
+
+
+@login_required
+def edit_street(request, street_id):
+    if not hasattr(request.user, "role") or request.user.role != "admin":
+        return HttpResponse("Доступ запрещён", status=403)
+
+    street = Street.objects.get(pk=street_id)
+
+    if request.method == "POST":
+        street.name = request.POST.get("name")
+        street.district_id = request.POST.get("district")
+        street.save()
+        return redirect("streets_list")
+
+    districts = District.objects.all()
+    return render(request, "edit_street.html", {
+        "street": street,
+        "districts": districts,
+    })
+
 
 def logout_view(request):
     logout(request)
     return redirect("login")
+
+

@@ -3,11 +3,11 @@ from django.urls import path
 from taxi.views import (
      admin_panel, CustomLoginView, add_driver, add_client, add_user, edit_driver, edit_client, edit_shift,
     edit_user, toggle_driver_archive, toggle_user_archive, drivers_list, clients_list, users_list, shifts_list, add_shift,
-    logout_view)
+    logout_view, districts_list, edit_district, add_district, streets_list, add_street, edit_street, toggle_driver_blacklist,
+    toggle_client_blacklist)
 from taxi.views.dispatcher_views import (
      dispatcher_dashboard, dispatcher_drivers, dispatcher_clients, dispatcher_shifts, dispatcher_add_client,
-    dispatcher_edit_client,  dispatcher_open_shift, dispatcher_close_shift,
-)
+    dispatcher_edit_client,  dispatcher_open_shift, dispatcher_close_shift,)
 
 urlpatterns = [
     path(
@@ -25,11 +25,13 @@ urlpatterns = [
     path("drivers/add/", add_driver, name="add_driver"),
     path("drivers/<int:driver_id>/edit/", edit_driver, name="edit_driver"),
     path("drivers/<int:driver_id>/toggle-archive/", toggle_driver_archive, name="toggle_driver_archive"),
+    path("drivers/<int:driver_id>/toggle-blacklist/", toggle_driver_blacklist, name="toggle_driver_blacklist",),
 
     # Клиенты
     path("clients/", clients_list, name="clients_list"),
     path("clients/add/", add_client, name="add_client"),
     path("clients/<int:client_id>/edit/", edit_client, name="edit_client"),
+    path("clients/<int:client_id>/toggle-blacklist/", toggle_client_blacklist, name="toggle_client_blacklist",),
 
     # Пользователи
     path("users/", users_list, name="users_list"),
@@ -40,6 +42,16 @@ urlpatterns = [
     path("shifts/", shifts_list, name="shifts_list"),
     path("shifts/add/", add_shift, name="add_shift"),
     path("shifts/<int:shift_id>/edit/", edit_shift, name="edit_shift"),
+
+    # Районы
+    path("districts/", districts_list, name="districts_list"),
+    path("districts/add/", add_district, name="add_district"),
+    path("districts/<int:district_id>/edit/", edit_district, name="edit_district"),
+
+    # Улицы
+    path("streets/", streets_list, name="streets_list"),
+    path("streets/add/", add_street, name="add_street"),
+    path("streets/<int:street_id>/edit/", edit_street, name="edit_street"), 
 
 
     # Диспетчер
