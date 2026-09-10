@@ -6,6 +6,27 @@
 <p>
     <a href="{% url 'add_shift' %}">Добавить смену</a>
 </p>
+<form method="get" style="margin-bottom: 20px;">
+    <label for="q">Поиск:</label>
+    <input type="text" name="q" id="q" value="{{ query }}" placeholder="Фамилия, имя водителя, начало, конец">
+
+    <label for="status">Статус:</label>
+    <select name="status" id="status">
+        <option value="">Все статусы</option>
+        <option value="not_opened" {% if current_status == "not_opened" %}selected{% endif %}>
+            Не открыта
+        </option>
+        <option value="opened" {% if current_status == "opened" %}selected{% endif %}>
+            Открыта
+        </option>
+        <option value="closed" {% if current_status == "closed" %}selected{% endif %}>
+            Закрыта
+        </option>
+    </select>
+
+    <button type="submit">Найти</button>
+    <a href="{% url 'shifts_list' %}" style="margin-left: 10px;">Сбросить</a>
+</form>
 <table border="1" cellpadding="6">
     <tr>
         <th>ID</th>

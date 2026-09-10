@@ -3,21 +3,44 @@
 
 {% block content %}
 <h1>Водители</h1>
+
+<form method="get" style="margin-bottom: 20px;">
+    <label for="q">Поиск:</label>
+    <input type="text" name="q" id="q" value="{{ query }}" placeholder="Фамилия, имя, телефон, авто, номер">
+
+    <label for="status">Статус:</label>
+    <select name="status" id="status">
+        <option value="">Все статусы</option>
+        {% for value, label in statuses %}
+        <option value="{{ value }}" {% if value == current_status %}selected{% endif %}>
+            {{ label }}
+        </option>
+        {% endfor %}
+    </select>
+
+    <button type="submit">Найти</button>
+    <a href="{% url 'dispatcher_drivers' %}" style="margin-left: 10px;">Сбросить</a>
+</form>
+
 <table border="1" cellpadding="6">
     <tr>
         <th>Фамилия</th>
         <th>Имя</th>
         <th>Телефон</th>
         <th>Авто</th>
+        <th>Номер</th>
         <th>Статус</th>
+        <th>Чёрный список</th>
     </tr>
     {% for d in drivers %}
     <tr>
         <td>{{ d.lname }}</td>
         <td>{{ d.fname }}</td>
         <td>{{ d.phone }}</td>
-        <td>{{ d.car_model }} {{ d.car_number }}</td>
+        <td>{{ d.car_model }}</td>
+        <td>{{ d.car_number }}</td>
         <td>{{ d.status }}</td>
+        <td>{{ d.is_blacklist|yesno:"Да,Нет" }}</td>
     </tr>
     {% empty %}
     <tr><td colspan="5">Нет водителей</td></tr>

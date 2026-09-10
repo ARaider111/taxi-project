@@ -6,6 +6,14 @@
 <p>
     <a href="{% url 'dispatcher_add_client' %}">Добавить клиента</a>
 </p>
+<form method="get" style="margin-bottom: 20px;">
+    <label for="q">Поиск:</label>
+    <input type="text" name="q" id="q" value="{{ query }}" placeholder="Фамилия, имя, телефон">
+
+    <button type="submit">Найти</button>
+    <a href="{% url 'dispatcher_clients' %}" style="margin-left: 10px;">Сбросить</a>
+</form>
+
 <table border="1" cellpadding="6">
     <tr>
         <th>Фамилия</th>

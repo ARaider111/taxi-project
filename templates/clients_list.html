@@ -6,6 +6,20 @@
 <p>
     <a href="{% url 'add_client' %}">Добавить клиента</a>
 </p>
+<form method="get" style="margin-bottom: 20px;">
+    <label for="q">Поиск:</label>
+    <input type="text" name="q" id="q" value="{{ query }}" placeholder="Фамилия, имя, телефон">
+
+    <label for="blacklist">Чёрный список:</label>
+    <select name="blacklist" id="blacklist">
+        <option value="">Все</option>
+        <option value="1" {% if current_blacklist == "1" %}selected{% endif %}>В чёрном списке</option>
+        <option value="0" {% if current_blacklist == "0" %}selected{% endif %}>Не в чёрном списке</option>
+    </select>
+
+    <button type="submit">Найти</button>
+    <a href="{% url 'clients_list' %}" style="margin-left: 10px;">Сбросить</a>
+</form>
 <table border="1" cellpadding="6">
     <tr>
         <th>Фамилия</th>

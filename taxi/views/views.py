@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
 from taxi.models import User, Driver, Client, Shift
 from django.contrib.auth import logout
-
+from django.db.models import Q
 
 class CustomLoginView(LoginView):
     template_name = "login.html"
@@ -36,7 +36,43 @@ def drivers_list(request):
         return HttpResponse("Доступ запрещён", status=403)
 
     drivers = Driver.objects.all()
-    return render(request, "drivers_list.html", {"drivers": drivers})
+
+    query = request.GET.get("q", "").strip()
+    if query:
+        drivers = drivers.filter(
+            Q(lname__icontains=query) |
+            Q(fname__icontains=query) |
+            Q(phone__icontains=query) |
+            Q(car_model__icontains=query) |
+            Q(car_number__icontains=query)
+        )
+
+    status = request.GET.get("status", "")
+    if status:
+        drivers = drivers.filter(status=status)
+
+    blacklist = request.GET.get("blacklist", "")
+    if blacklist == "1":
+        drivers = drivers.filter(is_blacklist=True)
+    elif blacklist == "0":
+        drivers = drivers.filter(is_blacklist=False)
+
+    archive = request.GET.get("archive", "")
+    if archive == "1":
+        drivers = drivers.filter(is_archive=True)
+    elif archive == "0":
+        drivers = drivers.filter(is_archive=False)
+
+    statuses = Driver.STATUS_CHOICES
+
+    return render(request, "drivers_list.html", {
+        "drivers": drivers,
+        "statuses": statuses,
+        "query": query,
+        "current_status": status,
+        "current_blacklist": blacklist,
+        "current_archive": archive,
+    })
 
 
 @login_required
@@ -45,7 +81,26 @@ def clients_list(request):
         return HttpResponse("Доступ запрещён", status=403)
 
     clients = Client.objects.all()
-    return render(request, "clients_list.html", {"clients": clients})
+
+    query = request.GET.get("q", "").strip()
+    if query:
+        clients = clients.filter(
+            Q(lname__icontains=query) |
+            Q(fname__icontains=query) |
+            Q(phone__icontains=query)
+        )
+
+    blacklist = request.GET.get("blacklist", "")
+    if blacklist == "1":
+        clients = clients.filter(is_blacklist=True)
+    elif blacklist == "0":
+        clients = clients.filter(is_blacklist=False)
+
+    return render(request, "clients_list.html", {
+        "clients": clients,
+        "query": query,
+        "current_blacklist": blacklist,
+    })
 
 
 @login_required
@@ -54,7 +109,44 @@ def users_list(request):
         return HttpResponse("Доступ запрещён", status=403)
 
     users = User.objects.all()
-    return render(request, "users_list.html", {"users": users})
+
+    # Поиск по логину, фамилии, имени, отчеству, телефону
+    query = request.GET.get("q", "").strip()
+    if query:
+        users = users.filter(
+            Q(login__icontains=query) |
+            Q(lname__icontains=query) |
+            Q(fname__icontains=query) |
+            Q(patronimyc__icontains=query) |
+            Q(phone__icontains=query)
+        )
+
+    role = request.GET.get("role", "")
+    if role:
+        users = users.filter(role=role)
+
+    is_active = request.GET.get("is_active", "")
+    if is_active == "1":
+        users = users.filter(is_active=True)
+    elif is_active == "0":
+        users = users.filter(is_active=False)
+
+    archive = request.GET.get("archive", "")
+    if archive == "1":
+        users = users.filter(is_archive=True)
+    elif archive == "0":
+        users = users.filter(is_archive=False)
+
+    roles = User.objects.values_list("role", flat=True).distinct()
+
+    return render(request, "users_list.html", {
+        "users": users,
+        "roles": roles,
+        "query": query,
+        "current_role": role,
+        "current_is_active": is_active,
+        "current_archive": archive,
+    })
 
 
 @login_required
@@ -62,9 +154,35 @@ def shifts_list(request):
     if not hasattr(request.user, "role") or request.user.role != "admin":
         return HttpResponse("Доступ запрещён", status=403)
 
-    shifts = Shift.objects.all()
-    return render(request, "shifts_list.html", {"shifts": shifts})
+    shifts = Shift.objects.select_related(
+        "driver", "opened_user", "closed_user"
+    ).order_by("-start_shift")
 
+    query = request.GET.get("q", "").strip()
+    if query:
+        shifts = shifts.filter(
+            Q(driver__lname__icontains=query) |
+            Q(driver__fname__icontains=query) |
+            Q(start_shift__icontains=query) |
+            Q(end_shift__icontains=query)
+        )
+
+    status = request.GET.get("status", "")
+    if status == "not_opened":
+        shifts = shifts.filter(opened_user__isnull=True)
+    elif status == "opened":
+        shifts = shifts.filter(
+            opened_user__isnull=False,
+            closed_user__isnull=True
+        )
+    elif status == "closed":
+        shifts = shifts.filter(closed_user__isnull=False)
+
+    return render(request, "shifts_list.html", {
+        "shifts": shifts,
+        "query": query,
+        "current_status": status,
+    })
 @login_required
 def add_driver(request):
     if not hasattr(request.user, "role") or request.user.role != "admin":
