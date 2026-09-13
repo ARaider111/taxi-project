@@ -1,0 +1,50 @@
+{% extends "base_admin.html" %}
+{% block title %}Добавить тариф{% endblock %}
+
+{% block content %}
+<h1>Добавить тариф</h1>
+<p><a href="{% url 'tariffs_list' %}">← Назад к списку</a></p>
+
+<form method="post">
+    {% csrf_token %}
+
+    <p>
+        <label>Название:<br>
+            <input type="text" name="name" required>
+        </label>
+    </p>
+
+    <p>
+        <label>Цена:<br>
+            <input type="number" step="0.01" name="price" required>
+        </label>
+    </p>
+
+    <p>
+        <label>Время с:<br>
+            <input type="time" name="time_from" required>
+        </label>
+    </p>
+
+    <p>
+        <label>Время по:<br>
+            <input type="time" name="time_to" required>
+        </label>
+    </p>
+
+    <p>
+        <label>Дни недели:<br>
+            {% for value, label in days_choices %}
+            <label>
+                <input type="checkbox" name="days_of_week" value="{{ value }}">
+                {{ label }}
+            </label>
+            {% endfor %}
+        </label>
+    </p>
+
+    <p>
+        <button type="submit">Создать</button>
+    </p>
+</form>
+{% endblock %}

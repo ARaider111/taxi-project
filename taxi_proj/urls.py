@@ -4,7 +4,7 @@ from taxi.views import (
      admin_panel, CustomLoginView, add_driver, add_client, add_user, edit_driver, edit_client, edit_shift,
     edit_user, toggle_driver_archive, toggle_user_archive, drivers_list, clients_list, users_list, shifts_list, add_shift,
     logout_view, districts_list, edit_district, add_district, streets_list, add_street, edit_street, toggle_driver_blacklist,
-    toggle_client_blacklist)
+    toggle_client_blacklist, tariffs_list, add_tariff, edit_tariff, toggle_tariff_archive)
 from taxi.views.dispatcher_views import (
      dispatcher_dashboard, dispatcher_drivers, dispatcher_clients, dispatcher_shifts, dispatcher_add_client,
     dispatcher_edit_client,  dispatcher_open_shift, dispatcher_close_shift,)
@@ -52,6 +52,12 @@ urlpatterns = [
     path("streets/", streets_list, name="streets_list"),
     path("streets/add/", add_street, name="add_street"),
     path("streets/<int:street_id>/edit/", edit_street, name="edit_street"), 
+
+    # Тарифы
+    path("tariffs/", tariffs_list, name="tariffs_list"),
+    path("tariffs/add/", add_tariff, name="add_tariff"),
+    path("tariffs/<int:tariff_id>/edit/", edit_tariff, name="edit_tariff"),
+    path("tariffs/<int:tariff_id>/toggle-archive/", toggle_tariff_archive, name="toggle_tariff_archive"),
 
 
     # Диспетчер

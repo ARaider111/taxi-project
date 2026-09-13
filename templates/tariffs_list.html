@@ -1,0 +1,41 @@
+{% extends "base_admin.html" %}
+{% block title %}Тарифы{% endblock %}
+
+{% block content %}
+<h1>Тарифы</h1>
+<p>
+    <a href="{% url 'add_tariff' %}">Добавить тариф</a>
+</p>
+<table border="1" cellpadding="6">
+    <tr>
+        <th>ID</th>
+        <th>Название</th>
+        <th>Цена</th>
+        <th>Время с</th>
+        <th>Время по</th>
+        <th>Дни недели</th>
+        <th>Архив</th>
+        <th>Действия</th>
+    </tr>
+    {% for t in tariffs %}
+    <tr>
+        <td>{{ t.tariff_id }}</td>
+        <td>{{ t.name }}</td>
+        <td>{{ t.price }}</td>
+        <td>{{ t.time_from|date:"H:i" }}</td>
+        <td>{{ t.time_to|date:"H:i" }}</td>
+        <td>{{ t.get_days_display }}</td>
+        <td>{{ t.is_archive|yesno:"Да,Нет" }}</td>
+        <td>
+            <a href="{% url 'edit_tariff' t.tariff_id %}">Редактировать</a>
+            |
+            <a href="{% url 'toggle_tariff_archive' t.tariff_id %}">
+                {% if t.is_archive %}Вернуть из архива{% else %}Архивировать{% endif %}
+            </a>
+        </td>
+    </tr>
+    {% empty %}
+    <tr><td colspan="8">Нет тарифов</td></tr>
+    {% endfor %}
+</table>
+{% endblock %}

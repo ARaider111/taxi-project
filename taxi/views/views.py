@@ -2,7 +2,7 @@ from django.http import HttpResponse
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from taxi.models import User, Driver, Client, Shift, District, Street
+from taxi.models import User, Driver, Client, Shift, District, Street, Tariff
 from django.contrib.auth import logout
 from django.db.models import Q
 
@@ -530,4 +530,85 @@ def logout_view(request):
     logout(request)
     return redirect("login")
 
+
+@login_required
+def tariffs_list(request):
+    if not hasattr(request.user, "role") or request.user.role != "admin":
+        return HttpResponse("Доступ запрещён", status=403)
+
+    tariffs = Tariff.objects.all()
+    return render(request, "tariffs_list.html", {"tariffs": tariffs})
+
+
+@login_required
+def add_tariff(request):
+    if not hasattr(request.user, "role") or request.user.role != "admin":
+        return HttpResponse("Доступ запрещён", status=403)
+
+    if request.method == "POST":
+        name = request.POST.get("name")
+        price = request.POST.get("price")
+        time_from = request.POST.get("time_from")
+        time_to = request.POST.get("time_to")
+
+        days_of_week = 0
+        for day_value in request.POST.getlist("days_of_week"):
+            days_of_week |= int(day_value)
+
+        Tariff.objects.create(
+            name=name,
+            price=price,
+            time_from=time_from,
+            time_to=time_to,
+            days_of_week=days_of_week,
+        )
+        return redirect("tariffs_list")
+
+    return render(request, "add_tariff.html", {
+        "days_choices": Tariff.DAYS_OF_WEEK_CHOICES,
+    })
+
+
+@login_required
+def edit_tariff(request, tariff_id):
+    if not hasattr(request.user, "role") or request.user.role != "admin":
+        return HttpResponse("Доступ запрещён", status=403)
+
+    tariff = Tariff.objects.get(pk=tariff_id)
+
+    selected_days = []
+    for day_value, day_label in Tariff.DAYS_OF_WEEK_CHOICES:
+        if tariff.days_of_week & day_value:
+            selected_days.append(day_value)
+
+    if request.method == "POST":
+        tariff.name = request.POST.get("name")
+        tariff.price = request.POST.get("price")
+        tariff.time_from = request.POST.get("time_from")
+        tariff.time_to = request.POST.get("time_to")
+
+        days_of_week = 0
+        for day_value in request.POST.getlist("days_of_week"):
+            days_of_week |= int(day_value)
+        tariff.days_of_week = days_of_week
+
+        tariff.save()
+        return redirect("tariffs_list")
+
+    return render(request, "edit_tariff.html", {
+        "tariff": tariff,
+        "days_choices": Tariff.DAYS_OF_WEEK_CHOICES,
+        "selected_days": selected_days,
+    })
+
+@login_required
+def toggle_tariff_archive(request, tariff_id):
+    if not hasattr(request.user, "role") or request.user.role != "admin":
+        return HttpResponse("Доступ запрещён", status=403)
+
+    tariff = Tariff.objects.get(pk=tariff_id)
+    tariff.is_archive = not tariff.is_archive
+    tariff.save()
+
+    return redirect("tariffs_list")
 

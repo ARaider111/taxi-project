@@ -181,3 +181,62 @@ class Street(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.district.name})"
+
+
+class Tariff(models.Model):
+    MONDAY = 1 << 0      
+    TUESDAY = 1 << 1     
+    WEDNESDAY = 1 << 2   
+    THURSDAY = 1 << 3    
+    FRIDAY = 1 << 4      
+    SATURDAY = 1 << 5    
+    SUNDAY = 1 << 6      
+
+    DAYS_OF_WEEK_CHOICES = [
+        (MONDAY, "Понедельник"),
+        (TUESDAY, "Вторник"),
+        (WEDNESDAY, "Среда"),
+        (THURSDAY, "Четверг"),
+        (FRIDAY, "Пятница"),
+        (SATURDAY, "Суббота"),
+        (SUNDAY, "Воскресенье"),
+    ]
+
+    tariff_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=128)
+    price = models.DecimalField(max_digits=5, decimal_places=2)
+    time_from = models.TimeField()
+    time_to = models.TimeField()
+    days_of_week = models.IntegerField(
+        help_text="Битовая маска дней недели: Пн=1, Вт=2, Ср=4, Чт=8, Пт=16, Сб=32, Вс=64"
+    )
+    is_archive = models.BooleanField("В архиве", default=False)
+
+    class Meta:
+        db_table = "tariffs"
+        verbose_name = "Тариф"
+        verbose_name_plural = "Тарифы"
+
+    def __str__(self):
+        return self.name
+
+    @classmethod
+    def get_days_mask(cls, days_list):
+        """Преобразует список дней в битовую маску."""
+        mask = 0
+        for day in days_list:
+            mask |= day
+        return mask
+
+    def get_days_list(self):
+        """Возвращает список дней недели для этого тарифа."""
+        days = []
+        for value, label in self.DAYS_OF_WEEK_CHOICES:
+            if self.days_of_week & value:
+                days.append(label)
+        return days
+
+    def get_days_display(self):
+        """Возвращает строку с днями недели."""
+        days = self.get_days_list()
+        return ", ".join(days) if days else "Нет дней"
