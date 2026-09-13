@@ -6,18 +6,20 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Taxi Control — Админ-панель</title>
+    <title>{% block title %}Taxi Control{% endblock %}</title>
 
     <link rel="stylesheet" href="{% static 'css/admin_panel.css' %}">
-</head>
 
+    {% block extra_head %}
+    {% endblock %}
+</head>
 <body>
 
 <div class="admin-page">
     <header class="admin-header">
 
         <div class="logo">
-            <div class="logo-icon">🚕</div>
+            <div class="logo-icon"></div>
             <span>Taxi Control</span>
         </div>
 
@@ -44,7 +46,7 @@
 
         <a href="{% url 'admin_panel' %}"
            class="header-button home-button">
-            🏠 Главная
+            Главная
         </a>
 
         <a href="{% url 'logout' %}"
@@ -61,23 +63,23 @@
     <nav class="admin-nav">
 
         <a href="{% url 'admin_panel' %}">
-            🏠 Главная
+            Главная
         </a>
 
         <a href="{% url 'drivers_list' %}">
-            🚕 Водители
+            Водители
         </a>
 
         <a href="{% url 'clients_list' %}">
-            👥 Клиенты
+            Клиенты
         </a>
 
         <a href="{% url 'users_list' %}">
-            👤 Пользователи
+            Пользователи
         </a>
 
         <a href="{% url 'shifts_list' %}">
-            🕐 Смены
+            Смены
         </a>
 
         <a href="{% url 'districts_list' %}">Районы</a> 
@@ -108,7 +110,7 @@
             <a href="{% url 'drivers_list' %}" class="menu-card">
 
                 <div class="menu-icon">
-                    🚕
+                
                 </div>
 
                 <div class="menu-text">

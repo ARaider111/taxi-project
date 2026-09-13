@@ -1,0 +1,599 @@
+.users-page {
+    width: 100%;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 45px 50px 60px;
+    color: #ffffff;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.users-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.users-label {
+    display: block;
+    margin-bottom: 10px;
+    color: #ffc107;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
+}
+
+.users-header h1 {
+    margin: 0 0 8px;
+    color: #ffffff;
+    font-size: 36px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+}
+
+.users-header p {
+    margin: 0;
+    color: #737d86;
+    font-size: 14px;
+}
+
+
+/* =========================
+   КНОПКА ДОБАВЛЕНИЯ
+========================= */
+
+.users-add-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    min-height: 43px;
+
+    padding: 0 18px;
+
+    border-radius: 9px;
+
+    background: #ffc107;
+    color: #111111;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    text-decoration: none;
+
+    box-shadow:
+        0 7px 20px rgba(255, 193, 7, 0.14);
+
+    transition: 0.2s ease;
+}
+
+.users-add-btn span {
+    font-size: 20px;
+    line-height: 1;
+}
+
+.users-add-btn:hover {
+    background: #ffd044;
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 10px 25px rgba(255, 193, 7, 0.2);
+}
+
+
+/* =========================
+   ФИЛЬТРЫ
+========================= */
+
+.users-filters {
+    display: flex;
+    align-items: flex-end;
+    gap: 14px;
+    flex-wrap: wrap;
+
+    margin-bottom: 22px;
+
+    padding: 20px;
+
+    border: 1px solid #2d3339;
+    border-radius: 13px;
+
+    background: #181c20;
+
+    box-shadow:
+        0 10px 35px rgba(0, 0, 0, 0.15);
+}
+
+.filter-item {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+
+    min-width: 150px;
+}
+
+.filter-search {
+    flex: 1;
+    min-width: 280px;
+}
+
+.filter-item label {
+    color: #747e87;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+}
+
+.filter-item input,
+.filter-item select {
+    width: 100%;
+    height: 42px;
+
+    padding: 0 12px;
+
+    border: 1px solid #343b42;
+    border-radius: 8px;
+
+    outline: none;
+
+    background: #111519;
+    color: #dce1e5;
+
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+
+    transition: 0.2s ease;
+}
+
+.filter-item input::placeholder {
+    color: #555f68;
+}
+
+.filter-item input:hover,
+.filter-item select:hover {
+    border-color: #4a535c;
+}
+
+.filter-item input:focus,
+.filter-item select:focus {
+    border-color: #ffc107;
+
+    background: #14191d;
+
+    box-shadow:
+        0 0 0 3px rgba(255, 193, 7, 0.08);
+}
+
+
+/* select */
+
+.filter-item select {
+    cursor: pointer;
+}
+
+.filter-item select option {
+    background: #181c20;
+    color: #ffffff;
+}
+
+
+/* =========================
+   КНОПКИ ФИЛЬТРОВ
+========================= */
+
+.filter-buttons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.users-search-btn,
+.users-reset-btn {
+    height: 42px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0 17px;
+
+    border-radius: 8px;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition: 0.2s ease;
+}
+
+.users-search-btn {
+    border: none;
+
+    background: #ffc107;
+    color: #121212;
+}
+
+.users-search-btn:hover {
+    background: #ffd044;
+    transform: translateY(-1px);
+}
+
+.users-reset-btn {
+    border: 1px solid #363d44;
+
+    background: transparent;
+    color: #89929a;
+
+    text-decoration: none;
+}
+
+.users-reset-btn:hover {
+    border-color: #ffc107;
+    color: #ffc107;
+}
+
+
+/* =========================
+   ТАБЛИЦА
+========================= */
+
+.users-table-card {
+    overflow: hidden;
+
+    border: 1px solid #2d3339;
+    border-radius: 13px;
+
+    background: #181c20;
+
+    box-shadow:
+        0 12px 35px rgba(0, 0, 0, 0.18);
+}
+
+.users-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.users-table {
+    width: 100%;
+    min-width: 1150px;
+
+    border-collapse: collapse;
+
+    font-size: 13px;
+}
+
+
+/* =========================
+   TABLE HEAD
+========================= */
+
+.users-table thead {
+    background: #15191d;
+}
+
+.users-table th {
+    padding: 15px 14px;
+
+    border-bottom: 1px solid #30363d;
+
+    color: #707a83;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    text-align: left;
+
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+
+    white-space: nowrap;
+}
+
+
+/* =========================
+   TABLE BODY
+========================= */
+
+.users-table td {
+    padding: 15px 14px;
+
+    border-bottom: 1px solid #262c31;
+
+    color: #a5adb5;
+
+    vertical-align: middle;
+}
+
+.users-table tbody tr {
+    transition: 0.18s ease;
+}
+
+.users-table tbody tr:hover {
+    background: rgba(255, 193, 7, 0.035);
+}
+
+.users-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+
+/* =========================
+   ЛОГИН
+========================= */
+
+.user-login {
+    color: #ffffff !important;
+    font-weight: 700;
+}
+
+
+/* =========================
+   РОЛЬ
+========================= */
+
+.role-badge {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 5px 9px;
+
+    border: 1px solid rgba(255, 193, 7, 0.18);
+    border-radius: 6px;
+
+    background: rgba(255, 193, 7, 0.08);
+    color: #ffc107;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+}
+
+
+/* =========================
+   СТАТУС
+========================= */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 6px 9px;
+
+    border-radius: 20px;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+.status-circle {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+}
+
+.status-active {
+    border: 1px solid rgba(54, 212, 99, 0.2);
+
+    background: rgba(54, 212, 99, 0.08);
+    color: #53d877;
+}
+
+.status-active .status-circle {
+    background: #36d463;
+
+    box-shadow:
+        0 0 7px rgba(54, 212, 99, 0.7);
+}
+
+.status-inactive {
+    border: 1px solid rgba(255, 95, 95, 0.2);
+
+    background: rgba(255, 95, 95, 0.08);
+    color: #ff7676;
+}
+
+.status-inactive .status-circle {
+    background: #ff6565;
+}
+
+
+/* =========================
+   АРХИВ
+========================= */
+
+.archive-badge {
+    display: inline-flex;
+
+    padding: 5px 9px;
+
+    border-radius: 6px;
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.archive-no {
+    background: #242a30;
+    color: #7e8992;
+}
+
+.archive-yes {
+    border: 1px solid rgba(255, 152, 50, 0.18);
+
+    background: rgba(255, 152, 50, 0.08);
+    color: #ffa34f;
+}
+
+
+/* =========================
+   ДЕЙСТВИЯ
+========================= */
+
+.user-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    white-space: nowrap;
+}
+
+.user-action {
+    position: relative;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition: 0.2s ease;
+}
+
+.edit-action {
+    color: #ffc107;
+}
+
+.edit-action:hover {
+    color: #ffd95c;
+}
+
+.archive-action {
+    color: #d06d6d;
+}
+
+.archive-action:hover {
+    color: #ff8c8c;
+}
+
+
+/* =========================
+   АРХИВНАЯ СТРОКА
+========================= */
+
+.user-archived {
+    opacity: 0.58;
+}
+
+.user-archived:hover {
+    opacity: 0.8;
+}
+
+
+/* =========================
+   ПУСТО
+========================= */
+
+.users-empty {
+    padding: 55px 20px !important;
+
+    color: #626c75 !important;
+
+    text-align: center;
+
+    font-size: 14px;
+}
+
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+.users-table-wrapper::-webkit-scrollbar {
+    height: 8px;
+}
+
+.users-table-wrapper::-webkit-scrollbar-track {
+    background: #14181c;
+}
+
+.users-table-wrapper::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+
+    background: #343b42;
+}
+
+.users-table-wrapper::-webkit-scrollbar-thumb:hover {
+    background: #ffc107;
+}
+
+
+/* =========================
+   ADAPTIVE
+========================= */
+
+@media (max-width: 1000px) {
+
+    .users-page {
+        padding: 35px 25px;
+    }
+
+    .users-header {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+
+    .users-add-btn {
+        width: 100%;
+    }
+
+    .users-filters {
+        align-items: stretch;
+    }
+
+    .filter-item {
+        flex: 1 1 200px;
+    }
+
+    .filter-search {
+        flex: 1 1 100%;
+    }
+}
+
+
+@media (max-width: 650px) {
+
+    .users-page {
+        padding: 25px 14px;
+    }
+
+    .users-header h1 {
+        font-size: 29px;
+    }
+
+    .users-filters {
+        flex-direction: column;
+
+        padding: 15px;
+    }
+
+    .filter-item,
+    .filter-search {
+        width: 100%;
+        min-width: 100%;
+    }
+
+    .filter-buttons {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .users-search-btn,
+    .users-reset-btn {
+        width: 100%;
+    }
+}

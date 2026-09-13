@@ -1,49 +1,134 @@
 {% extends "base_admin.html" %}
+{% load static %}
+
 {% block title %}Клиенты{% endblock %}
 
 {% block content %}
-<h1>Клиенты</h1>
-<p>
-    <a href="{% url 'add_client' %}">Добавить клиента</a>
-</p>
-<form method="get" style="margin-bottom: 20px;">
-    <label for="q">Поиск:</label>
-    <input type="text" name="q" id="q" value="{{ query }}" placeholder="Фамилия, имя, телефон">
 
-    <label for="blacklist">Чёрный список:</label>
-    <select name="blacklist" id="blacklist">
-        <option value="">Все</option>
-        <option value="1" {% if current_blacklist == "1" %}selected{% endif %}>В чёрном списке</option>
-        <option value="0" {% if current_blacklist == "0" %}selected{% endif %}>Не в чёрном списке</option>
-    </select>
+<link rel="stylesheet" href="{% static 'css/clients_list.css' %}">
 
-    <button type="submit">Найти</button>
-    <a href="{% url 'clients_list' %}" style="margin-left: 10px;">Сбросить</a>
-</form>
-<table border="1" cellpadding="6">
-    <tr>
-        <th>Фамилия</th>
-        <th>Имя</th>
-        <th>Телефон</th>
-        <th>Чёрный список</th>
-        <th>Действия</th>
-    </tr>
-    {% for c in clients %}
-    <tr>
-        <td>{{ c.lname }}</td>
-        <td>{{ c.fname }}</td>
-        <td>{{ c.phone }}</td>
-        <td>{{ c.is_blacklist|yesno:"Да,Нет" }}</td>
-        <td>
-            <a href="{% url 'edit_client' c.client_id %}">Редактировать</a>
-            |
-            <a href="{% url 'toggle_client_blacklist' c.client_id %}">
-                {% if c.is_blacklist %}Убрать из ЧС{% else %}Добавить в ЧС{% endif %}
-            </a>
-        </td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="5">Нет клиентов</td></tr>
-    {% endfor %}
-</table>
+<div class="clients-page">
+
+    <h1>Клиенты</h1>
+
+    <a href="{% url 'add_client' %}" class="clients-add">
+        Добавить клиента
+    </a>
+
+    <form method="get" class="clients-filters">
+
+        <div class="client-filter">
+            <label for="q">Поиск:</label>
+            <input
+                type="text"
+                name="q"
+                id="q"
+                value="{{ query }}"
+                placeholder="Фамилия, имя, телефон"
+            >
+        </div>
+
+        <div class="client-filter">
+            <label for="blacklist">Чёрный список:</label>
+            <select name="blacklist" id="blacklist">
+                <option value="">Все</option>
+                <option value="1" {% if current_blacklist == "1" %}selected{% endif %}>
+                    В чёрном списке
+                </option>
+                <option value="0" {% if current_blacklist == "0" %}selected{% endif %}>
+                    Не в чёрном списке
+                </option>
+            </select>
+        </div>
+
+        <button type="submit" class="client-search">
+            Найти
+        </button>
+
+        <a href="{% url 'clients_list' %}" class="client-reset">
+            Сбросить
+        </a>
+
+    </form>
+
+    <div class="clients-table-container">
+
+        <table class="clients-table">
+
+            <thead>
+                <tr>
+                    <th>Фамилия</th>
+                    <th>Имя</th>
+                    <th>Телефон</th>
+                    <th>Чёрный список</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for c in clients %}
+
+                <tr>
+
+                    <td>{{ c.lname }}</td>
+
+                    <td>{{ c.fname }}</td>
+
+                    <td>{{ c.phone }}</td>
+
+                    <td>
+                        {% if c.is_blacklist %}
+                            <span class="client-yes">Да</span>
+                        {% else %}
+                            <span class="client-no">Нет</span>
+                        {% endif %}
+                    </td>
+
+                    <td>
+
+                        <div class="client-actions">
+
+                            <a
+                                href="{% url 'edit_client' c.client_id %}"
+                                class="client-action client-action-edit"
+                            >
+                                Редактировать
+                            </a>
+
+                            <a
+                                href="{% url 'toggle_client_blacklist' c.client_id %}"
+                                class="client-action client-action-blacklist"
+                            >
+                                {% if c.is_blacklist %}
+                                    Убрать из ЧС
+                                {% else %}
+                                    Добавить в ЧС
+                                {% endif %}
+                            </a>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+                    <td colspan="5" class="clients-empty">
+                        Нет клиентов
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
 {% endblock %}

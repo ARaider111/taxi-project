@@ -1,21 +1,116 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Главная страница{% endblock %}</title>
-</head>
-<body>
-    <div style="margin-bottom: 20px;">
-        <strong>Главная страница</strong> |
-        Пользователь: {{ user.lname }} {{ user.fname }} ({{ user.role }}) |
-        <a href="{% url 'dispatcher_dashboard' %}">Главная</a> |
-        <a href="{% url 'dispatcher_drivers' %}">Водители</a> |
-        <a href="{% url 'dispatcher_clients' %}">Клиенты</a> |
-        <a href="{% url 'dispatcher_shifts' %}">Смены</a> |
-        <a href="{% url 'logout' %}">Выйти</a>
-    </div>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    {% block content %}{% endblock %}
+    <title>
+        {% block title %}
+            Taxi Control
+        {% endblock %}
+    </title>
+
+    <link rel="stylesheet" href="{% static 'css/admin_panel.css' %}">
+
+    {% block extra_head %}
+    {% endblock %}
+</head>
+
+<body>
+
+<div class="admin-page">
+
+    <header class="admin-header">
+
+        <div class="logo">
+            <div class="logo-icon">🚕</div>
+            <span>Taxi Control</span>
+        </div>
+
+        <div class="header-right">
+
+            <div class="user-info">
+                <span class="user-label">Пользователь</span>
+
+                <strong>
+                    {{ user.fname }} {{ user.lname }}
+                </strong>
+
+                <span class="user-role">
+                    {{ user.role }}
+                </span>
+            </div>
+
+            <div class="header-buttons">
+
+                <a href="{% url 'admin_panel' %}"
+                   class="header-button home-button">
+                    Главная
+                </a>
+
+                <a href="{% url 'logout' %}"
+                   class="header-button logout-button">
+                    ↪ Выйти
+                </a>
+
+            </div>
+
+        </div>
+
+    </header>
+
+    <nav class="admin-nav">
+
+        <a href="{% url 'admin_panel' %}">
+            Главная
+        </a>
+
+        <a href="{% url 'dispatcher_drivers' %}">
+            Водители
+        </a>
+
+        <a href="{% url 'clients_list' %}">
+            Клиенты
+        </a>
+
+        <a href="{% url 'users_list' %}">
+            Пользователи
+        </a>
+
+        <a href="{% url 'shifts_list' %}">
+            Смены
+        </a>
+
+        <a href="{% url 'districts_list' %}">
+            Районы
+        </a>
+
+        <a href="{% url 'streets_list' %}">
+            Улицы
+        </a>
+
+    </nav>
+
+    <main class="admin-content">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="admin-footer">
+
+        <span>
+            Taxi Control
+        </span>
+
+        <span>
+            Панель администратора · 2026
+        </span>
+
+    </footer>
+
+</div>
+
 </body>
 </html>

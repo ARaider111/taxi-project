@@ -1,71 +1,128 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Добавить пользователя</title>
-</head>
-<body>
-    <h1>Добавить пользователя</h1>
-    <a href="{% url 'users_list' %}">← Назад к панели</a>
+{% extends "base_admin.html" %}
+{% load static %}
 
-    <form method="post">
-        {% csrf_token %}
+{% block title %}Добавить пользователя{% endblock %}
 
-        <p>
-            <label>Логин:<br>
-                <input type="text" name="login" required maxlength="128">
-            </label>
-        </p>
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/user_form.css' %}">
 
-        <p>
-            <label>Пароль:<br>
-                <input type="password" name="password" required maxlength="128">
-            </label>
-        </p>
+<div class="user-form-page">
 
-        <p>
-            <label>Фамилия:<br>
-                <input type="text" name="lname" required maxlength="128">
-            </label>
-        </p>
+    <div class="user-form-header">
+        <h1>Добавить пользователя</h1>
+        <p class="user-form-subtitle">Создание новой учётной записи</p>
 
-        <p>
-            <label>Имя:<br>
-                <input type="text" name="fname" required maxlength="128">
-            </label>
-        </p>
+        <a href="{% url 'users_list' %}" class="user-form-back">
+            ← Назад к панели
+        </a>
+    </div>
 
-        <p>
-            <label>Отчество:<br>
-                <input type="text" name="patronimyc" maxlength="128">
-            </label>
-        </p>
+    <div class="user-form-card">
+        <form method="post">
+            {% csrf_token %}
 
-        <p>
-            <label>Телефон:<br>
-                <input type="text" name="phone" required maxlength="12">
-            </label>
-        </p>
+            <div class="user-form-grid">
 
-        <p>
-            <label>Роль:<br>
-                <select name="role">
-                    <option value="admin">Admin</option>
-                    <option value="dispatcher">Dispatcher</option>
-                </select>
-            </label>
-        </p>
+                <div class="user-form-field">
+                    <label for="login">Логин</label>
+                    <input
+                        type="text"
+                        id="login"
+                        name="login"
+                        required
+                        maxlength="128"
+                    >
+                </div>
 
-        <p>
-            <label>
-                <input type="checkbox" name="is_active" checked>
-                Активен
-            </label>
-        </p>
+                <div class="user-form-field">
+                    <label for="password">Пароль</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        required
+                        maxlength="128"
+                    >
+                </div>
 
-        <p>
-            <button type="submit">Сохранить</button>
-        </p>
-    </form>
-</body>
-</html>
+                <div class="user-form-field">
+                    <label for="lname">Фамилия</label>
+                    <input
+                        type="text"
+                        id="lname"
+                        name="lname"
+                        required
+                        maxlength="128"
+                    >
+                </div>
+
+                <div class="user-form-field">
+                    <label for="fname">Имя</label>
+                    <input
+                        type="text"
+                        id="fname"
+                        name="fname"
+                        required
+                        maxlength="128"
+                    >
+                </div>
+
+                <div class="user-form-field">
+                    <label for="patronimyc">Отчество</label>
+                    <input
+                        type="text"
+                        id="patronimyc"
+                        name="patronimyc"
+                        maxlength="128"
+                    >
+                </div>
+
+                <div class="user-form-field">
+                    <label for="phone">Телефон</label>
+                    <input
+                        type="text"
+                        id="phone"
+                        name="phone"
+                        required
+                        maxlength="12"
+                    >
+                </div>
+
+                <div class="user-form-field">
+                    <label for="role">Роль</label>
+                    <select id="role" name="role">
+                        <option value="admin">Admin</option>
+                        <option value="dispatcher">Dispatcher</option>
+                    </select>
+                </div>
+
+                <div class="user-form-field">
+                    <label>Статус</label>
+
+                    <div class="user-form-active">
+                        <input
+                            type="checkbox"
+                            id="is_active"
+                            name="is_active"
+                            checked
+                        >
+                        <label for="is_active">Активен</label>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="user-form-footer">
+                <a href="{% url 'users_list' %}" class="user-form-btn user-form-cancel">
+                    Отмена
+                </a>
+
+                <button type="submit" class="user-form-btn user-form-save">
+                    Сохранить
+                </button>
+            </div>
+        </form>
+    </div>
+
+</div>
+{% endblock %}

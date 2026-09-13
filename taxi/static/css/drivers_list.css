@@ -1,0 +1,252 @@
+.drivers-page {
+    width: 100%;
+    color: #f1f3f5;
+}
+
+.drivers-page h1 {
+    margin: 0 0 24px;
+    font-size: 30px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.drivers-add {
+    display: inline-flex;
+    align-items: center;
+    padding: 11px 18px;
+    margin-bottom: 24px;
+    background: #ffc107;
+    color: #111111;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
+    transition: 0.2s;
+}
+
+.drivers-add:hover {
+    background: #ffca2c;
+    color: #111111;
+}
+
+.drivers-filters {
+    display: flex;
+    align-items: end;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding: 20px;
+    margin-bottom: 24px;
+    background: #171b20;
+    border: 1px solid #292f36;
+    border-radius: 12px;
+}
+
+.driver-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.driver-filter label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #aeb5bd;
+}
+
+.driver-filter input,
+.driver-filter select {
+    height: 42px;
+    box-sizing: border-box;
+    padding: 0 12px;
+    background: #0f1215;
+    border: 1px solid #343b43;
+    border-radius: 7px;
+    color: #ffffff;
+    font-size: 14px;
+    outline: none;
+}
+
+.driver-filter input {
+    width: 300px;
+}
+
+.driver-filter select {
+    min-width: 170px;
+}
+
+.driver-filter input:focus,
+.driver-filter select:focus {
+    border-color: #ffc107;
+}
+
+.driver-filter input::placeholder {
+    color: #69717a;
+}
+
+.driver-search {
+    height: 42px;
+    padding: 0 20px;
+    border: 0;
+    border-radius: 7px;
+    background: #ffc107;
+    color: #111111;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.driver-search:hover {
+    background: #ffca2c;
+}
+
+.driver-reset {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 42px;
+    padding: 0 18px;
+    box-sizing: border-box;
+    border: 1px solid #343b43;
+    border-radius: 7px;
+    color: #c7ccd2;
+    background: #20252b;
+    text-decoration: none;
+    font-size: 14px;
+    transition: 0.2s;
+}
+
+.driver-reset:hover {
+    background: #2a3037;
+    color: #ffffff;
+}
+
+.drivers-table-container {
+    width: 100%;
+    overflow-x: auto;
+    background: #171b20;
+    border: 1px solid #292f36;
+    border-radius: 12px;
+}
+
+.drivers-table {
+    width: 100%;
+    min-width: 1100px;
+    border-collapse: collapse;
+}
+
+.drivers-table th {
+    padding: 16px 14px;
+    background: #1d2228;
+    border-bottom: 1px solid #343b43;
+    color: #aeb5bd;
+    font-size: 12px;
+    font-weight: 700;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.drivers-table td {
+    padding: 15px 14px;
+    border-bottom: 1px solid #292f36;
+    color: #e6e9ed;
+    font-size: 14px;
+    vertical-align: middle;
+}
+
+.drivers-table tbody tr {
+    transition: 0.15s;
+}
+
+.drivers-table tbody tr:hover {
+    background: #1d2228;
+}
+
+.drivers-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.driver-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 5px 10px;
+    border-radius: 20px;
+    background: #252b32;
+    color: #dce1e6;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.driver-yes {
+    color: #ff6b6b;
+    font-weight: 700;
+}
+
+.driver-no {
+    color: #7ddc9a;
+    font-weight: 600;
+}
+
+.driver-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    min-width: 270px;
+}
+
+.driver-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 32px;
+    padding: 6px 10px;
+    box-sizing: border-box;
+    border: 1px solid #343b43;
+    border-radius: 6px;
+    background: #20252b;
+    color: #dce1e6;
+    text-decoration: none;
+    font-size: 12px;
+    transition: 0.2s;
+}
+
+.driver-action:hover {
+    background: #2b3138;
+    color: #ffffff;
+    border-color: #4a535d;
+}
+
+.driver-action-edit:hover {
+    color: #ffc107;
+    border-color: #ffc107;
+}
+
+.driver-action-archive:hover {
+    color: #72b7ff;
+    border-color: #72b7ff;
+}
+
+.driver-action-blacklist:hover {
+    color: #ff6b6b;
+    border-color: #ff6b6b;
+}
+
+.drivers-empty {
+    padding: 40px !important;
+    text-align: center !important;
+    color: #737c86 !important;
+}
+
+@media (max-width: 900px) {
+    .drivers-filters {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .driver-filter input,
+    .driver-filter select,
+    .driver-search,
+    .driver-reset {
+        width: 100%;
+    }
+}

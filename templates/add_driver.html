@@ -1,55 +1,93 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Добавить водителя</title>
-</head>
-<body>
-    <h1>Добавить водителя</h1>
-    <a href="{% url 'drivers_list' %}">← Назад к панели</a>
+{% extends "base_admin.html" %}
+{% load static %}
 
-    <form method="post">
-        {% csrf_token %}
+{% block title %}Добавить водителя{% endblock %}
 
-        <p>
-            <label>Фамилия:<br>
-                <input type="text" name="lname" required maxlength="128">
-            </label>
-        </p>
+{% block content %}
 
-        <p>
-            <label>Имя:<br>
-                <input type="text" name="fname" required maxlength="128">
-            </label>
-        </p>
+<link rel="stylesheet" href="{% static 'css/driver_form.css' %}">
 
-        <p>
-            <label>Отчество:<br>
-                <input type="text" name="patronimyc" maxlength="128">
-            </label>
-        </p>
+<div class="driver-form-page">
 
-        <p>
-            <label>Телефон:<br>
-                <input type="text" name="phone" required maxlength="12">
-            </label>
-        </p>
+    <div class="page-header">
+        <div>
+            <h1>Добавить водителя</h1>
+            <p class="page-subtitle">
+                Заполните данные нового водителя
+            </p>
+        </div>
 
-        <p>
-            <label>Модель авто:<br>
-                <input type="text" name="car_model" required maxlength="128">
-            </label>
-        </p>
+        <a href="{% url 'drivers_list' %}" class="back-link">
+            ← Назад к водителям
+        </a>
+    </div>
 
-        <p>
-            <label>Номер авто:<br>
-                <input type="text" name="car_number" required maxlength="8">
-            </label>
-        </p>
+    <div class="form-card">
+        <form method="post" class="driver-form">
+            {% csrf_token %}
 
-        <p>
-            <button type="submit">Сохранить</button>
-        </p>
-    </form>
-</body>
-</html>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="form-message">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if form.errors %}
+                <div class="form-errors">
+                    <p>Проверьте правильность заполнения формы.</p>
+                    {{ form.errors }}
+                </div>
+            {% endif %}
+
+            <div class="form-grid">
+
+                <div class="form-field">
+                    <label for="lname">Фамилия</label>
+                    <input type="text" id="lname" name="lname" maxlength="128" required placeholder="Введите фамилию" value="{{ request.POST.lname|default:'' }}">
+                </div>
+
+                <div class="form-field">
+                    <label for="fname">Имя</label>
+                    <input type="text" id="fname" name="fname" maxlength="128" required placeholder="Введите имя" value="{{ request.POST.fname|default:'' }}">
+                </div>
+
+                <div class="form-field">
+                    <label for="patronimyc">Отчество</label>
+                    <input type="text" id="patronimyc" name="patronimyc" maxlength="128" placeholder="Введите отчество" value="{{ request.POST.patronimyc|default:'' }}">
+                </div>
+
+                <div class="form-field">
+                    <label for="phone">Телефон</label>
+                    <input type="tel" id="phone" name="phone" maxlength="12" required placeholder="+79991234567" value="{{ request.POST.phone|default:'' }}">
+                </div>
+
+                <div class="form-field">
+                    <label for="car_model">Модель автомобиля</label>
+                    <input type="text" id="car_model" name="car_model" maxlength="128" required placeholder="Например, Kia Rio" value="{{ request.POST.car_model|default:'' }}">
+                </div>
+
+                <div class="form-field">
+                    <label for="car_number">Номер автомобиля</label>
+                    <input type="text" id="car_number" name="car_number" maxlength="8" required placeholder="А123ВС70" value="{{ request.POST.car_number|default:'' }}">
+                </div>
+
+            </div>
+
+            <div class="form-footer">
+                <a href="{% url 'drivers_list' %}" class="btn btn-light">
+                    Отмена
+                </a>
+
+                <button type="submit" class="btn btn-primary">
+                    Сохранить водителя
+                </button>
+            </div>
+
+        </form>
+    </div>
+
+</div>
+
+{% endblock %}

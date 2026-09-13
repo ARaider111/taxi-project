@@ -1,71 +1,157 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Редактировать водителя</title>
-</head>
-<body>
-    <h1>Редактировать водителя</h1>
-    <a href="{% url 'drivers_list' %}">← Назад к панели</a>
+{% extends "base_admin.html" %}
+{% load static %}
 
-    <form method="post">
-        {% csrf_token %}
+{% block title %}Редактировать водителя{% endblock %}
 
-        <p>
-            <label>Фамилия:<br>
-                <input type="text" name="lname" required maxlength="128"
-                       value="{{ driver.lname }}">
-            </label>
-        </p>
+{% block content %}
 
-        <p>
-            <label>Имя:<br>
-                <input type="text" name="fname" required maxlength="128"
-                       value="{{ driver.fname }}">
-            </label>
-        </p>
+<link rel="stylesheet" href="{% static 'css/driver_edit.css' %}">
 
-        <p>
-            <label>Отчество:<br>
-                <input type="text" name="patronimyc" maxlength="128"
-                       value="{{ driver.patronimyc|default:'' }}">
-            </label>
-        </p>
+<div class="driver-edit-page">
 
-        <p>
-            <label>Телефон:<br>
-                <input type="text" name="phone" required maxlength="12"
-                       value="{{ driver.phone }}">
-            </label>
-        </p>
+    <div class="driver-edit-header">
+        <div>
+            <h1>Редактировать водителя</h1>
+            <p class="driver-edit-subtitle">
+                Измените данные водителя
+            </p>
+        </div>
 
-        <p>
-            <label>Модель авто:<br>
-                <input type="text" name="car_model" required maxlength="128"
-                       value="{{ driver.car_model }}">
-            </label>
-        </p>
+        <a href="{% url 'drivers_list' %}" class="driver-edit-back">
+            ← Назад к водителям
+        </a>
+    </div>
 
-        <p>
-            <label>Номер авто:<br>
-                <input type="text" name="car_number" required maxlength="8"
-                       value="{{ driver.car_number }}">
-            </label>
-        </p>
+    <div class="driver-edit-card">
 
-        <p>
-            <label>Статус:<br>
-                <select name="status">
-                    <option value="В ожидании" {% if driver.status == "В ожидаении" %}selected{% endif %}>В ожидаении</option>
-                    <option value="В работе" {% if driver.status == "В работе" %}selected{% endif %}>В работе</option>
-                    <option value="Вне работы" {% if driver.status == "Вне работы" %}selected{% endif %}>Вне работы</option>
-                </select>
-            </label>
-        </p>
- 
-        <p>
-            <button type="submit">Сохранить</button>
-        </p>
-    </form>
-</body>
-</html>
+        <form method="post" class="driver-edit-form">
+            {% csrf_token %}
+
+            <div class="driver-edit-grid">
+
+                <div class="driver-edit-field">
+                    <label for="lname">Фамилия</label>
+                    <input
+                        type="text"
+                        id="lname"
+                        name="lname"
+                        required
+                        maxlength="128"
+                        value="{{ driver.lname }}"
+                    >
+                </div>
+
+                <div class="driver-edit-field">
+                    <label for="fname">Имя</label>
+                    <input
+                        type="text"
+                        id="fname"
+                        name="fname"
+                        required
+                        maxlength="128"
+                        value="{{ driver.fname }}"
+                    >
+                </div>
+
+                <div class="driver-edit-field">
+                    <label for="patronimyc">Отчество</label>
+                    <input
+                        type="text"
+                        id="patronimyc"
+                        name="patronimyc"
+                        maxlength="128"
+                        value="{{ driver.patronimyc|default:'' }}"
+                    >
+                </div>
+
+                <div class="driver-edit-field">
+                    <label for="phone">Телефон</label>
+                    <input
+                        type="text"
+                        id="phone"
+                        name="phone"
+                        required
+                        maxlength="12"
+                        value="{{ driver.phone }}"
+                    >
+                </div>
+
+                <div class="driver-edit-field">
+                    <label for="car_model">Модель автомобиля</label>
+                    <input
+                        type="text"
+                        id="car_model"
+                        name="car_model"
+                        required
+                        maxlength="128"
+                        value="{{ driver.car_model }}"
+                    >
+                </div>
+
+                <div class="driver-edit-field">
+                    <label for="car_number">Номер автомобиля</label>
+                    <input
+                        type="text"
+                        id="car_number"
+                        name="car_number"
+                        required
+                        maxlength="8"
+                        value="{{ driver.car_number }}"
+                    >
+                </div>
+
+                <div class="driver-edit-field">
+                    <label for="status">Статус</label>
+                    <select name="status" id="status">
+
+                        <option
+                            value="В ожидании"
+                            {% if driver.status == "В ожидании" %}selected{% endif %}
+                        >
+                            В ожидании
+                        </option>
+
+                        <option
+                            value="В работе"
+                            {% if driver.status == "В работе" %}selected{% endif %}
+                        >
+                            В работе
+                        </option>
+
+                        <option
+                            value="Вне работы"
+                            {% if driver.status == "Вне работы" %}selected{% endif %}
+                        >
+                            Вне работы
+                        </option>
+
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="driver-edit-footer">
+
+                <a
+                    href="{% url 'drivers_list' %}"
+                    class="driver-edit-btn driver-edit-cancel"
+                >
+                    Отмена
+                </a>
+
+                <button
+                    type="submit"
+                    class="driver-edit-btn driver-edit-save"
+                >
+                    Сохранить изменения
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

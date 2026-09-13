@@ -1,43 +1,105 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Добавить клиента</title>
-</head>
-<body>
-    <h1>Добавить клиента</h1>
-    <a href="{% url 'clients_list' %}">← Назад к панели</a>
+{% extends "base_admin.html" %}
+{% load static %}
 
-    <form method="post">
-        {% csrf_token %}
+{% block title %}Добавить клиента{% endblock %}
 
-        <p>
-            <label>Фамилия:<br>
-                <input type="text" name="lname" required maxlength="128">
-            </label>
-        </p>
+{% block content %}
 
-        <p>
-            <label>Имя:<br>
-                <input type="text" name="fname" required maxlength="128">
-            </label>
-        </p>
+<link rel="stylesheet" href="{% static 'css/client_form.css' %}">
 
-        <p>
-            <label>Отчество:<br>
-                <input type="text" name="patronimyc" maxlength="128">
-            </label>
-        </p>
+<div class="client-form-page">
 
-        <p>
-            <label>Телефон:<br>
-                <input type="text" name="phone" required maxlength="12">
-            </label>
-        </p>
+    <div class="client-page-header">
+        <div>
+            <h1>Добавить клиента</h1>
+            <p class="client-page-subtitle">
+                Заполните данные нового клиента
+            </p>
+        </div>
 
-        <p>
-            <button type="submit">Сохранить</button>
-        </p>
-    </form>
-</body>
-</html>
+        <a href="{% url 'clients_list' %}" class="client-back-link">
+            ← Назад к клиентам
+        </a>
+    </div>
+
+    <div class="client-form-card">
+
+        <form method="post">
+            {% csrf_token %}
+
+            <div class="client-form-grid">
+
+                <div class="client-form-field">
+                    <label for="lname">Фамилия</label>
+                    <input
+                        type="text"
+                        id="lname"
+                        name="lname"
+                        required
+                        maxlength="128"
+                        placeholder="Введите фамилию"
+                    >
+                </div>
+
+                <div class="client-form-field">
+                    <label for="fname">Имя</label>
+                    <input
+                        type="text"
+                        id="fname"
+                        name="fname"
+                        required
+                        maxlength="128"
+                        placeholder="Введите имя"
+                    >
+                </div>
+
+                <div class="client-form-field">
+                    <label for="patronimyc">Отчество</label>
+                    <input
+                        type="text"
+                        id="patronimyc"
+                        name="patronimyc"
+                        maxlength="128"
+                        placeholder="Введите отчество"
+                    >
+                </div>
+
+                <div class="client-form-field">
+                    <label for="phone">Телефон</label>
+                    <input
+                        type="text"
+                        id="phone"
+                        name="phone"
+                        required
+                        maxlength="12"
+                        placeholder="+79991234567"
+                    >
+                </div>
+
+            </div>
+
+            <div class="client-form-footer">
+
+                <a
+                    href="{% url 'clients_list' %}"
+                    class="client-btn client-btn-cancel"
+                >
+                    Отмена
+                </a>
+
+                <button
+                    type="submit"
+                    class="client-btn client-btn-save"
+                >
+                    Сохранить клиента
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

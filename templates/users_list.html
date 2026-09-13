@@ -1,82 +1,285 @@
 {% extends "base_admin.html" %}
-{% block title %}Пользователи{% endblock %}
+
+{% load static %}
+
+{% block title %}Пользователи — Taxi Control{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/users_list.css' %}">
+{% endblock %}
+
 
 {% block content %}
-<h1>Пользователи</h1>
-<p>
-    <a href="{% url 'add_user' %}">Добавить пользователя</a>
-</p>
-<form method="get" style="margin-bottom: 20px;">
-    <label for="q">Поиск:</label>
-    <input type="text" name="q" id="q" value="{{ query }}" placeholder="Логин, фамилия, имя, отчество, телефон">
 
-    <label for="role">Роль:</label>
-    <select name="role" id="role">
-        <option value="">Все роли</option>
-        {% for r in roles %}
-        {% if r is tuple %}
-            {# если roles = ROLE_CHOICES = [(value, label), ...] #}
-            <option value="{{ r.0 }}" {% if r.0 == current_role %}selected{% endif %}>
-                {{ r.1 }}
-            </option>
-        {% else %}
-            {# если roles = queryset строк #}
-            <option value="{{ r }}" {% if r == current_role %}selected{% endif %}>
-                {{ r }}
-            </option>
-        {% endif %}
-        {% endfor %}
-    </select>
+<div class="users-page">
 
-    <label for="is_active">Активен:</label>
-    <select name="is_active" id="is_active">
-        <option value="">Все</option>
-        <option value="1" {% if current_is_active == "1" %}selected{% endif %}>Активен</option>
-        <option value="0" {% if current_is_active == "0" %}selected{% endif %}>Не активен</option>
-    </select>
+    <div class="users-header">
+        <div>
+            <span class="users-label">УПРАВЛЕНИЕ СИСТЕМОЙ</span>
+            <h1>Пользователи</h1>
+            <p>Управление учетными записями сотрудников системы</p>
+        </div>
 
-    <label for="archive">Архив:</label>
-    <select name="archive" id="archive">
-        <option value="">Все</option>
-        <option value="1" {% if current_archive == "1" %}selected{% endif %}>В архиве</option>
-        <option value="0" {% if current_archive == "0" %}selected{% endif %}>Не в архиве</option>
-    </select>
+        <a href="{% url 'add_user' %}" class="users-add-btn">
+            <span>+</span>
+            Добавить пользователя
+        </a>
+    </div>
 
-    <button type="submit">Найти</button>
-    <a href="{% url 'users_list' %}" style="margin-left: 10px;">Сбросить</a>
-</form>
-<table border="1" cellpadding="6">
-    <tr>
-        <th>Логин</th>
-        <th>Фамилия</th>
-        <th>Имя</th>
-        <th>Отчество</th>
-        <th>Телефон</th>
-        <th>Роль</th>
-        <th>Активен</th>
-        <th>Архив</th>
-        <th>Действия</th>
-    </tr>
-    {% for u in users %}
-    <tr>
-        <td>{{ u.login }}</td>
-        <td>{{ u.lname }}</td>
-        <td>{{ u.fname }}</td>
-        <td>{{ u.patronimyc|default:"—" }}</td>
-        <td>{{ u.phone }}</td>
-        <td>{{ u.role }}</td>
-        <td>{{ u.is_active|yesno:"Да,Нет" }}</td>
-        <td>{{ u.is_archive|yesno:"Да,Нет" }}</td>
-        <td>
-            <a href="{% url 'edit_user' u.user_id %}">Редактировать</a>
-            |
-            <a href="{% url 'toggle_user_archive' u.user_id %}">
-                {% if u.is_archive %}Вернуть из архива{% else %}Архивировать{% endif %}
+
+    <form method="get" class="users-filters">
+
+        <div class="filter-item filter-search">
+            <label for="q">Поиск</label>
+
+            <input
+                type="text"
+                name="q"
+                id="q"
+                value="{{ query }}"
+                placeholder="Логин, фамилия, имя, телефон"
+            >
+        </div>
+
+
+        <div class="filter-item">
+            <label for="role">Роль</label>
+
+            <select name="role" id="role">
+                <option value="">Все роли</option>
+
+                {% for r in roles %}
+
+                    {% if r is tuple %}
+
+                        <option
+                            value="{{ r.0 }}"
+                            {% if r.0 == current_role %}selected{% endif %}
+                        >
+                            {{ r.1 }}
+                        </option>
+
+                    {% else %}
+
+                        <option
+                            value="{{ r }}"
+                            {% if r == current_role %}selected{% endif %}
+                        >
+                            {{ r }}
+                        </option>
+
+                    {% endif %}
+
+                {% endfor %}
+            </select>
+        </div>
+
+
+        <div class="filter-item">
+            <label for="is_active">Статус</label>
+
+            <select name="is_active" id="is_active">
+                <option value="">Все</option>
+
+                <option
+                    value="1"
+                    {% if current_is_active == "1" %}selected{% endif %}
+                >
+                    Активен
+                </option>
+
+                <option
+                    value="0"
+                    {% if current_is_active == "0" %}selected{% endif %}
+                >
+                    Не активен
+                </option>
+            </select>
+        </div>
+
+
+        <div class="filter-item">
+            <label for="archive">Архив</label>
+
+            <select name="archive" id="archive">
+                <option value="">Все</option>
+
+                <option
+                    value="0"
+                    {% if current_archive == "0" %}selected{% endif %}
+                >
+                    Не в архиве
+                </option>
+
+                <option
+                    value="1"
+                    {% if current_archive == "1" %}selected{% endif %}
+                >
+                    В архиве
+                </option>
+            </select>
+        </div>
+
+
+        <div class="filter-buttons">
+
+            <button type="submit" class="users-search-btn">
+                Найти
+            </button>
+
+            <a href="{% url 'users_list' %}" class="users-reset-btn">
+                Сбросить
             </a>
-        </td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="9">Нет пользователей</td></tr>
-    {% endfor %}
-</table>
+
+        </div>
+
+    </form>
+
+
+    <div class="users-table-card">
+
+        <div class="users-table-wrapper">
+
+            <table class="users-table">
+
+                <thead>
+                    <tr>
+                        <th>Логин</th>
+                        <th>Фамилия</th>
+                        <th>Имя</th>
+                        <th>Отчество</th>
+                        <th>Телефон</th>
+                        <th>Роль</th>
+                        <th>Активен</th>
+                        <th>Архив</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+
+
+                <tbody>
+
+                    {% for u in users %}
+
+                    <tr {% if u.is_archive %}class="user-archived"{% endif %}>
+
+                        <td class="user-login">
+                            {{ u.login }}
+                        </td>
+
+                        <td>
+                            {{ u.lname }}
+                        </td>
+
+                        <td>
+                            {{ u.fname }}
+                        </td>
+
+                        <td>
+                            {{ u.patronimyc|default:"—" }}
+                        </td>
+
+                        <td>
+                            {{ u.phone }}
+                        </td>
+
+                        <td>
+                            <span class="role-badge">
+                                {{ u.role }}
+                            </span>
+                        </td>
+
+
+                        <td>
+
+                            {% if u.is_active %}
+
+                                <span class="status-badge status-active">
+                                    <span class="status-circle"></span>
+                                    Активен
+                                </span>
+
+                            {% else %}
+
+                                <span class="status-badge status-inactive">
+                                    <span class="status-circle"></span>
+                                    Не активен
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if u.is_archive %}
+
+                                <span class="archive-badge archive-yes">
+                                    В архиве
+                                </span>
+
+                            {% else %}
+
+                                <span class="archive-badge archive-no">
+                                    Нет
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            <div class="user-actions">
+
+                                <a
+                                    href="{% url 'edit_user' u.user_id %}"
+                                    class="user-action edit-action"
+                                >
+                                    Редактировать
+                                </a>
+
+
+                                <a
+                                    href="{% url 'toggle_user_archive' u.user_id %}"
+                                    class="user-action archive-action"
+                                >
+
+                                    {% if u.is_archive %}
+                                        Вернуть
+                                    {% else %}
+                                        Архивировать
+                                    {% endif %}
+
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+
+                    {% empty %}
+
+                    <tr>
+                        <td colspan="9" class="users-empty">
+                            Пользователи не найдены
+                        </td>
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
 {% endblock %}

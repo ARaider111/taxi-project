@@ -1,0 +1,132 @@
+.districts-page {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    color: #f1f3f5;
+}
+
+.districts-header {
+    margin-bottom: 24px;
+}
+
+.districts-header h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.districts-subtitle {
+    margin: 0;
+    color: #858e98;
+    font-size: 14px;
+}
+
+.districts-add {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 18px;
+    padding: 11px 18px;
+    border-radius: 7px;
+    background: #ffc107;
+    color: #111;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s ease;
+}
+
+.districts-add:hover {
+    background: #ffca2c;
+}
+
+.districts-table-container {
+    overflow-x: auto;
+    background: #171b20;
+    border: 1px solid #292f36;
+    border-radius: 12px;
+}
+
+.districts-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 650px;
+}
+
+.districts-table th {
+    padding: 15px 16px;
+    background: #20252b;
+    color: #aeb5bd;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: left;
+    border-bottom: 1px solid #343b43;
+}
+
+.districts-table td {
+    padding: 15px 16px;
+    color: #e6e9ed;
+    font-size: 14px;
+    border-bottom: 1px solid #292f36;
+}
+
+.districts-table tbody tr {
+    transition: background 0.2s ease;
+}
+
+.districts-table tbody tr:hover {
+    background: #1d2228;
+}
+
+.districts-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.district-id {
+    color: #858e98;
+}
+
+.district-coefficient {
+    font-weight: 600;
+    color: #ffc107;
+}
+
+.district-edit {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 12px;
+    border: 1px solid #343b43;
+    border-radius: 6px;
+    background: #20252b;
+    color: #e6e9ed;
+    text-decoration: none;
+    font-size: 13px;
+    transition: 0.2s ease;
+}
+
+.district-edit:hover {
+    border-color: #ffc107;
+    color: #ffc107;
+    background: #252b31;
+}
+
+.districts-empty {
+    padding: 40px 20px !important;
+    text-align: center;
+    color: #858e98 !important;
+}
+
+@media (max-width: 700px) {
+    .districts-page {
+        padding: 24px 16px;
+    }
+
+    .districts-header h1 {
+        font-size: 24px;
+    }
+
+    .districts-add {
+        width: 100%;
+        box-sizing: border-box;
+    }
+}

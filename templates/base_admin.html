@@ -5,55 +5,70 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Taxi Control — Админ-панель{% endblock %}</title>
 
-    <title>
-        {% block title %}Админ-панель{% endblock %}
-    </title>
+    <!-- Основной CSS админ-панели -->
+    <link rel="stylesheet" href="{% static 'css/admin_panel.css' %}">
 
-    <link rel="stylesheet"
-          href="{% static 'css/admin_panel.css' %}">
+    <!-- CSS конкретной страницы -->
+    {% block extra_head %}
+    {% endblock %}
 </head>
 
 <body>
+
+<div class="admin-page">
+
+    <!-- ================= HEADER ================= -->
+
     <header class="admin-header">
 
-        <div class="admin-logo">
-            <div class="admin-logo-icon">🚕</div>
+        <div class="logo">
+
+            <div class="logo-icon">
+                🚕
+            </div>
+
             <span>Taxi Control</span>
+
         </div>
 
 
-        <div class="admin-user">
+        <div class="header-right">
 
             <div class="user-info">
-                <span class="user-label">Пользователь</span>
+
+                <span class="user-label">
+                    Пользователь
+                </span>
 
                 <strong>
-                    {{ user.lname }} {{ user.fname }}
+                    {{ user.fname }} {{ user.lname }}
                 </strong>
 
                 <span class="user-role">
                     {{ user.role }}
                 </span>
+
             </div>
 
 
             <div class="header-buttons">
-                <a href="{% url 'admin_panel' %}"
-                   class="header-button home-button">
-                    🏠
-                    <span>Главная</span>
+
+                <a
+                    href="{% url 'admin_panel' %}"
+                    class="header-button home-button"
+                >
+                    Главная
                 </a>
 
-
-                <!-- Выйти -->
-                <a href="{% url 'logout' %}"
-                   class="header-button logout-button">
-                    ↪
-                    <span>Выйти</span>
+                <a
+                    href="{% url 'logout' %}"
+                    class="header-button logout-button"
+                >
+                    ↪ Выйти
                 </a>
 
             </div>
@@ -62,35 +77,53 @@
 
     </header>
 
+
+    <!-- ================= NAVIGATION ================= -->
+
     <nav class="admin-nav">
 
+        <a href="{% url 'admin_panel' %}">
+            Главная
+        </a>
+
         <a href="{% url 'drivers_list' %}">
-            🚕 Водители
+            Водители
         </a>
 
         <a href="{% url 'clients_list' %}">
-            👥 Клиенты
+            Клиенты
         </a>
 
         <a href="{% url 'users_list' %}">
-            👤 Пользователи
+            Пользователи
         </a>
 
         <a href="{% url 'shifts_list' %}">
-            🕐 Смены
+            Смены
         </a>
 
-        <a href="{% url 'districts_list' %}">Районы</a> 
+        <a href="{% url 'districts_list' %}">
+            Районы
+        </a>
 
-        <a href="{% url 'streets_list' %}">Улицы</a>
+        <a href="{% url 'streets_list' %}">
+            Улицы
+        </a>
 
     </nav>
+
+
+    <!-- ================= CONTENT ================= -->
+
     <main class="admin-content">
 
         {% block content %}
         {% endblock %}
 
     </main>
+
+
+    <!-- ================= FOOTER ================= -->
 
     <footer class="admin-footer">
 
@@ -104,6 +137,7 @@
 
     </footer>
 
-</body>
+</div>
 
+</body>
 </html>

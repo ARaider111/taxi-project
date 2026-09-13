@@ -1,0 +1,152 @@
+.client-edit-page {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 32px 24px;
+    color: #f1f3f5;
+}
+
+.client-edit-header {
+    margin-bottom: 24px;
+}
+
+.client-edit-header h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.client-edit-subtitle {
+    margin: 0;
+    color: #858e98;
+    font-size: 14px;
+}
+
+.client-edit-back {
+    display: inline-flex;
+    margin-top: 14px;
+    color: #aeb5bd;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.2s ease;
+}
+
+.client-edit-back:hover {
+    color: #ffc107;
+}
+
+.client-edit-card {
+    background: #171b20;
+    border: 1px solid #292f36;
+    border-radius: 12px;
+    padding: 28px;
+}
+
+.client-edit-form {
+    width: 100%;
+}
+
+.client-edit-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.client-edit-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.client-edit-field label {
+    color: #e6e9ed;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.client-edit-field input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 11px 13px;
+    border: 1px solid #343b43;
+    border-radius: 7px;
+    background: #20252b;
+    color: #f1f3f5;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.client-edit-field input:focus {
+    border-color: #ffc107;
+    background: #242a30;
+}
+
+.client-edit-field input::placeholder {
+    color: #858e98;
+}
+
+.client-edit-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 28px;
+    padding-top: 22px;
+    border-top: 1px solid #292f36;
+}
+
+.client-edit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 120px;
+    padding: 11px 18px;
+    border-radius: 7px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s ease;
+}
+
+.client-edit-cancel {
+    background: #20252b;
+    color: #aeb5bd;
+    border: 1px solid #343b43;
+}
+
+.client-edit-cancel:hover {
+    background: #292f36;
+    color: #f1f3f5;
+}
+
+.client-edit-save {
+    background: #ffc107;
+    color: #111;
+}
+
+.client-edit-save:hover {
+    background: #ffca2c;
+}
+
+@media (max-width: 700px) {
+    .client-edit-page {
+        padding: 24px 16px;
+    }
+
+    .client-edit-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .client-edit-card {
+        padding: 20px;
+    }
+
+    .client-edit-footer {
+        flex-direction: column;
+    }
+
+    .client-edit-btn {
+        width: 100%;
+    }
+}

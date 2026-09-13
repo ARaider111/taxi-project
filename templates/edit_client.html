@@ -1,47 +1,88 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Редактировать клиента</title>
-</head>
-<body>
-    <h1>Редактировать клиента</h1>
-    <a href="{% url 'clients_list' %}">← Назад к панели</a>
+{% extends "base_admin.html" %}
+{% load static %}
 
-    <form method="post">
-        {% csrf_token %}
+{% block title %}Редактировать клиента{% endblock %}
 
-        <p>
-            <label>Фамилия:<br>
-                <input type="text" name="lname" required maxlength="128"
-                       value="{{ client.lname }}">
-            </label>
-        </p>
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/client_edit.css' %}">
 
-        <p>
-            <label>Имя:<br>
-                <input type="text" name="fname" required maxlength="128"
-                       value="{{ client.fname }}">
-            </label>
-        </p>
+<div class="client-edit-page">
 
-        <p>
-            <label>Отчество:<br>
-                <input type="text" name="patronimyc" maxlength="128"
-                       value="{{ client.patronimyc|default:'' }}">
-            </label>
-        </p>
+    <div class="client-edit-header">
+        <h1>Редактировать клиента</h1>
+        <p class="client-edit-subtitle">Изменение данных клиента</p>
 
-        <p>
-            <label>Телефон:<br>
-                <input type="text" name="phone" required maxlength="12"
-                       value="{{ client.phone }}">
-            </label>
-        </p>
+        <a href="{% url 'clients_list' %}" class="client-edit-back">
+            ← Назад к панели
+        </a>
+    </div>
 
-        <p>
-            <button type="submit">Сохранить</button>
-        </p>
-    </form>
-</body>
-</html>
+    <div class="client-edit-card">
+        <form method="post" class="client-edit-form">
+            {% csrf_token %}
+
+            <div class="client-edit-grid">
+
+                <div class="client-edit-field">
+                    <label for="lname">Фамилия</label>
+                    <input
+                        type="text"
+                        id="lname"
+                        name="lname"
+                        required
+                        maxlength="128"
+                        value="{{ client.lname }}"
+                    >
+                </div>
+
+                <div class="client-edit-field">
+                    <label for="fname">Имя</label>
+                    <input
+                        type="text"
+                        id="fname"
+                        name="fname"
+                        required
+                        maxlength="128"
+                        value="{{ client.fname }}"
+                    >
+                </div>
+
+                <div class="client-edit-field">
+                    <label for="patronimyc">Отчество</label>
+                    <input
+                        type="text"
+                        id="patronimyc"
+                        name="patronimyc"
+                        maxlength="128"
+                        value="{{ client.patronimyc|default:'' }}"
+                    >
+                </div>
+
+                <div class="client-edit-field">
+                    <label for="phone">Телефон</label>
+                    <input
+                        type="text"
+                        id="phone"
+                        name="phone"
+                        required
+                        maxlength="12"
+                        value="{{ client.phone }}"
+                    >
+                </div>
+
+            </div>
+
+            <div class="client-edit-footer">
+                <a href="{% url 'clients_list' %}" class="client-edit-btn client-edit-cancel">
+                    Отмена
+                </a>
+
+                <button type="submit" class="client-edit-btn client-edit-save">
+                    Сохранить
+                </button>
+            </div>
+        </form>
+    </div>
+
+</div>
+{% endblock %}
