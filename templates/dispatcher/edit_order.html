@@ -1,0 +1,82 @@
+{% extends "dispatcher/base_dispatcher.html" %}
+
+{% block title %}Редактировать заказ{% endblock %}
+
+{% block content %}
+
+<h1>Редактировать заказ {{ order.order_number }}</h1>
+<p><a href="{% url 'dispatcher_orders_list' %}">← Назад к списку</a></p>
+
+<form method="post">
+    {% csrf_token %}
+
+    <p>
+        <label>Клиент:<br>
+            <select name="client" required>
+                <option value="">Выберите клиента</option>
+                {% for c in clients %}
+                <option value="{{ c.client_id }}" {% if order.client.client_id == c.client_id %}selected{% endif %}>
+                    {{ c.lname }} {{ c.fname }} ({{ c.phone }})
+                </option>
+                {% endfor %}
+            </select>
+        </label>
+    </p>
+
+    <p>
+        <label>Улица откуда:<br>
+            <select name="street_from" required>
+                <option value="">Выберите улицу</option>
+                {% for s in streets %}
+                <option value="{{ s.street_id }}" {% if order.street_from.street_id == s.street_id %}selected{% endif %}>
+                    {{ s.name }} ({{ s.district.name }}, коэф. {{ s.district.base_coefficient }})
+                </option>
+                {% endfor %}
+            </select>
+        </label>
+    </p>
+
+    <p>
+        <label>Номер дома (откуда):<br>
+            <input type="text" name="house_from" value="{{ order.house_from }}" max_length="6" required>
+        </label>
+    </p>
+
+    <p>
+        <label>Улица куда:<br>
+            <select name="street_to" required>
+                <option value="">Выберите улицу</option>
+                {% for s in streets %}
+                <option value="{{ s.street_id }}" {% if order.street_to.street_id == s.street_id %}selected{% endif %}>
+                    {{ s.name }} ({{ s.district.name }}, коэф. {{ s.district.base_coefficient }})
+                </option>
+                {% endfor %}
+            </select>
+        </label>
+    </p>
+
+    <p>
+        <label>Номер дома (куда):<br>
+            <input type="text" name="house_to" value="{{ order.house_to }}" max_length="6" required>
+        </label>
+    </p>
+
+    <p>
+        <label>Тариф:<br>
+            <select name="tariff" required>
+                <option value="">Выберите тариф</option>
+                {% for t in tariffs %}
+                <option value="{{ t.tariff_id }}" {% if order.tariff.tariff_id == t.tariff_id %}selected{% endif %}>
+                    {{ t.name }} — {{ t.price }} руб.
+                </option>
+                {% endfor %}
+            </select>
+        </label>
+    </p>
+
+    <p>
+        <button type="submit">Сохранить</button>
+    </p>
+</form>
+
+{% endblock %}

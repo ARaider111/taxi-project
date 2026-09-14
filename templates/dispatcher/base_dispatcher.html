@@ -45,7 +45,7 @@
 
             <div class="header-buttons">
 
-                <a href="{% url 'admin_panel' %}"
+                <a href="{% url 'dispatcher_dashboard' %}"
                    class="header-button home-button">
                     Главная
                 </a>
@@ -71,24 +71,16 @@
             Водители
         </a>
 
-        <a href="{% url 'clients_list' %}">
+        <a href="{% url 'dispatcher_clients' %}">
             Клиенты
         </a>
 
-        <a href="{% url 'users_list' %}">
-            Пользователи
-        </a>
-
-        <a href="{% url 'shifts_list' %}">
+        <a href="{% url 'dispatcher_shifts' %}">
             Смены
         </a>
 
-        <a href="{% url 'districts_list' %}">
-            Районы
-        </a>
-
-        <a href="{% url 'streets_list' %}">
-            Улицы
+        <a href="{% url 'dispatcher_orders_list' %}">
+            Заказы
         </a>
 
     </nav>
@@ -105,7 +97,7 @@
         </span>
 
         <span>
-            Панель администратора · 2026
+            Панель диспетчера · 2026
         </span>
 
     </footer>

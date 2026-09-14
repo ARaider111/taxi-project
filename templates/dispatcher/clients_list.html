@@ -18,6 +18,7 @@
     <tr>
         <th>Фамилия</th>
         <th>Имя</th>
+        <th>Отчество</th>
         <th>Телефон</th>
         <th>Чёрный список</th>
         <th>Действия</th>
@@ -26,6 +27,7 @@
     <tr>
         <td>{{ c.lname }}</td>
         <td>{{ c.fname }}</td>
+        <td>{{ c.patronimyc|default:"—" }}</td>
         <td>{{ c.phone }}</td>
         <td>{{ c.is_blacklist|yesno:"Да,Нет" }}</td>
         <td>

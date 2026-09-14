@@ -1,0 +1,175 @@
+{% extends "dispatcher/base_dispatcher.html" %}
+{% load static %}
+
+{% block title %}Заказы{% endblock %}
+
+{% block content %}
+
+<link rel="stylesheet" href="{% static 'css/orders_list.css' %}">
+
+<div class="orders-page">
+
+    <h1>Заказы</h1>
+
+    <a href="{% url 'dispatcher_add_order' %}" class="orders-add">
+        Добавить заказ
+    </a>
+
+    <form method="get" class="orders-filters">
+
+        <div class="order-filter">
+            <label for="q">Поиск:</label>
+            <input
+                type="text"
+                name="q"
+                id="q"
+                value="{{ query }}"
+                placeholder="Клиент, телефон, номер заказа"
+            >
+        </div>
+
+        <div class="order-filter">
+            <label for="status">Статус:</label>
+            <select name="status" id="status">
+                <option value="">Все</option>
+                {% for value, label in status_choices %}
+                <option value="{{ value }}" {% if current_status == value %}selected{% endif %}>
+                    {{ label }}
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="order-search">
+            Найти
+        </button>
+
+        <a href="{% url 'dispatcher_orders_list' %}" class="order-reset">
+            Сбросить
+        </a>
+
+    </form>
+
+    <div class="orders-table-container">
+
+        <table class="orders-table">
+
+            <thead>
+                <tr>
+                    <th>Номер</th>
+                    <th>Клиент</th>
+                    <th>Водитель</th>
+                    <th>Откуда</th>
+                    <th>Куда</th>
+                    <th>Цена</th>
+                    <th>Статус</th>
+                    <th>Время создания</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for o in orders %}
+
+                <tr>
+
+                    <td><strong>{{ o.order_number }}</strong></td>
+
+                    <td>
+                        {{ o.client.lname }} {{ o.client.fname }}
+                    </td>
+
+                    <td>
+                        {% if o.driver %}
+                            {{ o.driver.lname }} {{ o.driver.fname }}
+                        {% else %}
+                            —
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {{ o.street_from.name }}, д. {{ o.house_from }}
+                    </td>
+
+                    <td>
+                        {{ o.street_to.name }}, д. {{ o.house_to }}
+                    </td>
+
+                    <td>{{ o.price }}</td>
+
+                    <td>
+                        {% if o.status == "Новый" %}
+                            <span class="status-new">{{ o.status }}</span>
+                        {% elif o.status == "Назначен водитель" %}
+                            <span class="status-assigned">{{ o.status }}</span>
+                        {% elif o.status == "В работе" %}
+                            <span class="status-progress">{{ o.status }}</span>
+                        {% elif o.status == "Завершен" %}
+                            <span class="status-completed">{{ o.status }}</span>
+                        {% elif o.status == "Отменен" %}
+                            <span class="status-cancelled">{{ o.status }}</span>
+                        {% endif %}
+                    </td>
+
+                    <td>{{ o.created_at|date:"d.m.Y H:i" }}</td>
+
+                    <td>
+
+                        <div class="order-actions">
+
+                            {% if o.status != "Завершен" %}
+                            <a
+                                href="{% url 'dispatcher_edit_order' o.order_id %}"
+                                class="order-action order-action-edit"
+                            >
+                                Редактировать
+                            </a>
+
+                            {% if not o.driver %}
+                            <a
+                                href="{% url 'dispatcher_assign_driver' o.order_id %}"
+                                class="order-action order-action-assign"
+                            >
+                                Назначить водителя
+                            </a>
+                            {% endif %}
+
+                            {% if o.driver and o.status != "Завершен" %}
+                            <a
+                                href="{% url 'dispatcher_complete_order' o.order_id %}"
+                                class="order-action order-action-complete"
+                                onclick="return confirm('Завершить заказ?')"
+                            >
+                                Завершить
+                            </a>
+                            {% endif %}
+                            {% else %}
+                            <span class="order-completed">Завершён</span>
+                            {% endif %}
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+                {% empty %}
+
+                <tr>
+                    <td colspan="9" class="orders-empty">
+                        Нет заказов
+                    </td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

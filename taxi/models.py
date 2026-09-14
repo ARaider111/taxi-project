@@ -240,3 +240,122 @@ class Tariff(models.Model):
         """Возвращает строку с днями недели."""
         days = self.get_days_list()
         return ", ".join(days) if days else "Нет дней"
+
+
+class Order(models.Model):
+    order_id = models.AutoField("ID", primary_key=True)
+
+    order_number = models.CharField(
+        "Номер заказа",
+        max_length=16,
+        unique=True,
+        editable=False,
+    )
+
+    client = models.ForeignKey(
+        Client,
+        on_delete=models.CASCADE,
+        db_column="fk_client_id",
+        related_name="orders",
+        verbose_name="Клиент",
+    )
+
+    street_from = models.ForeignKey(
+        Street,
+        on_delete=models.CASCADE,
+        db_column="street_from",
+        related_name="orders_from",
+        verbose_name="Улица откуда",
+    )
+
+    house_from = models.CharField("Номер дома (откуда)", max_length=6)
+
+    street_to = models.ForeignKey(
+        Street,
+        on_delete=models.CASCADE,
+        db_column="street_to",
+        related_name="orders_to",
+        verbose_name="Улица куда",
+    )
+
+    house_to = models.CharField("Номер дома (куда)", max_length=6)
+
+    tariff = models.ForeignKey(
+        Tariff,
+        on_delete=models.CASCADE,
+        db_column="fk_tariff_id",
+        related_name="orders",
+        verbose_name="Тариф",
+    )
+
+    driver = models.ForeignKey(
+        Driver,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        db_column="fk_driver_id",
+        related_name="orders",
+        verbose_name="Водитель",
+    )
+
+    price = models.DecimalField(
+        "Цена",
+        max_digits=5,
+        decimal_places=2,
+    )
+
+    STATUS_CHOICES = [
+        ("Новый", "Новый"),
+        ("Назначен водитель", "Назначен водитель"),
+        ("В работе", "В работе"),
+        ("Завершен", "Завершен"),
+        ("Отменен", "Отменен"),
+    ]
+    status = models.CharField(
+        "Статус",
+        max_length=32,
+        choices=STATUS_CHOICES,
+        default="Новый",
+    )
+
+    created_at = models.DateTimeField(
+        "Время создания",
+        auto_now_add=True,
+    )
+
+    completed_at = models.DateTimeField(
+        "Время завершения",
+        null=True,
+        blank=True,
+    )
+
+
+    created_by = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        related_name="created_orders",
+        verbose_name="Создал пользователь",
+    )
+
+    class Meta:
+        db_table = "orders"
+        verbose_name = "Заказ"
+        verbose_name_plural = "Заказы"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"Заказ #{self.order_number} ({self.client})"
+
+    def save(self, *args, **kwargs):
+        if not self.order_number:
+            last_order = Order.objects.order_by("-order_id").first()
+            if last_order and last_order.order_number:
+                last_num = int(last_order.order_number.split("-")[1])
+                new_num = last_num + 1
+            else:
+                new_num = 1
+            self.order_number = f"TAX-{new_num:06d}"
+        
+        super().save(*args, **kwargs)
+
+

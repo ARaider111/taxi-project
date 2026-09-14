@@ -4,10 +4,11 @@ from taxi.views import (
      admin_panel, CustomLoginView, add_driver, add_client, add_user, edit_driver, edit_client, edit_shift,
     edit_user, toggle_driver_archive, toggle_user_archive, drivers_list, clients_list, users_list, shifts_list, add_shift,
     logout_view, districts_list, edit_district, add_district, streets_list, add_street, edit_street, toggle_driver_blacklist,
-    toggle_client_blacklist, tariffs_list, add_tariff, edit_tariff, toggle_tariff_archive)
+    toggle_client_blacklist, tariffs_list, add_tariff, edit_tariff, toggle_tariff_archive, edit_order, orders_list)
 from taxi.views.dispatcher_views import (
      dispatcher_dashboard, dispatcher_drivers, dispatcher_clients, dispatcher_shifts, dispatcher_add_client,
-    dispatcher_edit_client,  dispatcher_open_shift, dispatcher_close_shift,)
+    dispatcher_edit_client,  dispatcher_open_shift, dispatcher_close_shift,  dispatcher_orders_list, dispatcher_add_order, dispatcher_edit_order,
+    dispatcher_assign_driver, dispatcher_complete_order)
 
 urlpatterns = [
     path(
@@ -59,6 +60,10 @@ urlpatterns = [
     path("tariffs/<int:tariff_id>/edit/", edit_tariff, name="edit_tariff"),
     path("tariffs/<int:tariff_id>/toggle-archive/", toggle_tariff_archive, name="toggle_tariff_archive"),
 
+    # Заказы
+    path("orders/", orders_list, name="orders_list"),
+    path("orders/<int:order_id>/edit/", edit_order, name="edit_order"),
+
 
     # Диспетчер
     path("dashboard/", dispatcher_dashboard, name="dispatcher_dashboard"),
@@ -69,5 +74,10 @@ urlpatterns = [
     path("dashboard/shifts/", dispatcher_shifts, name="dispatcher_shifts"),
     path("dashboard/shifts/<int:shift_id>/open/", dispatcher_open_shift, name="dispatcher_open_shift",),
     path("dashboard/shifts/<int:shift_id>/close/", dispatcher_close_shift, name="dispatcher_close_shift",),
+    path("dashboard/orders/", dispatcher_orders_list, name="dispatcher_orders_list"),
+    path("dashboard/orders/add/", dispatcher_add_order, name="dispatcher_add_order"),
+    path("dashboard/orders/<int:order_id>/edit/", dispatcher_edit_order, name="dispatcher_edit_order"),
+    path("dashboard/orders/<int:order_id>/assign-driver/", dispatcher_assign_driver, name="dispatcher_assign_driver"),
+    path("dashboard/orders/<int:order_id>/complete/", dispatcher_complete_order, name="dispatcher_complete_order"),
 
 ]

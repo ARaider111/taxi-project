@@ -84,6 +84,7 @@
                 <tr>
                     <th>Фамилия</th>
                     <th>Имя</th>
+                    <th>Отчество</th>
                     <th>Телефон</th>
                     <th>Авто</th>
                     <th>Номер</th>
@@ -103,6 +104,8 @@
                     <td>{{ d.lname }}</td>
 
                     <td>{{ d.fname }}</td>
+
+                    <td>{{ d.patronimyc|default:"—" }}</td>
 
                     <td>{{ d.phone }}</td>
 

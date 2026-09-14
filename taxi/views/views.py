@@ -2,17 +2,25 @@ from django.http import HttpResponse
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from taxi.models import User, Driver, Client, Shift, District, Street, Tariff
+from taxi.models import User, Driver, Client, Shift, District, Street, Tariff, Order
 from django.contrib.auth import logout
 from django.db.models import Q
+from django.db import models
+from django.utils import timezone
+
 
 class CustomLoginView(LoginView):
     template_name = "login.html"
 
     def form_valid(self, form):
-        login_result = super().form_valid(form)
-        user = self.request.user
+        user = form.get_user()
 
+        if hasattr(user, "is_archive") and user.is_archive:
+            form.add_error(None, "Пользователь находится в архиве и не может войти")
+            return self.form_invalid(form)
+
+        login_result = super().form_valid(form)
+        
         if hasattr(user, "role") and user.role == "admin":
             return redirect("admin_panel")
 
@@ -612,3 +620,119 @@ def toggle_tariff_archive(request, tariff_id):
 
     return redirect("tariffs_list")
 
+
+@login_required
+def orders_list(request):
+    if not hasattr(request.user, "role") or request.user.role != "admin":
+        return HttpResponse("Доступ запрещён", status=403)
+
+    query = request.GET.get("q", "")
+    status_filter = request.GET.get("status", "")
+    driver_filter = request.GET.get("driver", "")
+    date_from = request.GET.get("date_from", "")
+    date_to = request.GET.get("date_to", "")
+
+    orders = Order.objects.select_related(
+        "client", "driver", "tariff", "street_from", "street_to", "created_by"
+    ).all()
+
+    if query:
+        orders = orders.filter(
+            models.Q(client__lname__icontains=query) |
+            models.Q(client__fname__icontains=query) |
+            models.Q(client__phone__icontains=query) |
+            models.Q(order_number__icontains=query)
+        )
+
+    if status_filter:
+        orders = orders.filter(status=status_filter)
+
+    if driver_filter:
+        orders = orders.filter(driver_id=driver_filter)
+
+    if date_from:
+        orders = orders.filter(created_at__date__gte=date_from)
+    if date_to:
+        orders = orders.filter(created_at__date__lte=date_to)
+
+    drivers = Driver.objects.filter(is_archive=False)
+
+    context = {
+        "orders": orders,
+        "query": query,
+        "current_status": status_filter,
+        "current_driver": driver_filter,
+        "date_from": date_from,
+        "date_to": date_to,
+        "status_choices": Order.STATUS_CHOICES,
+        "drivers": drivers,
+    }
+
+    return render(request, "orders_list.html", context)
+
+@login_required
+def edit_order(request, order_id):
+    if not hasattr(request.user, "role") or request.user.role != "admin":
+        return HttpResponse("Доступ запрещён", status=403)
+
+    order = Order.objects.select_related(
+        "client", "driver", "tariff", "street_from", "street_to"
+    ).get(pk=order_id)
+
+    if request.method == "POST":
+        action = request.POST.get("action")
+
+        if action == "assign_driver":
+            driver_id = request.POST.get("driver")
+            if driver_id:
+                order.driver = Driver.objects.get(pk=driver_id)
+                if order.status == "Новый":
+                    order.status = "Назначен водитель"
+                order.save()
+            return redirect("orders_list")
+
+        elif action == "complete":
+            order.status = "Завершен"
+            order.completed_at = timezone.now()
+            order.save()
+            return redirect("orders_list")
+
+        elif action == "cancel":
+            order.status = "Отменен"
+            order.save()
+            return redirect("orders_list")
+
+        client_id = request.POST.get("client")
+        street_from_id = request.POST.get("street_from")
+        house_from = request.POST.get("house_from")
+        street_to_id = request.POST.get("street_to")
+        house_to = request.POST.get("house_to")
+        tariff_id = request.POST.get("tariff")
+
+        order.client = Client.objects.get(pk=client_id)
+        order.street_from = Street.objects.select_related("district").get(pk=street_from_id)
+        order.house_from = house_from
+        order.street_to = Street.objects.select_related("district").get(pk=street_to_id)
+        order.house_to = house_to
+        order.tariff = Tariff.objects.get(pk=tariff_id)
+
+        
+        coef_from = order.street_from.district.base_coefficient
+        coef_to = order.street_to.district.base_coefficient
+        order.price = order.tariff.price * ((coef_from + coef_to) / 2)
+
+        order.save()
+        return redirect("orders_list")
+
+    clients = Client.objects.all()
+    streets = Street.objects.select_related("district").all()
+    tariffs = Tariff.objects.filter(is_archive=False)
+    drivers = Driver.objects.filter(is_archive=False)
+
+    return render(request, "edit_order.html", {
+        "order": order,
+        "clients": clients,
+        "streets": streets,
+        "tariffs": tariffs,
+        "drivers": drivers,
+    })

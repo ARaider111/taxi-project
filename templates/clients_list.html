@@ -59,6 +59,7 @@
                 <tr>
                     <th>Фамилия</th>
                     <th>Имя</th>
+                    <th>Отчество</th>
                     <th>Телефон</th>
                     <th>Чёрный список</th>
                     <th>Действия</th>
@@ -74,6 +75,8 @@
                     <td>{{ c.lname }}</td>
 
                     <td>{{ c.fname }}</td>
+
+                    <td>{{ c.patronimyc|default:"—" }}</td>
 
                     <td>{{ c.phone }}</td>
 

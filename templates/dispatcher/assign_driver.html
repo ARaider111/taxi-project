@@ -1,0 +1,31 @@
+{% extends "dispatcher/base_dispatcher.html" %}
+
+{% block title %}Назначить водителя{% endblock %}
+
+{% block content %}
+
+<h1>Назначить водителя на заказ {{ order.order_number }}</h1>
+<p><a href="{% url 'dispatcher_orders_list' %}">← Назад к списку</a></p>
+
+<form method="post">
+    {% csrf_token %}
+
+    <p>
+        <label>Водитель:<br>
+            <select name="driver" required>
+                <option value="">Выберите водителя</option>
+                {% for d in drivers %}
+                <option value="{{ d.driver_id }}">
+                    {{ d.lname }} {{ d.fname }} ({{ d.car_model }} {{ d.car_number }})
+                </option>
+                {% endfor %}
+            </select>
+        </label>
+    </p>
+
+    <p>
+        <button type="submit">Назначить</button>
+    </p>
+</form>
+
+{% endblock %}

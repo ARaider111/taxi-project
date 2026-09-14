@@ -26,6 +26,7 @@
     <tr>
         <th>Фамилия</th>
         <th>Имя</th>
+        <th>Отчество</th>
         <th>Телефон</th>
         <th>Авто</th>
         <th>Номер</th>
@@ -36,6 +37,7 @@
     <tr>
         <td>{{ d.lname }}</td>
         <td>{{ d.fname }}</td>
+        <td>{{ d.patronimyc|default_if_none:"—" }}</td>
         <td>{{ d.phone }}</td>
         <td>{{ d.car_model }}</td>
         <td>{{ d.car_number }}</td>
