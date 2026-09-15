@@ -29,7 +29,6 @@
 </form>
 <table border="1" cellpadding="6">
     <tr>
-        <th>ID</th>
         <th>Водитель</th>
         <th>Начало</th>
         <th>Конец</th>
@@ -38,7 +37,6 @@
     </tr>
     {% for s in shifts %}
     <tr>
-        <td>{{ s.shift_id }}</td>
         <td>{{ s.driver.lname }} {{ s.driver.fname }}</td>
         <td>{{ s.start_shift|date:"d.m.Y H:i" }}</td>
         <td>{{ s.end_shift|date:"d.m.Y H:i" }}</td>

@@ -6,6 +6,7 @@ from django.contrib.auth import logout
 from django.utils import timezone
 from django.db.models import Q
 from django.db import models
+from taxi.utils import log_action
 
 @login_required
 def dispatcher_dashboard(request):
@@ -113,12 +114,21 @@ def dispatcher_add_client(request):
         patronimyc = request.POST.get("patronimyc") or None
         phone = request.POST.get("phone")
 
-        Client.objects.create(
+        client = Client.objects.create(
             lname=lname,
             fname=fname,
             patronimyc=patronimyc,
             phone=phone,
             is_blacklist=False,
+        )
+
+        log_action(
+            user=request.user,
+            action="CREATE",
+            object_type="Client",
+            object_id=client.client_id,
+            description=f"Создан клиент {client.lname} {client.fname}",
+            ip_address=request.META.get("REMOTE_ADDR"),
         )
         return redirect("dispatcher_clients")
 
@@ -133,11 +143,28 @@ def dispatcher_edit_client(request, client_id):
     client = Client.objects.get(pk=client_id)
 
     if request.method == "POST":
+        old_data = {
+            "lname": client.lname,
+            "fname": client.fname,
+            "patronimyc": client.patronimyc,
+            "phone": client.phone,
+        }
+
         client.lname = request.POST.get("lname")
         client.fname = request.POST.get("fname")
         client.patronimyc = request.POST.get("patronimyc") or None
         client.phone = request.POST.get("phone")
         client.save()
+
+        log_action(
+            user=request.user,
+            action="UPDATE",
+            object_type="Client",
+            object_id=client.client_id,
+            description=f"Изменены данные клиента {client.lname} {client.fname}",
+            extra_data={"old_data": old_data},
+            ip_address=request.META.get("REMOTE_ADDR"),
+        )
         return redirect("dispatcher_clients")
 
     return render(request, "dispatcher/edit_client.html", {"client": client})
@@ -154,6 +181,15 @@ def dispatcher_open_shift(request, shift_id):
         shift.opened_user = request.user
         shift.save()
 
+        log_action(
+            user=request.user,
+            action="UPDATE",
+            object_type="Shift",
+            object_id=shift.shift_id,
+            description=f"Открыта смена {shift.shift_id} для водителя {shift.driver}",
+            ip_address=request.META.get("REMOTE_ADDR"),
+        )
+
     return redirect("dispatcher_shifts")
 
 
@@ -168,6 +204,15 @@ def dispatcher_close_shift(request, shift_id):
         shift.end_shift = timezone.now()
         shift.closed_user = request.user
         shift.save()
+
+        log_action(
+            user=request.user,
+            action="UPDATE",
+            object_type="Shift",
+            object_id=shift.shift_id,
+            description=f"Закрыта смена {shift.shift_id} для водителя {shift.driver}",
+            ip_address=request.META.get("REMOTE_ADDR"),
+        )
 
     return redirect("dispatcher_shifts")
 
@@ -241,6 +286,15 @@ def dispatcher_add_order(request):
             status="Новый",
         )
 
+        log_action(
+            user=request.user,
+            action="CREATE",
+            object_type="Order",
+            object_id=order.order_id,
+            description=f"Создан заказ {order.order_number} для клиента {client}",
+            ip_address=request.META.get("REMOTE_ADDR"),
+        )
+
         return redirect("orders_list")
 
    
@@ -268,6 +322,16 @@ def dispatcher_edit_order(request, order_id):
         return HttpResponse("Нельзя редактировать завершённый заказ", status=403)
 
     if request.method == "POST":
+        old_data = {
+            "client": str(order.client),
+            "street_from": str(order.street_from),
+            "house_from": order.house_from,
+            "street_to": str(order.street_to),
+            "house_to": order.house_to,
+            "tariff": str(order.tariff),
+            "price": str(order.price),
+        }
+         
         client_id = request.POST.get("client")
         street_from_id = request.POST.get("street_from")
         house_from = request.POST.get("house_from")
@@ -287,6 +351,16 @@ def dispatcher_edit_order(request, order_id):
         order.price = order.tariff.price * ((coef_from + coef_to) / 2)
 
         order.save()
+        log_action(
+            user=request.user,
+            action="UPDATE",
+            object_type="Order",
+            object_id=order.order_id,
+            description=f"Изменены данные заказа {order.order_number}",
+            extra_data={"old_data": old_data},
+            ip_address=request.META.get("REMOTE_ADDR"),
+        )
+
         return redirect("orders_list")
 
     clients = Client.objects.all()
@@ -315,9 +389,19 @@ def dispatcher_assign_driver(request, order_id):
         driver_id = request.POST.get("driver")
         driver = Driver.objects.get(pk=driver_id)
 
+        old_driver = order.driver
         order.driver = driver
         order.status = "Назначен водитель"
         order.save()
+        log_action(
+            user=request.user,
+            action="ASSIGN_DRIVER",
+            object_type="Order",
+            object_id=order.order_id,
+            description=f"Назначен водитель {order.driver} на заказ {order.order_number}",
+            extra_data={"old_driver": str(old_driver), "new_driver": str(order.driver)},
+            ip_address=request.META.get("REMOTE_ADDR"),
+        )
 
         return redirect("orders_list")
 
@@ -343,5 +427,14 @@ def dispatcher_complete_order(request, order_id):
     order.status = "Завершен"
     order.completed_at = timezone.now()
     order.save()
+
+    log_action(
+        user=request.user,
+        action="COMPLETE_ORDER",
+        object_type="Order",
+        object_id=order.order_id,
+        description=f"Заказ {order.order_number} завершён",
+        ip_address=request.META.get("REMOTE_ADDR"),
+    )
 
     return redirect("orders_list")

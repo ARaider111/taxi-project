@@ -4,7 +4,7 @@ from taxi.views import (
      admin_panel, CustomLoginView, add_driver, add_client, add_user, edit_driver, edit_client, edit_shift,
     edit_user, toggle_driver_archive, toggle_user_archive, drivers_list, clients_list, users_list, shifts_list, add_shift,
     logout_view, districts_list, edit_district, add_district, streets_list, add_street, edit_street, toggle_driver_blacklist,
-    toggle_client_blacklist, tariffs_list, add_tariff, edit_tariff, toggle_tariff_archive, edit_order, orders_list)
+    toggle_client_blacklist, tariffs_list, add_tariff, edit_tariff, toggle_tariff_archive, edit_order, orders_list, audit_logs_list)
 from taxi.views.dispatcher_views import (
      dispatcher_dashboard, dispatcher_drivers, dispatcher_clients, dispatcher_shifts, dispatcher_add_client,
     dispatcher_edit_client,  dispatcher_open_shift, dispatcher_close_shift,  dispatcher_orders_list, dispatcher_add_order, dispatcher_edit_order,
@@ -21,6 +21,7 @@ urlpatterns = [
     # Админ‑панель 
     path("admin/", admin_panel, name="admin_panel"),
 
+    path("admin/audit-logs/", audit_logs_list, name="audit_logs_list"),
     # Водители
     path("drivers/", drivers_list, name="drivers_list"),
     path("drivers/add/", add_driver, name="add_driver"),
@@ -79,5 +80,4 @@ urlpatterns = [
     path("dashboard/orders/<int:order_id>/edit/", dispatcher_edit_order, name="dispatcher_edit_order"),
     path("dashboard/orders/<int:order_id>/assign-driver/", dispatcher_assign_driver, name="dispatcher_assign_driver"),
     path("dashboard/orders/<int:order_id>/complete/", dispatcher_complete_order, name="dispatcher_complete_order"),
-
 ]

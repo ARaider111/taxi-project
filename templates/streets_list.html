@@ -15,14 +15,12 @@
 </form>
 <table border="1" cellpadding="6">
     <tr>
-        <th>ID</th>
         <th>Название</th>
         <th>Район</th>
         <th>Действия</th>
     </tr>
     {% for s in streets %}
     <tr>
-        <td>{{ s.street_id }}</td>
         <td>{{ s.name }}</td>
         <td>{{ s.district.name }}</td>
         <td>

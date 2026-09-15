@@ -8,7 +8,6 @@
 </p>
 <table border="1" cellpadding="6">
     <tr>
-        <th>ID</th>
         <th>Название</th>
         <th>Цена</th>
         <th>Время с</th>
@@ -19,7 +18,6 @@
     </tr>
     {% for t in tariffs %}
     <tr>
-        <td>{{ t.tariff_id }}</td>
         <td>{{ t.name }}</td>
         <td>{{ t.price }}</td>
         <td>{{ t.time_from|date:"H:i" }}</td>

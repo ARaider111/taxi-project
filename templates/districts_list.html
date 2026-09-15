@@ -21,7 +21,6 @@
         <table class="districts-table">
             <thead>
                 <tr>
-                    <th>ID</th>
                     <th>Название</th>
                     <th>Базовый коэффициент</th>
                     <th>Действия</th>
@@ -31,7 +30,6 @@
             <tbody>
                 {% for d in districts %}
                 <tr>
-                    <td class="district-id">{{ d.district_id }}</td>
                     <td>{{ d.name }}</td>
                     <td class="district-coefficient">{{ d.base_coefficient }}</td>
                     <td>

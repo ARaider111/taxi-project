@@ -2,12 +2,12 @@ from django.http import HttpResponse
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from taxi.models import User, Driver, Client, Shift, District, Street, Tariff, Order
+from taxi.models import User, Driver, Client, Shift, District, Street, Tariff, Order, AuditLog
 from django.contrib.auth import logout
 from django.db.models import Q
 from django.db import models
 from django.utils import timezone
-
+from taxi.utils import log_action 
 
 class CustomLoginView(LoginView):
     template_name = "login.html"
@@ -20,6 +20,13 @@ class CustomLoginView(LoginView):
             return self.form_invalid(form)
 
         login_result = super().form_valid(form)
+
+        log_action(
+            user=user,
+            action="LOGIN",
+            description=f"Вход в систему: {user.login}",
+            ip_address=self.request.META.get("REMOTE_ADDR"),
+        )
         
         if hasattr(user, "role") and user.role == "admin":
             return redirect("admin_panel")
@@ -204,7 +211,7 @@ def add_driver(request):
         car_model = request.POST.get("car_model")
         car_number = request.POST.get("car_number")
 
-        Driver.objects.create(
+        driver = Driver.objects.create(
             lname=lname,
             fname=fname,
             patronimyc=patronimyc,
@@ -213,6 +220,15 @@ def add_driver(request):
             car_number=car_number,
             status="Вне работы",
             is_blacklist=False,
+        )
+
+        log_action(
+            user=request.user,
+            action="CREATE",
+            object_type="Driver",
+            object_id=driver.driver_id,
+            description=f"Создан водитель {driver.lname} {driver.fname}",
+            ip_address=request.META.get("REMOTE_ADDR"),
         )
         return redirect("drivers_list")
 
@@ -226,6 +242,16 @@ def edit_driver(request, driver_id):
     driver = Driver.objects.get(pk=driver_id)
 
     if request.method == "POST":
+        old_data = {
+            "lname": driver.lname,
+            "fname": driver.fname,
+            "patronimyc": driver.patronimyc,
+            "phone": driver.phone,
+            "car_model": driver.car_model,
+            "car_number": driver.car_number,
+            "status": driver.status,
+        }
+
         driver.lname = request.POST.get("lname")
         driver.fname = request.POST.get("fname")
         driver.patronimyc = request.POST.get("patronimyc") or None
@@ -234,6 +260,16 @@ def edit_driver(request, driver_id):
         driver.car_number = request.POST.get("car_number")
         driver.status = request.POST.get("status", driver.status)
         driver.save()
+
+        log_action(
+            user=request.user,
+            action="UPDATE",
+            object_type="Driver",
+            object_id=driver.driver_id,
+            description=f"Изменены данные водителя {driver.lname} {driver.fname}",
+            extra_data={"old_data": old_data},
+            ip_address=request.META.get("REMOTE_ADDR"),
+        )
         return redirect("drivers_list")
 
     return render(request, "edit_driver.html", {"driver": driver})
@@ -244,8 +280,19 @@ def toggle_driver_archive(request, driver_id):
         return HttpResponse("Доступ запрещён", status=403)
 
     driver = Driver.objects.get(pk=driver_id)
+    old_archive = driver.is_archive
     driver.is_archive = not driver.is_archive  
     driver.save()
+
+    log_action(
+        user=request.user,
+        action="TOGGLE_ARCHIVE",
+        object_type="Driver",
+        object_id=driver.driver_id,
+        description=f"Архивирование водителя {driver.lname} {driver.fname} ({'в архив' if driver.is_archive else 'из архива'})",
+        extra_data={"old_archive": old_archive, "new_archive": driver.is_archive},
+        ip_address=request.META.get("REMOTE_ADDR"),
+    )
 
     return redirect("drivers_list")
 
@@ -255,8 +302,19 @@ def toggle_driver_blacklist(request, driver_id):
         return HttpResponse("Доступ запрещён", status=403)
 
     driver = Driver.objects.get(pk=driver_id)
+    old_blacklist = driver.is_blacklist
     driver.is_blacklist = not driver.is_blacklist
     driver.save()
+
+    log_action(
+        user=request.user,
+        action="TOGGLE_BLACKLIST",
+        object_type="Driver",
+        object_id=driver.driver_id,
+        description=f"Чёрный список водителя {driver.lname} {driver.fname} ({'добавлен' if driver.is_blacklist else 'убран'})",
+        extra_data={"old_blacklist": old_blacklist, "new_blacklist": driver.is_blacklist},
+        ip_address=request.META.get("REMOTE_ADDR"),
+    )
 
     return redirect("drivers_list")
 
@@ -271,14 +329,24 @@ def add_client(request):
         patronimyc = request.POST.get("patronimyc") or None
         phone = request.POST.get("phone")
 
-        Client.objects.create(
+        client = Client.objects.create(
             lname=lname,
             fname=fname,
             patronimyc=patronimyc,
             phone=phone,
             is_blacklist=False,  
         )
+
+        log_action(
+            user=request.user,
+            action="CREATE",
+            object_type="Client",
+            object_id=client.client_id,
+            description=f"Создан клиент {client.lname} {client.fname}",
+            ip_address=request.META.get("REMOTE_ADDR"),
+        )
         return redirect("clients_list")
+
 
     return render(request, "add_client.html")
 
@@ -290,11 +358,28 @@ def edit_client(request, client_id):
     client = Client.objects.get(pk=client_id)
 
     if request.method == "POST":
+        old_data = {
+            "lname": client.lname,
+            "fname": client.fname,
+            "patronimyc": client.patronimyc,
+            "phone": client.phone,
+        }
+
         client.lname = request.POST.get("lname")
         client.fname = request.POST.get("fname")
         client.patronimyc = request.POST.get("patronimyc") or None
         client.phone = request.POST.get("phone")
         client.save()
+
+        log_action(
+            user=request.user,
+            action="UPDATE",
+            object_type="Client",
+            object_id=client.client_id,
+            description=f"Изменены данные клиента {client.lname} {client.fname}",
+            extra_data={"old_data": old_data},
+            ip_address=request.META.get("REMOTE_ADDR"),
+        )
         return redirect("clients_list")
 
     return render(request, "edit_client.html", {"client": client})
@@ -306,9 +391,19 @@ def toggle_client_blacklist(request, client_id):
         return HttpResponse("Доступ запрещён", status=403)
 
     client = Client.objects.get(pk=client_id)
+    old_blacklist = client.is_blacklist
     client.is_blacklist = not client.is_blacklist
     client.save()
 
+    log_action(
+        user=request.user,
+        action="TOGGLE_BLACKLIST",
+        object_type="Client",
+        object_id=client.client_id,
+        description=f"Чёрный список клиента {client.lname} {client.fname} ({'добавлен' if client.is_blacklist else 'убран'})",
+        extra_data={"old_blacklist": old_blacklist, "new_blacklist": client.is_blacklist},
+        ip_address=request.META.get("REMOTE_ADDR"),
+    )
     return redirect("clients_list")
 
 
@@ -327,7 +422,7 @@ def add_user(request):
         role = request.POST.get("role", "dispatcher")
         is_active = request.POST.get("is_active") == "on"
 
-        User.objects.create_user(
+        user_obj = User.objects.create_user(
             login=login,
             password=password,
             lname=lname,
@@ -336,6 +431,15 @@ def add_user(request):
             phone=phone,
             role=role,
             is_active=is_active,
+        )
+
+        log_action(
+            user=request.user,
+            action="CREATE",
+            object_type="User",
+            object_id=user_obj.user_id,
+            description=f"Создан пользователь {user_obj.lname} {user_obj.fname}",
+            ip_address=request.META.get("REMOTE_ADDR"),
         )
         return redirect("users_list")
 
@@ -350,6 +454,15 @@ def edit_user(request, user_id):
     user_obj = User.objects.get(pk=user_id)
 
     if request.method == "POST":
+        old_data = {
+            "login": user_obj.login,
+            "lname": user_obj.lname,
+            "fname": user_obj.fname,
+            "patronimyc": user_obj.patronimyc,
+            "phone": user_obj.phone,
+            "role": user_obj.role,
+            "is_active": user_obj.is_active,
+        }
         user_obj.login = request.POST.get("login")
         user_obj.lname = request.POST.get("lname")
         user_obj.fname = request.POST.get("fname")
@@ -363,6 +476,15 @@ def edit_user(request, user_id):
             user_obj.set_password(new_password)
 
         user_obj.save()
+        log_action(
+            user=request.user,
+            action="UPDATE",
+            object_type="User",
+            object_id=user_obj.user_id,
+            description=f"Изменены данные пользователя {user_obj.lname} {user_obj.fname}",
+            extra_data={"old_data": old_data},
+            ip_address=request.META.get("REMOTE_ADDR"),
+        )
         return redirect("users_list")
 
     return render(request, "edit_user.html", {"user_obj": user_obj})
@@ -373,8 +495,19 @@ def toggle_user_archive(request, user_id):
         return HttpResponse("Доступ запрещён", status=403)
 
     user_obj = User.objects.get(pk=user_id)
+    old_archive = user_obj.is_archive
     user_obj.is_archive = not user_obj.is_archive
     user_obj.save()
+
+    log_action(
+        user=request.user,
+        action="TOGGLE_ARCHIVE",
+        object_type="User",
+        object_id=user_obj.user_id,
+        description=f"Архивирование пользователя {user_obj.lname} {user_obj.fname} ({'в архив' if user_obj.is_archive else 'из архива'})",
+        extra_data={"old_archive": old_archive, "new_archive": user_obj.is_archive},
+        ip_address=request.META.get("REMOTE_ADDR"),
+    )
 
     return redirect("users_list")
 
@@ -391,10 +524,19 @@ def add_shift(request):
         end_shift = request.POST.get("end_shift")
 
 
-        Shift.objects.create(
+        shift = Shift.objects.create(
             driver_id=driver_id,
             start_shift=start_shift.replace("T", " "),
             end_shift=end_shift.replace("T", " "),
+        )
+
+        log_action(
+            user=request.user,
+            action="CREATE",
+            object_type="Shift",
+            object_id=shift.shift_id,
+            description=f"Создана смена для водителя {shift.driver}",
+            ip_address=request.META.get("REMOTE_ADDR"),
         )
         return redirect("shifts_list")
 
@@ -410,6 +552,13 @@ def edit_shift(request, shift_id):
     shift = Shift.objects.get(pk=shift_id)
 
     if request.method == "POST":
+        old_data = {
+            "driver_id": shift.driver_id,
+            "start_shift": str(shift.start_shift),
+            "end_shift": str(shift.end_shift),
+            "opened_user_id": shift.opened_user_id,
+            "closed_user_id": shift.closed_user_id,
+        }
         driver_id = request.POST.get("driver")
         start_shift = request.POST.get("start_shift")
         end_shift = request.POST.get("end_shift")
@@ -422,6 +571,16 @@ def edit_shift(request, shift_id):
         shift.opened_user_id = opened_user_id if opened_user_id else None
         shift.closed_user_id = closed_user_id if closed_user_id else None
         shift.save()
+
+        log_action(
+            user=request.user,
+            action="UPDATE",
+            object_type="Shift",
+            object_id=shift.shift_id,
+            description=f"Изменены данные смены {shift.shift_id}",
+            extra_data={"old_data": old_data},
+            ip_address=request.META.get("REMOTE_ADDR"),
+        )
 
         return redirect("shifts_list")
 
@@ -448,12 +607,22 @@ def add_district(request):
         return HttpResponse("Доступ запрещён", status=403)
 
     if request.method == "POST":
+        
         name = request.POST.get("name")
         base_coefficient = request.POST.get("base_coefficient")
 
-        District.objects.create(
+        district = District.objects.create(
             name=name,
             base_coefficient=base_coefficient,
+        )
+
+        log_action(
+            user=request.user,
+            action="CREATE",
+            object_type="District",
+            object_id=district.district_id,
+            description=f"Создан район {district.name}",
+            ip_address=request.META.get("REMOTE_ADDR"),
         )
         return redirect("districts_list")
 
@@ -468,9 +637,22 @@ def edit_district(request, district_id):
     district = District.objects.get(pk=district_id)
 
     if request.method == "POST":
+        old_data = {
+            "name": district.name,
+            "base_coefficient": str(district.base_coefficient),
+        }
         district.name = request.POST.get("name")
         district.base_coefficient = request.POST.get("base_coefficient")
         district.save()
+        log_action(
+            user=request.user,
+            action="UPDATE",
+            object_type="District",
+            object_id=district.district_id,
+            description=f"Изменены данные района {district.name}",
+            extra_data={"old_data": old_data},
+            ip_address=request.META.get("REMOTE_ADDR"),
+        )
         return redirect("districts_list")
 
     return render(request, "edit_district.html", {"district": district})
@@ -504,9 +686,18 @@ def add_street(request):
         name = request.POST.get("name")
         district_id = request.POST.get("district")
 
-        Street.objects.create(
+        street = Street.objects.create(
             name=name,
             district_id=district_id,
+        )
+
+        log_action(
+            user=request.user,
+            action="CREATE",
+            object_type="Street",
+            object_id=street.street_id,
+            description=f"Создана улица {street.name}",
+            ip_address=request.META.get("REMOTE_ADDR"),
         )
         return redirect("streets_list")
 
@@ -522,9 +713,23 @@ def edit_street(request, street_id):
     street = Street.objects.get(pk=street_id)
 
     if request.method == "POST":
+        old_data = {
+            "name": street.name,
+            "district_id": street.district_id,
+        }
         street.name = request.POST.get("name")
         street.district_id = request.POST.get("district")
         street.save()
+
+        log_action(
+            user=request.user,
+            action="UPDATE",
+            object_type="Street",
+            object_id=street.street_id,
+            description=f"Изменены данные улицы {street.name}",
+            extra_data={"old_data": old_data},
+            ip_address=request.META.get("REMOTE_ADDR"),
+        )
         return redirect("streets_list")
 
     districts = District.objects.all()
@@ -535,6 +740,14 @@ def edit_street(request, street_id):
 
 
 def logout_view(request):
+    if request.user.is_authenticated:
+        log_action(
+            user=request.user,
+            action="LOGOUT",
+            description=f"Выход из системы: {request.user.login}",
+            ip_address=request.META.get("REMOTE_ADDR"),
+        )
+    
     logout(request)
     return redirect("login")
 
@@ -563,12 +776,21 @@ def add_tariff(request):
         for day_value in request.POST.getlist("days_of_week"):
             days_of_week |= int(day_value)
 
-        Tariff.objects.create(
+        tariff = Tariff.objects.create(
             name=name,
             price=price,
             time_from=time_from,
             time_to=time_to,
             days_of_week=days_of_week,
+        )
+
+        log_action(
+            user=request.user,
+            action="CREATE",
+            object_type="Tariff",
+            object_id=tariff.tariff_id,
+            description=f"Создан тариф {tariff.name}",
+            ip_address=request.META.get("REMOTE_ADDR"),
         )
         return redirect("tariffs_list")
 
@@ -590,6 +812,14 @@ def edit_tariff(request, tariff_id):
             selected_days.append(day_value)
 
     if request.method == "POST":
+        old_data = {
+            "name": tariff.name,
+            "price": str(tariff.price),
+            "time_from": str(tariff.time_from),
+            "time_to": str(tariff.time_to),
+            "days_of_week": tariff.days_of_week,
+        }
+
         tariff.name = request.POST.get("name")
         tariff.price = request.POST.get("price")
         tariff.time_from = request.POST.get("time_from")
@@ -601,6 +831,15 @@ def edit_tariff(request, tariff_id):
         tariff.days_of_week = days_of_week
 
         tariff.save()
+        log_action(
+            user=request.user,
+            action="UPDATE",
+            object_type="Tariff",
+            object_id=tariff.tariff_id,
+            description=f"Изменены данные тарифа {tariff.name}",
+            extra_data={"old_data": old_data},
+            ip_address=request.META.get("REMOTE_ADDR"),
+        )
         return redirect("tariffs_list")
 
     return render(request, "edit_tariff.html", {
@@ -615,8 +854,19 @@ def toggle_tariff_archive(request, tariff_id):
         return HttpResponse("Доступ запрещён", status=403)
 
     tariff = Tariff.objects.get(pk=tariff_id)
+    old_archive = tariff.is_archive
     tariff.is_archive = not tariff.is_archive
     tariff.save()
+
+    log_action(
+        user=request.user,
+        action="TOGGLE_ARCHIVE",
+        object_type="Tariff",
+        object_id=tariff.tariff_id,
+        description=f"Архивирование тарифа {tariff.name} ({'в архив' if tariff.is_archive else 'из архива'})",
+        extra_data={"old_archive": old_archive, "new_archive": tariff.is_archive},
+        ip_address=request.META.get("REMOTE_ADDR"),
+    )
 
     return redirect("tariffs_list")
 
@@ -685,22 +935,60 @@ def edit_order(request, order_id):
         if action == "assign_driver":
             driver_id = request.POST.get("driver")
             if driver_id:
+                old_driver = order.driver
                 order.driver = Driver.objects.get(pk=driver_id)
                 if order.status == "Новый":
                     order.status = "Назначен водитель"
                 order.save()
+
+                log_action(
+                    user=request.user,
+                    action="ASSIGN_DRIVER",
+                    object_type="Order",
+                    object_id=order.order_id,
+                    description=f"Назначен водитель {order.driver} на заказ {order.order_number}",
+                    extra_data={"old_driver": str(old_driver), "new_driver": str(order.driver)},
+                    ip_address=request.META.get("REMOTE_ADDR"),
+                )
             return redirect("orders_list")
 
         elif action == "complete":
             order.status = "Завершен"
             order.completed_at = timezone.now()
             order.save()
+
+            log_action(
+                user=request.user,
+                action="COMPLETE_ORDER",
+                object_type="Order",
+                object_id=order.order_id,
+                description=f"Заказ {order.order_number} завершён",
+                ip_address=request.META.get("REMOTE_ADDR"),
+            )
             return redirect("orders_list")
 
         elif action == "cancel":
             order.status = "Отменен"
             order.save()
+            log_action(
+                user=request.user,
+                action="CANCEL_ORDER",
+                object_type="Order",
+                object_id=order.order_id,
+                description=f"Заказ {order.order_number} отменён",
+                ip_address=request.META.get("REMOTE_ADDR"),
+            )
             return redirect("orders_list")
+
+        old_data = {
+            "client": str(order.client),
+            "street_from": str(order.street_from),
+            "house_from": order.house_from,
+            "street_to": str(order.street_to),
+            "house_to": order.house_to,
+            "tariff": str(order.tariff),
+            "price": str(order.price),
+        }
 
         client_id = request.POST.get("client")
         street_from_id = request.POST.get("street_from")
@@ -722,6 +1010,15 @@ def edit_order(request, order_id):
         order.price = order.tariff.price * ((coef_from + coef_to) / 2)
 
         order.save()
+        log_action(
+            user=request.user,
+            action="UPDATE",
+            object_type="Order",
+            object_id=order.order_id,
+            description=f"Изменены данные заказа {order.order_number}",
+            extra_data={"old_data": old_data, "new_data": str(order)},
+            ip_address=request.META.get("REMOTE_ADDR"),
+        )
         return redirect("orders_list")
 
     clients = Client.objects.all()
@@ -735,4 +1032,38 @@ def edit_order(request, order_id):
         "streets": streets,
         "tariffs": tariffs,
         "drivers": drivers,
+    })
+
+
+@login_required
+def audit_logs_list(request):
+    if not hasattr(request.user, "role") or request.user.role != "admin":
+        return HttpResponse("Доступ запрещён", status=403)
+
+    logs = AuditLog.objects.select_related("user").all()
+
+    user_filter = request.GET.get("user", "")
+    action_filter = request.GET.get("action", "")
+    date_from = request.GET.get("date_from", "")
+    date_to = request.GET.get("date_to", "")
+
+    if user_filter:
+        logs = logs.filter(user_id=user_filter)
+    if action_filter:
+        logs = logs.filter(action=action_filter)
+    if date_from:
+        logs = logs.filter(created_at__date__gte=date_from)
+    if date_to:
+        logs = logs.filter(created_at__date__lte=date_to)
+
+    users = User.objects.filter(is_archive=False)
+
+    return render(request, "audit_logs_list.html", {
+        "logs": logs,
+        "users": users,
+        "current_user": user_filter,
+        "current_action": action_filter,
+        "date_from": date_from,
+        "date_to": date_to,
+        "action_choices": AuditLog.ACTION_CHOICES,
     })

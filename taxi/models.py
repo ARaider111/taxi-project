@@ -359,3 +359,49 @@ class Order(models.Model):
         super().save(*args, **kwargs)
 
 
+class AuditLog(models.Model):
+    log_id = models.AutoField("ID", primary_key=True)
+
+    user = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name="audit_logs",
+        verbose_name="Пользователь",
+    )
+
+    ACTION_CHOICES = [
+        ("CREATE", "Создание"),
+        ("UPDATE", "Изменение"),
+        ("DELETE", "Удаление"),
+        ("LOGIN", "Вход в систему"),
+        ("LOGOUT", "Выход из системы"),
+        ("ASSIGN_DRIVER", "Назначение водителя"),
+        ("COMPLETE_ORDER", "Завершение заказа"),
+        ("CANCEL_ORDER", "Отмена заказа"),
+        ("TOGGLE_ARCHIVE", "Архивирование"),
+        ("TOGGLE_BLACKLIST", "Чёрный список"),
+        ("OTHER", "Другое"),
+    ]
+    action = models.CharField(
+        "Действие",
+        max_length=32,
+        choices=ACTION_CHOICES,
+    )
+
+    object_type = models.CharField("Тип объекта", max_length=64, blank=True, null=True)
+    object_id = models.IntegerField("ID объекта", null=True, blank=True)
+    description = models.TextField("Описание", blank=True, null=True)
+    extra_data = models.TextField("Доп. данные", blank=True, null=True)
+    created_at = models.DateTimeField("Время", auto_now_add=True)
+    ip_address = models.GenericIPAddressField("IP адрес", null=True, blank=True)
+
+    class Meta:
+        db_table = "audit_logs"
+        verbose_name = "Лог аудита"
+        verbose_name_plural = "Логи аудита"
+        ordering = ["-created_at"]
+
+    def __str__(self):
+        return f"{self.action} - {self.user} - {self.created_at}"
