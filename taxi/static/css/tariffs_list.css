@@ -1,9 +1,9 @@
-.districts-page {
+.tariffs-page {
     width: 100%;
     color: #ffffff;
 }
 
-.districts-header {
+.tariffs-header {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
@@ -11,11 +11,11 @@
     margin-bottom: 35px;
 }
 
-.districts-header > div:first-child {
+.tariffs-header > div:first-child {
     min-width: 0;
 }
 
-.districts-label {
+.tariffs-label {
     display: block;
     margin-bottom: 11px;
     color: #ffc107;
@@ -24,7 +24,7 @@
     letter-spacing: 2px;
 }
 
-.districts-header h1 {
+.tariffs-header h1 {
     margin: 0 0 9px;
     color: #ffffff;
     font-size: 42px;
@@ -32,13 +32,13 @@
     letter-spacing: -1px;
 }
 
-.districts-subtitle {
+.tariffs-subtitle {
     margin: 0;
     color: #7f8992;
     font-size: 15px;
 }
 
-.districts-add {
+.tariffs-add {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -56,19 +56,19 @@
     white-space: nowrap;
 }
 
-.districts-add span {
+.tariffs-add span {
     font-size: 20px;
     font-weight: 400;
     line-height: 1;
 }
 
-.districts-add:hover {
+.tariffs-add:hover {
     background: #ffd54a;
     box-shadow: 0 8px 22px rgba(255, 193, 7, 0.2);
     transform: translateY(-2px);
 }
 
-.districts-table-card {
+.tariffs-table-card {
     width: 100%;
     overflow: hidden;
     border: 1px solid #30363d;
@@ -77,7 +77,7 @@
     box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
 }
 
-.districts-table-header {
+.tariffs-table-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -86,22 +86,22 @@
     border-bottom: 1px solid #30363d;
 }
 
-.districts-table-header > div:first-child {
+.tariffs-table-header > div:first-child {
     min-width: 0;
 }
 
-.districts-table-header h2 {
+.tariffs-table-header h2 {
     margin: 0 0 6px;
     color: #ffffff;
     font-size: 17px;
 }
 
-.districts-table-header span {
+.tariffs-table-header span {
     color: #737d86;
     font-size: 12px;
 }
 
-.districts-counter {
+.tariffs-counter {
     flex-shrink: 0;
     padding: 8px 12px;
     border: 1px solid rgba(255, 193, 7, 0.2);
@@ -113,114 +113,190 @@
     white-space: nowrap;
 }
 
-.districts-table-container {
+.tariffs-table-container {
     width: 100%;
     overflow: hidden;
 }
 
-.districts-table {
+.tariffs-table {
     width: 100%;
     min-width: 0;
     table-layout: fixed;
     border-collapse: collapse;
 }
 
-.districts-table thead {
+.tariffs-table thead {
     background: #1d2228;
 }
 
-.districts-table th {
-    padding: 15px 14px;
+.tariffs-table th {
+    padding: 15px 9px;
     overflow: hidden;
     border-bottom: 1px solid #343b43;
     color: #89929a;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 800;
     text-align: left;
     text-overflow: ellipsis;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.4px;
     white-space: nowrap;
 }
 
-.districts-table td {
-    padding: 16px 14px;
+.tariffs-table td {
+    padding: 16px 9px;
     overflow: hidden;
     border-bottom: 1px solid #292f36;
     color: #e6e9ed;
-    font-size: 13px;
+    font-size: 12px;
     text-overflow: ellipsis;
     vertical-align: middle;
     white-space: nowrap;
 }
 
-.districts-table tbody tr {
+.tariffs-table tbody tr {
     transition: 0.2s ease;
 }
 
-.districts-table tbody tr:hover {
+.tariffs-table tbody tr:hover {
     background: #20252a;
 }
 
-.districts-table tbody tr:last-child td {
+.tariffs-table tbody tr:last-child td {
     border-bottom: 0;
 }
 
-.districts-table th:nth-child(1),
-.districts-table td:nth-child(1) {
+.tariffs-table th:nth-child(1),
+.tariffs-table td:nth-child(1) {
+    width: 8%;
+}
+
+.tariffs-table th:nth-child(2),
+.tariffs-table td:nth-child(2) {
+    width: 17%;
+}
+
+.tariffs-table th:nth-child(3),
+.tariffs-table td:nth-child(3) {
+    width: 12%;
+}
+
+.tariffs-table th:nth-child(4),
+.tariffs-table td:nth-child(4) {
+    width: 11%;
+}
+
+.tariffs-table th:nth-child(5),
+.tariffs-table td:nth-child(5) {
+    width: 11%;
+}
+
+.tariffs-table th:nth-child(6),
+.tariffs-table td:nth-child(6) {
+    width: 16%;
+}
+
+.tariffs-table th:nth-child(7),
+.tariffs-table td:nth-child(7) {
+    width: 11%;
+}
+
+.tariffs-table th:nth-child(8),
+.tariffs-table td:nth-child(8) {
     width: 14%;
 }
 
-.districts-table th:nth-child(2),
-.districts-table td:nth-child(2) {
-    width: 36%;
-}
-
-.districts-table th:nth-child(3),
-.districts-table td:nth-child(3) {
-    width: 24%;
-}
-
-.districts-table th:nth-child(4),
-.districts-table td:nth-child(4) {
-    width: 26%;
-}
-
-.district-id {
+.tariff-id {
     color: #ffc107 !important;
     font-weight: 700;
 }
 
-.district-name {
+.tariff-name {
     color: #ffffff !important;
     font-weight: 700;
 }
 
-.district-coefficient {
+.tariff-price {
     color: #72d491 !important;
     font-weight: 700;
 }
 
-.district-actions {
+.tariff-time {
+    color: #aeb5bd !important;
+}
+
+.tariff-days {
+    color: #c7ccd2 !important;
+}
+
+.tariff-archive {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    max-width: 100%;
+    min-height: 25px;
+    padding: 0 8px;
+    box-sizing: border-box;
+    overflow: hidden;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 700;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tariff-archive::before {
+    width: 6px;
+    height: 6px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    content: "";
+}
+
+.tariff-archive-yes {
+    border: 1px solid rgba(255, 152, 50, 0.18);
+    background: rgba(255, 152, 50, 0.08);
+    color: #ffa34f;
+}
+
+.tariff-archive-yes::before {
+    background: #ffa34f;
+    box-shadow: 0 0 7px rgba(255, 163, 79, 0.6);
+}
+
+.tariff-archive-no {
+    border: 1px solid rgba(49, 196, 92, 0.2);
+    background: rgba(49, 196, 92, 0.08);
+    color: #72d491;
+}
+
+.tariff-archive-no::before {
+    background: #72d491;
+    box-shadow: 0 0 7px rgba(114, 212, 145, 0.6);
+}
+
+.tariff-actions {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 4px;
     min-width: 0;
 }
 
-.district-edit {
+.tariff-action {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-width: 0;
-    min-height: 31px;
-    padding: 5px 10px;
+    min-height: 30px;
+    padding: 5px 6px;
     box-sizing: border-box;
     overflow: hidden;
     border: 1px solid #343b43;
     border-radius: 6px;
     background: #20252b;
     color: #c7ccd2;
-    font-size: 10px;
+    font-size: 8px;
     font-weight: 600;
     text-decoration: none;
     text-overflow: ellipsis;
@@ -228,14 +304,23 @@
     white-space: nowrap;
 }
 
-.district-edit:hover {
-    border-color: #ffc107;
+.tariff-action:hover {
     background: #2b3138;
-    color: #ffc107;
+    color: #ffffff;
     transform: translateY(-1px);
 }
 
-.districts-empty {
+.tariff-action-edit:hover {
+    border-color: #ffc107;
+    color: #ffc107;
+}
+
+.tariff-action-archive:hover {
+    border-color: #ffa34f;
+    color: #ffa34f;
+}
+
+.tariffs-empty {
     height: 230px;
     padding: 40px !important;
     color: #737d86 !important;
@@ -243,7 +328,7 @@
     vertical-align: middle !important;
 }
 
-.districts-empty-icon {
+.tariffs-empty-icon {
     display: block;
     margin-bottom: 12px;
     color: #ffc107;
@@ -251,14 +336,14 @@
     font-weight: 300;
 }
 
-.districts-empty strong {
+.tariffs-empty strong {
     display: block;
     margin-bottom: 7px;
     color: #c7ccd2;
     font-size: 15px;
 }
 
-.districts-empty span:last-child {
+.tariffs-empty span:last-child {
     color: #737d86;
     font-size: 12px;
 }

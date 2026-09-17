@@ -1,15 +1,19 @@
 {% extends "base_admin.html" %}
-{% block title %}Улицы{% endblock %}
+{% load static %}
+
+{% block title %}Улицы — Taxi Control{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/streets_list.css' %}">
+{% endblock %}
 
 {% block content %}
-<h1>Улицы</h1>
-<p>
-    <a href="{% url 'add_street' %}">Добавить улицу</a>
-</p>
-<form method="get" style="margin-bottom: 20px;">
-    <label for="q">Поиск:</label>
-    <input type="text" name="q" id="q" value="{{ query }}" placeholder="Название улицы">
+<div class="streets-page">
+    <div class="streets-header">
+        <div>
+            <span class="streets-label">СПРАВОЧНИК ТЕРРИТОРИЙ</span>
 
+<<<<<<< HEAD
     <button type="submit">Найти</button>
     <a href="{% url 'streets_list' %}" style="margin-left: 10px;">Сбросить</a>
 </form>
@@ -31,4 +35,113 @@
     <tr><td colspan="4">Нет улиц</td></tr>
     {% endfor %}
 </table>
+=======
+            <h1>Улицы</h1>
+
+            <p class="streets-subtitle">
+                Управление улицами и их принадлежностью к районам
+            </p>
+        </div>
+
+        <a href="{% url 'add_street' %}" class="streets-add">
+            <span>+</span>
+            Добавить улицу
+        </a>
+    </div>
+
+    <form method="get" class="streets-filters">
+        <div class="street-filter street-filter-search">
+            <label for="q">Поиск</label>
+
+            <input
+                type="text"
+                name="q"
+                id="q"
+                value="{{ query }}"
+                placeholder="Название улицы"
+            >
+        </div>
+
+        <button type="submit" class="street-search">
+            Найти
+        </button>
+
+        <a href="{% url 'streets_list' %}" class="street-reset">
+            Сбросить
+        </a>
+    </form>
+
+    <div class="streets-table-card">
+        <div class="streets-table-header">
+            <div>
+                <h2>Список улиц</h2>
+
+                <span>
+                    Улицы, используемые в диспетчерской системе
+                </span>
+            </div>
+
+            <div class="streets-counter">
+                {{ streets|length }} записей
+            </div>
+        </div>
+
+        <div class="streets-table-container">
+            <table class="streets-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Название</th>
+                        <th>Район</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for s in streets %}
+                        <tr>
+                            <td class="street-id">
+                                #{{ s.street_id }}
+                            </td>
+
+                            <td class="street-name">
+                                {{ s.name }}
+                            </td>
+
+                            <td class="street-district">
+                                {{ s.district.name }}
+                            </td>
+
+                            <td>
+                                <div class="street-actions">
+                                    <a
+                                        href="{% url 'edit_street' s.street_id %}"
+                                        class="street-edit"
+                                    >
+                                        Редактировать
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4" class="streets-empty">
+                                <span class="streets-empty-icon">∅</span>
+
+                                <strong>
+                                    Улицы не найдены
+                                </strong>
+
+                                <span>
+                                    Добавьте первую улицу в систему
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+>>>>>>> d686244 (ураплюсфронтдедлайнгорит)
 {% endblock %}

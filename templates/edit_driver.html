@@ -1,36 +1,64 @@
 {% extends "base_admin.html" %}
 {% load static %}
 
-{% block title %}Редактировать водителя{% endblock %}
+{% block title %}Редактировать водителя — Taxi Control{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/driver_edit.css' %}">
+{% endblock %}
 
 {% block content %}
-
-<link rel="stylesheet" href="{% static 'css/driver_edit.css' %}">
-
 <div class="driver-edit-page">
-
     <div class="driver-edit-header">
         <div>
-            <h1>Редактировать водителя</h1>
+            <span class="driver-edit-label">
+                УПРАВЛЕНИЕ АВТОПАРКОМ
+            </span>
+
+            <h1>
+                Редактировать водителя
+            </h1>
+
             <p class="driver-edit-subtitle">
-                Измените данные водителя
+                Измените данные водителя и его автомобиля
             </p>
         </div>
 
-        <a href="{% url 'drivers_list' %}" class="driver-edit-back">
+        <a
+            href="{% url 'drivers_list' %}"
+            class="driver-edit-back"
+        >
             ← Назад к водителям
         </a>
     </div>
 
     <div class="driver-edit-card">
+        <div class="driver-edit-card-header">
+            <div>
+                <h2>
+                    Данные водителя
+                </h2>
+
+                <span>
+                    Обновите необходимую информацию
+                </span>
+            </div>
+
+            <div class="driver-edit-id">
+                ID: {{ driver.driver_id }}
+            </div>
+        </div>
 
         <form method="post" class="driver-edit-form">
             {% csrf_token %}
 
             <div class="driver-edit-grid">
-
                 <div class="driver-edit-field">
-                    <label for="lname">Фамилия</label>
+                    <label for="lname">
+                        Фамилия
+                        <span>*</span>
+                    </label>
+
                     <input
                         type="text"
                         id="lname"
@@ -42,7 +70,11 @@
                 </div>
 
                 <div class="driver-edit-field">
-                    <label for="fname">Имя</label>
+                    <label for="fname">
+                        Имя
+                        <span>*</span>
+                    </label>
+
                     <input
                         type="text"
                         id="fname"
@@ -54,7 +86,10 @@
                 </div>
 
                 <div class="driver-edit-field">
-                    <label for="patronimyc">Отчество</label>
+                    <label for="patronimyc">
+                        Отчество
+                    </label>
+
                     <input
                         type="text"
                         id="patronimyc"
@@ -65,9 +100,13 @@
                 </div>
 
                 <div class="driver-edit-field">
-                    <label for="phone">Телефон</label>
+                    <label for="phone">
+                        Телефон
+                        <span>*</span>
+                    </label>
+
                     <input
-                        type="text"
+                        type="tel"
                         id="phone"
                         name="phone"
                         required
@@ -77,7 +116,11 @@
                 </div>
 
                 <div class="driver-edit-field">
-                    <label for="car_model">Модель автомобиля</label>
+                    <label for="car_model">
+                        Модель автомобиля
+                        <span>*</span>
+                    </label>
+
                     <input
                         type="text"
                         id="car_model"
@@ -89,7 +132,11 @@
                 </div>
 
                 <div class="driver-edit-field">
-                    <label for="car_number">Номер автомобиля</label>
+                    <label for="car_number">
+                        Номер автомобиля
+                        <span>*</span>
+                    </label>
+
                     <input
                         type="text"
                         id="car_number"
@@ -101,9 +148,12 @@
                 </div>
 
                 <div class="driver-edit-field">
-                    <label for="status">Статус</label>
-                    <select name="status" id="status">
+                    <label for="status">
+                        Статус
+                        <span>*</span>
+                    </label>
 
+                    <select name="status" id="status" required>
                         <option
                             value="В ожидании"
                             {% if driver.status == "В ожидании" %}selected{% endif %}
@@ -124,14 +174,11 @@
                         >
                             Вне работы
                         </option>
-
                     </select>
                 </div>
-
             </div>
 
             <div class="driver-edit-footer">
-
                 <a
                     href="{% url 'drivers_list' %}"
                     class="driver-edit-btn driver-edit-cancel"
@@ -145,13 +192,8 @@
                 >
                     Сохранить изменения
                 </button>
-
             </div>
-
         </form>
-
     </div>
-
 </div>
-
 {% endblock %}

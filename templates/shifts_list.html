@@ -1,29 +1,21 @@
 {% extends "base_admin.html" %}
-{% block title %}Смены{% endblock %}
+{% load static %}
+
+{% block title %}Смены — Taxi Control{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/shifts_list.css' %}">
+{% endblock %}
 
 {% block content %}
-<h1>Смены</h1>
-<p>
-    <a href="{% url 'add_shift' %}">Добавить смену</a>
-</p>
-<form method="get" style="margin-bottom: 20px;">
-    <label for="q">Поиск:</label>
-    <input type="text" name="q" id="q" value="{{ query }}" placeholder="Фамилия, имя водителя, начало, конец">
+<div class="shifts-page">
+    <div class="shifts-header">
+        <div>
+            <span class="shifts-label">УПРАВЛЕНИЕ РАБОЧИМИ СМЕНАМИ</span>
 
-    <label for="status">Статус:</label>
-    <select name="status" id="status">
-        <option value="">Все статусы</option>
-        <option value="not_opened" {% if current_status == "not_opened" %}selected{% endif %}>
-            Не открыта
-        </option>
-        <option value="opened" {% if current_status == "opened" %}selected{% endif %}>
-            Открыта
-        </option>
-        <option value="closed" {% if current_status == "closed" %}selected{% endif %}>
-            Закрыта
-        </option>
-    </select>
+            <h1>Смены</h1>
 
+<<<<<<< HEAD
     <button type="submit">Найти</button>
     <a href="{% url 'shifts_list' %}" style="margin-left: 10px;">Сбросить</a>
 </form>
@@ -56,4 +48,165 @@
     <tr><td colspan="6">Нет смен</td></tr>
     {% endfor %}
 </table>
+=======
+            <p>
+                Просмотр и управление рабочими сменами водителей
+            </p>
+        </div>
+
+        <a href="{% url 'add_shift' %}" class="shifts-add-btn">
+            <span>+</span>
+            Добавить смену
+        </a>
+    </div>
+
+    <form method="get" class="shifts-filters">
+        <div class="shift-filter shift-filter-search">
+            <label for="q">Поиск</label>
+
+            <input
+                type="text"
+                name="q"
+                id="q"
+                value="{{ query }}"
+                placeholder="Водитель, начало, конец"
+            >
+        </div>
+
+        <div class="shift-filter">
+            <label for="status">Статус</label>
+
+            <select name="status" id="status">
+                <option value="">Все статусы</option>
+
+                <option
+                    value="not_opened"
+                    {% if current_status == "not_opened" %}selected{% endif %}
+                >
+                    Не открыта
+                </option>
+
+                <option
+                    value="opened"
+                    {% if current_status == "opened" %}selected{% endif %}
+                >
+                    Открыта
+                </option>
+
+                <option
+                    value="closed"
+                    {% if current_status == "closed" %}selected{% endif %}
+                >
+                    Закрыта
+                </option>
+            </select>
+        </div>
+
+        <button type="submit" class="shift-search-btn">
+            Найти
+        </button>
+
+        <a href="{% url 'shifts_list' %}" class="shift-reset-btn">
+            Сбросить
+        </a>
+    </form>
+
+    <div class="shifts-table-card">
+        <div class="shifts-table-header">
+            <div>
+                <h2>Список смен</h2>
+
+                <span>
+                    Все рабочие смены водителей системы
+                </span>
+            </div>
+
+            <div class="shifts-counter">
+                {{ shifts|length }} записей
+            </div>
+        </div>
+
+        <div class="shifts-table-wrapper">
+            <table class="shifts-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Водитель</th>
+                        <th>Начало</th>
+                        <th>Конец</th>
+                        <th>Открыл</th>
+                        <th>Закрыл</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for s in shifts %}
+                        <tr>
+                            <td class="shift-id">
+                                #{{ s.shift_id }}
+                            </td>
+
+                            <td class="shift-driver">
+                                {{ s.driver.lname }} {{ s.driver.fname }}
+                            </td>
+
+                            <td class="shift-date">
+                                {{ s.start_shift|date:"d.m.Y H:i" }}
+                            </td>
+
+                            <td class="shift-date">
+                                {% if s.end_shift %}
+                                    {{ s.end_shift|date:"d.m.Y H:i" }}
+                                {% else %}
+                                    —
+                                {% endif %}
+                            </td>
+
+                            <td class="shift-user">
+                                {{ s.opened_user.lname }} {{ s.opened_user.fname }}
+                            </td>
+
+                            <td class="shift-user">
+                                {% if s.closed_user %}
+                                    {{ s.closed_user.lname }} {{ s.closed_user.fname }}
+                                {% else %}
+                                    <span class="shift-not-closed">
+                                        Не закрыта
+                                    </span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                <div class="shift-actions">
+                                    <a
+                                        href="{% url 'edit_shift' s.shift_id %}"
+                                        class="shift-action shift-action-edit"
+                                    >
+                                        Редактировать
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7" class="shifts-empty">
+                                <span class="shifts-empty-icon">∅</span>
+
+                                <strong>
+                                    Смены не найдены
+                                </strong>
+
+                                <span>
+                                    Попробуйте изменить параметры поиска
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+>>>>>>> d686244 (ураплюсфронтдедлайнгорит)
 {% endblock %}

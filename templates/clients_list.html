@@ -1,24 +1,35 @@
 {% extends "base_admin.html" %}
 {% load static %}
 
-{% block title %}Клиенты{% endblock %}
+{% block title %}Клиенты — Taxi Control{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/clients_list.css' %}">
+{% endblock %}
 
 {% block content %}
-
-<link rel="stylesheet" href="{% static 'css/clients_list.css' %}">
-
 <div class="clients-page">
+    <div class="clients-header">
+        <div>
+            <span class="clients-label">УПРАВЛЕНИЕ КЛИЕНТАМИ</span>
 
-    <h1>Клиенты</h1>
+            <h1>Клиенты</h1>
 
-    <a href="{% url 'add_client' %}" class="clients-add">
-        Добавить клиента
-    </a>
+            <p class="clients-subtitle">
+                Просмотр и управление клиентами системы
+            </p>
+        </div>
+
+        <a href="{% url 'add_client' %}" class="clients-add">
+            <span>+</span>
+            Добавить клиента
+        </a>
+    </div>
 
     <form method="get" class="clients-filters">
+        <div class="client-filter client-filter-search">
+            <label for="q">Поиск</label>
 
-        <div class="client-filter">
-            <label for="q">Поиск:</label>
             <input
                 type="text"
                 name="q"
@@ -29,13 +40,22 @@
         </div>
 
         <div class="client-filter">
-            <label for="blacklist">Чёрный список:</label>
+            <label for="blacklist">Чёрный список</label>
+
             <select name="blacklist" id="blacklist">
                 <option value="">Все</option>
-                <option value="1" {% if current_blacklist == "1" %}selected{% endif %}>
+
+                <option
+                    value="1"
+                    {% if current_blacklist == "1" %}selected{% endif %}
+                >
                     В чёрном списке
                 </option>
-                <option value="0" {% if current_blacklist == "0" %}selected{% endif %}>
+
+                <option
+                    value="0"
+                    {% if current_blacklist == "0" %}selected{% endif %}
+                >
                     Не в чёрном списке
                 </option>
             </select>
@@ -48,90 +68,107 @@
         <a href="{% url 'clients_list' %}" class="client-reset">
             Сбросить
         </a>
-
     </form>
 
-    <div class="clients-table-container">
+    <div class="clients-table-card">
+        <div class="clients-table-header">
+            <div>
+                <h2>Список клиентов</h2>
 
-        <table class="clients-table">
+                <span>
+                    Все зарегистрированные клиенты системы
+                </span>
+            </div>
 
-            <thead>
-                <tr>
-                    <th>Фамилия</th>
-                    <th>Имя</th>
-                    <th>Отчество</th>
-                    <th>Телефон</th>
-                    <th>Чёрный список</th>
-                    <th>Действия</th>
-                </tr>
-            </thead>
+            <div class="clients-counter">
+                {{ clients|length }} записей
+            </div>
+        </div>
 
-            <tbody>
+        <div class="clients-table-container">
+            <table class="clients-table">
+                <thead>
+                    <tr>
+                        <th>Фамилия</th>
+                        <th>Имя</th>
+                        <th>Отчество</th>
+                        <th>Телефон</th>
+                        <th>Чёрный список</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
 
-                {% for c in clients %}
+                <tbody>
+                    {% for c in clients %}
+                        <tr>
+                            <td class="client-last-name">
+                                {{ c.lname }}
+                            </td>
 
-                <tr>
+                            <td class="client-first-name">
+                                {{ c.fname }}
+                            </td>
 
-                    <td>{{ c.lname }}</td>
+                            <td class="client-patronymic">
+                                {{ c.patronimyc|default:"—" }}
+                            </td>
 
-                    <td>{{ c.fname }}</td>
+                            <td class="client-phone">
+                                {{ c.phone }}
+                            </td>
 
-                    <td>{{ c.patronimyc|default:"—" }}</td>
-
-                    <td>{{ c.phone }}</td>
-
-                    <td>
-                        {% if c.is_blacklist %}
-                            <span class="client-yes">Да</span>
-                        {% else %}
-                            <span class="client-no">Нет</span>
-                        {% endif %}
-                    </td>
-
-                    <td>
-
-                        <div class="client-actions">
-
-                            <a
-                                href="{% url 'edit_client' c.client_id %}"
-                                class="client-action client-action-edit"
-                            >
-                                Редактировать
-                            </a>
-
-                            <a
-                                href="{% url 'toggle_client_blacklist' c.client_id %}"
-                                class="client-action client-action-blacklist"
-                            >
+                            <td>
                                 {% if c.is_blacklist %}
-                                    Убрать из ЧС
+                                    <span class="client-yes">
+                                        Да
+                                    </span>
                                 {% else %}
-                                    Добавить в ЧС
+                                    <span class="client-no">
+                                        Нет
+                                    </span>
                                 {% endif %}
-                            </a>
+                            </td>
 
-                        </div>
+                            <td>
+                                <div class="client-actions">
+                                    <a
+                                        href="{% url 'edit_client' c.client_id %}"
+                                        class="client-action client-action-edit"
+                                    >
+                                        Редактировать
+                                    </a>
 
-                    </td>
+                                    <a
+                                        href="{% url 'toggle_client_blacklist' c.client_id %}"
+                                        class="client-action client-action-blacklist"
+                                    >
+                                        {% if c.is_blacklist %}
+                                            Убрать из ЧС
+                                        {% else %}
+                                            Добавить в ЧС
+                                        {% endif %}
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="clients-empty">
+                                <span class="clients-empty-icon">∅</span>
 
-                </tr>
+                                <strong>
+                                    Клиенты не найдены
+                                </strong>
 
-                {% empty %}
-
-                <tr>
-                    <td colspan="5" class="clients-empty">
-                        Нет клиентов
-                    </td>
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
+                                <span>
+                                    Попробуйте изменить параметры поиска
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-
 </div>
-
 {% endblock %}

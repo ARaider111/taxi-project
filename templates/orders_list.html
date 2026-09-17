@@ -1,20 +1,30 @@
 {% extends "base_admin.html" %}
 {% load static %}
 
-{% block title %}Заказы (Админ){% endblock %}
+{% block title %}Заказы — Taxi Control{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/orders_list.css' %}">
+{% endblock %}
 
 {% block content %}
-
-<link rel="stylesheet" href="{% static 'css/orders_list.css' %}">
-
 <div class="orders-page">
+    <div class="orders-header">
+        <div>
+            <span class="orders-label">ДИСПЕТЧЕРСКАЯ СИСТЕМА</span>
 
-    <h1>Заказы</h1>
+            <h1>Заказы</h1>
+
+            <p class="orders-subtitle">
+                Просмотр и управление заказами клиентов
+            </p>
+        </div>
+    </div>
 
     <form method="get" class="orders-filters">
+        <div class="order-filter order-filter-search">
+            <label for="q">Поиск</label>
 
-        <div class="order-filter">
-            <label for="q">Поиск:</label>
             <input
                 type="text"
                 name="q"
@@ -25,37 +35,59 @@
         </div>
 
         <div class="order-filter">
-            <label for="status">Статус:</label>
+            <label for="status">Статус</label>
+
             <select name="status" id="status">
                 <option value="">Все</option>
+
                 {% for value, label in status_choices %}
-                <option value="{{ value }}" {% if current_status == value %}selected{% endif %}>
-                    {{ label }}
-                </option>
+                    <option
+                        value="{{ value }}"
+                        {% if current_status == value %}selected{% endif %}
+                    >
+                        {{ label }}
+                    </option>
                 {% endfor %}
             </select>
         </div>
 
         <div class="order-filter">
-            <label for="driver">Водитель:</label>
+            <label for="driver">Водитель</label>
+
             <select name="driver" id="driver">
                 <option value="">Все</option>
+
                 {% for d in drivers %}
-                <option value="{{ d.driver_id }}" {% if current_driver == d.driver_id|slugify %}selected{% endif %}>
-                    {{ d.lname }} {{ d.fname }}
-                </option>
+                    <option
+                        value="{{ d.driver_id }}"
+                        {% if current_driver == d.driver_id|slugify %}selected{% endif %}
+                    >
+                        {{ d.lname }} {{ d.fname }}
+                    </option>
                 {% endfor %}
             </select>
         </div>
 
         <div class="order-filter">
-            <label for="date_from">Дата с:</label>
-            <input type="date" name="date_from" id="date_from" value="{{ date_from }}">
+            <label for="date_from">Дата с</label>
+
+            <input
+                type="date"
+                name="date_from"
+                id="date_from"
+                value="{{ date_from }}"
+            >
         </div>
 
         <div class="order-filter">
-            <label for="date_to">Дата по:</label>
-            <input type="date" name="date_to" id="date_to" value="{{ date_to }}">
+            <label for="date_to">Дата по</label>
+
+            <input
+                type="date"
+                name="date_to"
+                id="date_to"
+                value="{{ date_to }}"
+            >
         </div>
 
         <button type="submit" class="order-search">
@@ -65,136 +97,181 @@
         <a href="{% url 'orders_list' %}" class="order-reset">
             Сбросить
         </a>
-
     </form>
 
-    <div class="orders-table-container">
+    <div class="orders-table-card">
+        <div class="orders-table-header">
+            <div>
+                <h2>Список заказов</h2>
 
-        <table class="orders-table">
+                <span>
+                    Все заказы диспетчерской системы
+                </span>
+            </div>
 
-            <thead>
-                <tr>
-                    <th>Номер</th>
-                    <th>Клиент</th>
-                    <th>Водитель</th>
-                    <th>Откуда</th>
-                    <th>Куда</th>
-                    <th>Цена</th>
-                    <th>Статус</th>
-                    <th>Время создания</th>
-                    <th>Действия</th>
-                </tr>
-            </thead>
+            <div class="orders-counter">
+                {{ orders|length }} записей
+            </div>
+        </div>
 
-            <tbody>
+        <div class="orders-table-container">
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th>Номер</th>
+                        <th>Клиент</th>
+                        <th>Водитель</th>
+                        <th>Откуда</th>
+                        <th>Куда</th>
+                        <th>Цена</th>
+                        <th>Статус</th>
+                        <th>Создан</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
 
-                {% for o in orders %}
+                <tbody>
+                    {% for o in orders %}
+                        <tr>
+                            <td class="order-number">
+                                {{ o.order_number }}
+                            </td>
 
-                <tr>
+                            <td class="order-client">
+                                {{ o.client.lname }} {{ o.client.fname }}
+                            </td>
 
-                    <td><strong>{{ o.order_number }}</strong></td>
+                            <td class="order-driver">
+                                {% if o.driver %}
+                                    {{ o.driver.lname }} {{ o.driver.fname }}
+                                {% else %}
+                                    <span class="order-no-driver">
+                                        Не назначен
+                                    </span>
+                                {% endif %}
+                            </td>
 
-                    <td>
-                        {{ o.client.lname }} {{ o.client.fname }}
-                    </td>
+                            <td class="order-address">
+                                {{ o.street_from.name }}, д. {{ o.house_from }}
+                            </td>
 
-                    <td>
-                        {% if o.driver %}
-                            {{ o.driver.lname }} {{ o.driver.fname }}
-                        {% else %}
-                            —
-                        {% endif %}
-                    </td>
+                            <td class="order-address">
+                                {{ o.street_to.name }}, д. {{ o.house_to }}
+                            </td>
 
-                    <td>
-                        {{ o.street_from.name }}, д. {{ o.house_from }}
-                    </td>
+                            <td class="order-price">
+                                {{ o.price }}
+                            </td>
 
-                    <td>
-                        {{ o.street_to.name }}, д. {{ o.house_to }}
-                    </td>
+                            <td>
+                                {% if o.status == "Новый" %}
+                                    <span class="order-status status-new">
+                                        {{ o.status }}
+                                    </span>
+                                {% elif o.status == "Назначен водитель" %}
+                                    <span class="order-status status-assigned">
+                                        {{ o.status }}
+                                    </span>
+                                {% elif o.status == "В работе" %}
+                                    <span class="order-status status-progress">
+                                        {{ o.status }}
+                                    </span>
+                                {% elif o.status == "Завершен" %}
+                                    <span class="order-status status-completed">
+                                        {{ o.status }}
+                                    </span>
+                                {% elif o.status == "Отменен" %}
+                                    <span class="order-status status-cancelled">
+                                        {{ o.status }}
+                                    </span>
+                                {% else %}
+                                    <span class="order-status status-default">
+                                        {{ o.status }}
+                                    </span>
+                                {% endif %}
+                            </td>
 
-                    <td>{{ o.price }}</td>
+                            <td class="order-date">
+                                {{ o.created_at|date:"d.m.Y H:i" }}
+                            </td>
 
-                    <td>
-                        {% if o.status == "Новый" %}
-                            <span class="status-new">{{ o.status }}</span>
-                        {% elif o.status == "Назначен водитель" %}
-                            <span class="status-assigned">{{ o.status }}</span>
-                        {% elif o.status == "В работе" %}
-                            <span class="status-progress">{{ o.status }}</span>
-                        {% elif o.status == "Завершен" %}
-                            <span class="status-completed">{{ o.status }}</span>
-                        {% elif o.status == "Отменен" %}
-                            <span class="status-cancelled">{{ o.status }}</span>
-                        {% endif %}
-                    </td>
+                            <td>
+                                <div class="order-actions">
+                                    <a
+                                        href="{% url 'edit_order' o.order_id %}"
+                                        class="order-action order-action-edit"
+                                    >
+                                        Редактировать
+                                    </a>
 
-                    <td>{{ o.created_at|date:"d.m.Y H:i" }}</td>
+                                    {% if o.status != "Завершен" and o.status != "Отменен" %}
+                                        <form
+                                            method="post"
+                                            action="{% url 'edit_order' o.order_id %}"
+                                            class="order-action-form"
+                                            onsubmit="return confirm('Завершить заказ?')"
+                                        >
+                                            {% csrf_token %}
 
-                    <td>
+                                            <button
+                                                type="submit"
+                                                name="action"
+                                                value="complete"
+                                                class="order-action order-action-complete"
+                                            >
+                                                Завершить
+                                            </button>
+                                        </form>
 
-                       <td>
-    <div class="order-actions">
+                                        <form
+                                            method="post"
+                                            action="{% url 'edit_order' o.order_id %}"
+                                            class="order-action-form"
+                                            onsubmit="return confirm('Отменить заказ?')"
+                                        >
+                                            {% csrf_token %}
 
-        <a
-            href="{% url 'edit_order' o.order_id %}"
-            class="order-action order-action-edit"
-        >
-            Редактировать
-        </a>
+                                            <button
+                                                type="submit"
+                                                name="action"
+                                                value="cancel"
+                                                class="order-action order-action-cancel"
+                                            >
+                                                Отменить
+                                            </button>
+                                        </form>
+                                    {% else %}
+                                        {% if o.status == "Завершен" %}
+                                            <span class="order-finished">
+                                                Завершён
+                                            </span>
+                                        {% else %}
+                                            <span class="order-cancelled">
+                                                Отменён
+                                            </span>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="9" class="orders-empty">
+                                <span class="orders-empty-icon">∅</span>
 
-        {% if o.status != "Завершен" and o.status != "Отменен" %}
+                                <strong>
+                                    Заказы не найдены
+                                </strong>
 
-        <form
-            method="post"
-            action="{% url 'edit_order' o.order_id %}"
-            style="display: inline;"
-            onsubmit="return confirm('Завершить заказ?')"
-        >
-            {% csrf_token %}
-            <button type="submit" name="action" value="complete" class="order-action order-action-complete">
-                Завершить
-            </button>
-        </form>
-
-        <form
-            method="post"
-            action="{% url 'edit_order' o.order_id %}"
-            style="display: inline;"
-            onsubmit="return confirm('Отменить заказ?')"
-        >
-            {% csrf_token %}
-            <button type="submit" name="action" value="cancel" class="order-action order-action-cancel">
-                Отменить
-            </button>
-        </form>
-
-        {% else %}
-        <span class="order-completed">Завершён</span>
-        {% endif %}
-
+                                <span>
+                                    Попробуйте изменить параметры поиска
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-</td>
-
-                </tr>
-
-                {% empty %}
-
-                <tr>
-                    <td colspan="9" class="orders-empty">
-                        Нет заказов
-                    </td>
-                </tr>
-
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
-    </div>
-
 </div>
-
 {% endblock %}

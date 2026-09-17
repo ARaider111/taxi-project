@@ -1,7 +1,14 @@
 {% extends "base_admin.html" %}
-{% block title %}Тарифы{% endblock %}
+{% load static %}
+
+{% block title %}Тарифы — Taxi Control{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/tariffs_list.css' %}">
+{% endblock %}
 
 {% block content %}
+<<<<<<< HEAD
 <h1>Тарифы</h1>
 <p>
     <a href="{% url 'add_tariff' %}">Добавить тариф</a>
@@ -36,4 +43,135 @@
     <tr><td colspan="8">Нет тарифов</td></tr>
     {% endfor %}
 </table>
+=======
+<div class="tariffs-page">
+    <div class="tariffs-header">
+        <div>
+            <span class="tariffs-label">НАСТРОЙКА СИСТЕМЫ</span>
+
+            <h1>Тарифы</h1>
+
+            <p class="tariffs-subtitle">
+                Управление ценами и условиями поездок
+            </p>
+        </div>
+
+        <a href="{% url 'add_tariff' %}" class="tariffs-add">
+            <span>+</span>
+            Добавить тариф
+        </a>
+    </div>
+
+    <div class="tariffs-table-card">
+        <div class="tariffs-table-header">
+            <div>
+                <h2>Список тарифов</h2>
+
+                <span>
+                    Настроенные тарифы диспетчерской системы
+                </span>
+            </div>
+
+            <div class="tariffs-counter">
+                {{ tariffs|length }} записей
+            </div>
+        </div>
+
+        <div class="tariffs-table-container">
+            <table class="tariffs-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Название</th>
+                        <th>Цена</th>
+                        <th>Время с</th>
+                        <th>Время по</th>
+                        <th>Дни недели</th>
+                        <th>Архив</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for t in tariffs %}
+                        <tr>
+                            <td class="tariff-id">
+                                #{{ t.tariff_id }}
+                            </td>
+
+                            <td class="tariff-name">
+                                {{ t.name }}
+                            </td>
+
+                            <td class="tariff-price">
+                                {{ t.price }}
+                            </td>
+
+                            <td class="tariff-time">
+                                {{ t.time_from|date:"H:i" }}
+                            </td>
+
+                            <td class="tariff-time">
+                                {{ t.time_to|date:"H:i" }}
+                            </td>
+
+                            <td class="tariff-days">
+                                {{ t.get_days_display }}
+                            </td>
+
+                            <td>
+                                {% if t.is_archive %}
+                                    <span class="tariff-archive tariff-archive-yes">
+                                        В архиве
+                                    </span>
+                                {% else %}
+                                    <span class="tariff-archive tariff-archive-no">
+                                        Нет
+                                    </span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                <div class="tariff-actions">
+                                    <a
+                                        href="{% url 'edit_tariff' t.tariff_id %}"
+                                        class="tariff-action tariff-action-edit"
+                                    >
+                                        Редактировать
+                                    </a>
+
+                                    <a
+                                        href="{% url 'toggle_tariff_archive' t.tariff_id %}"
+                                        class="tariff-action tariff-action-archive"
+                                    >
+                                        {% if t.is_archive %}
+                                            Вернуть
+                                        {% else %}
+                                            Архивировать
+                                        {% endif %}
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="8" class="tariffs-empty">
+                                <span class="tariffs-empty-icon">∅</span>
+
+                                <strong>
+                                    Тарифы не найдены
+                                </strong>
+
+                                <span>
+                                    Добавьте первый тариф в систему
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+>>>>>>> d686244 (ураплюсфронтдедлайнгорит)
 {% endblock %}

@@ -1,22 +1,32 @@
 {% extends "base_admin.html" %}
 {% load static %}
 
-{% block title %}Районы{% endblock %}
+{% block title %}Районы — Taxi Control{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/districts_list.css' %}">
+{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/districts_list.css' %}">
-
 <div class="districts-page">
-
     <div class="districts-header">
-        <h1>Районы</h1>
-        <p class="districts-subtitle">Управление районами и базовыми коэффициентами</p>
+        <div>
+            <span class="districts-label">СПРАВОЧНИК ТЕРРИТОРИЙ</span>
+
+            <h1>Районы</h1>
+
+            <p class="districts-subtitle">
+                Управление районами и базовыми коэффициентами
+            </p>
+        </div>
 
         <a href="{% url 'add_district' %}" class="districts-add">
+            <span>+</span>
             Добавить район
         </a>
     </div>
 
+<<<<<<< HEAD
     <div class="districts-table-container">
         <table class="districts-table">
             <thead>
@@ -41,17 +51,78 @@
                         </a>
                     </td>
                 </tr>
+=======
+    <div class="districts-table-card">
+        <div class="districts-table-header">
+            <div>
+                <h2>Список районов</h2>
 
-                {% empty %}
-                <tr>
-                    <td colspan="4" class="districts-empty">
-                        Нет районов
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+                <span>
+                    Районы, используемые в диспетчерской системе
+                </span>
+            </div>
+>>>>>>> d686244 (ураплюсфронтдедлайнгорит)
+
+            <div class="districts-counter">
+                {{ districts|length }} записей
+            </div>
+        </div>
+
+        <div class="districts-table-container">
+            <table class="districts-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Название</th>
+                        <th>Базовый коэффициент</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for d in districts %}
+                        <tr>
+                            <td class="district-id">
+                                #{{ d.district_id }}
+                            </td>
+
+                            <td class="district-name">
+                                {{ d.name }}
+                            </td>
+
+                            <td class="district-coefficient">
+                                {{ d.base_coefficient }}
+                            </td>
+
+                            <td>
+                                <div class="district-actions">
+                                    <a
+                                        href="{% url 'edit_district' d.district_id %}"
+                                        class="district-edit"
+                                    >
+                                        Редактировать
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="4" class="districts-empty">
+                                <span class="districts-empty-icon">∅</span>
+
+                                <strong>
+                                    Районы не найдены
+                                </strong>
+
+                                <span>
+                                    Добавьте первый район в систему
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-
 </div>
 {% endblock %}

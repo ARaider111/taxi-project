@@ -1,24 +1,35 @@
 {% extends "base_admin.html" %}
 {% load static %}
 
-{% block title %}Водители{% endblock %}
+{% block title %}Водители — Taxi Control{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/drivers_list.css' %}">
+{% endblock %}
 
 {% block content %}
-
-<link rel="stylesheet" href="{% static 'css/drivers_list.css' %}">
-
 <div class="drivers-page">
+    <div class="drivers-header">
+        <div>
+            <span class="drivers-label">УПРАВЛЕНИЕ АВТОПАРКОМ</span>
 
-    <h1>Водители</h1>
+            <h1>Водители</h1>
 
-    <a class="drivers-add" href="{% url 'add_driver' %}">
-        Добавить водителя
-    </a>
+            <p class="drivers-subtitle">
+                Просмотр, поиск и управление водителями системы
+            </p>
+        </div>
+
+        <a href="{% url 'add_driver' %}" class="drivers-add">
+            <span>+</span>
+            Добавить водителя
+        </a>
+    </div>
 
     <form method="get" class="drivers-filters">
+        <div class="driver-filter driver-filter-search">
+            <label for="q">Поиск</label>
 
-        <div class="driver-filter">
-            <label for="q">Поиск:</label>
             <input
                 type="text"
                 name="q"
@@ -29,38 +40,61 @@
         </div>
 
         <div class="driver-filter">
-            <label for="status">Статус:</label>
+            <label for="status">Статус</label>
+
             <select name="status" id="status">
                 <option value="">Все статусы</option>
+
                 {% for value, label in statuses %}
-                <option value="{{ value }}" {% if value == current_status %}selected{% endif %}>
-                    {{ label }}
-                </option>
+                    <option
+                        value="{{ value }}"
+                        {% if value == current_status %}selected{% endif %}
+                    >
+                        {{ label }}
+                    </option>
                 {% endfor %}
             </select>
         </div>
 
         <div class="driver-filter">
-            <label for="blacklist">Чёрный список:</label>
+            <label for="blacklist">Чёрный список</label>
+
             <select name="blacklist" id="blacklist">
                 <option value="">Все</option>
-                <option value="1" {% if current_blacklist == "1" %}selected{% endif %}>
+
+                <option
+                    value="1"
+                    {% if current_blacklist == "1" %}selected{% endif %}
+                >
                     В чёрном списке
                 </option>
-                <option value="0" {% if current_blacklist == "0" %}selected{% endif %}>
+
+                <option
+                    value="0"
+                    {% if current_blacklist == "0" %}selected{% endif %}
+                >
                     Не в чёрном списке
                 </option>
             </select>
         </div>
 
         <div class="driver-filter">
-            <label for="archive">Архив:</label>
+            <label for="archive">Архив</label>
+
             <select name="archive" id="archive">
                 <option value="">Все</option>
-                <option value="1" {% if current_archive == "1" %}selected{% endif %}>
+
+                <option
+                    value="1"
+                    {% if current_archive == "1" %}selected{% endif %}
+                >
                     В архиве
                 </option>
-                <option value="0" {% if current_archive == "0" %}selected{% endif %}>
+
+                <option
+                    value="0"
+                    {% if current_archive == "0" %}selected{% endif %}
+                >
                     Не в архиве
                 </option>
             </select>
@@ -73,123 +107,148 @@
         <a href="{% url 'drivers_list' %}" class="driver-reset">
             Сбросить
         </a>
-
     </form>
 
-    <div class="drivers-table-container">
+    <div class="drivers-table-card">
+        <div class="drivers-table-header">
+            <div>
+                <h2>Список водителей</h2>
 
-        <table class="drivers-table">
+                <span>
+                    Все зарегистрированные водители системы
+                </span>
+            </div>
 
-            <thead>
-                <tr>
-                    <th>Фамилия</th>
-                    <th>Имя</th>
-                    <th>Отчество</th>
-                    <th>Телефон</th>
-                    <th>Авто</th>
-                    <th>Номер</th>
-                    <th>Статус</th>
-                    <th>Чёрный список</th>
-                    <th>Архив</th>
-                    <th>Действия</th>
-                </tr>
-            </thead>
+            <div class="drivers-counter">
+                {{ drivers|length }} записей
+            </div>
+        </div>
 
-            <tbody>
+        <div class="drivers-table-container">
+            <table class="drivers-table">
+                <thead>
+                    <tr>
+                        <th>Фамилия</th>
+                        <th>Имя</th>
+                        <th>Отчество</th>
+                        <th>Телефон</th>
+                        <th>Автомобиль</th>
+                        <th>Номер</th>
+                        <th>Статус</th>
+                        <th>Чёрный список</th>
+                        <th>Архив</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
 
-                {% for d in drivers %}
+                <tbody>
+                    {% for d in drivers %}
+                        <tr>
+                            <td class="driver-last-name">
+                                {{ d.lname }}
+                            </td>
 
-                <tr>
+                            <td class="driver-first-name">
+                                {{ d.fname }}
+                            </td>
 
-                    <td>{{ d.lname }}</td>
+                            <td class="driver-patronymic">
+                                {{ d.patronimyc|default:"—" }}
+                            </td>
 
-                    <td>{{ d.fname }}</td>
+                            <td class="driver-phone">
+                                {{ d.phone }}
+                            </td>
 
-                    <td>{{ d.patronimyc|default:"—" }}</td>
+                            <td class="driver-car-model">
+                                {{ d.car_model }}
+                            </td>
 
-                    <td>{{ d.phone }}</td>
+                            <td class="driver-car-number">
+                                {{ d.car_number }}
+                            </td>
 
-                    <td>{{ d.car_model }}</td>
+                            <td>
+                                <span class="driver-status">
+                                    {{ d.status }}
+                                </span>
+                            </td>
 
-                    <td>{{ d.car_number }}</td>
-
-                    <td>
-                        <span class="driver-status">
-                            {{ d.status }}
-                        </span>
-                    </td>
-
-                    <td>
-                        {% if d.is_blacklist %}
-                            <span class="driver-yes">Да</span>
-                        {% else %}
-                            <span class="driver-no">Нет</span>
-                        {% endif %}
-                    </td>
-
-                    <td>
-                        {% if d.is_archive %}
-                            <span class="driver-yes">Да</span>
-                        {% else %}
-                            <span class="driver-no">Нет</span>
-                        {% endif %}
-                    </td>
-
-                    <td>
-
-                        <div class="driver-actions">
-
-                            <a
-                                class="driver-action driver-action-edit"
-                                href="{% url 'edit_driver' d.driver_id %}"
-                            >
-                                Редактировать
-                            </a>
-
-                            <a
-                                class="driver-action driver-action-archive"
-                                href="{% url 'toggle_driver_archive' d.driver_id %}"
-                            >
-                                {% if d.is_archive %}
-                                    Вернуть из архива
-                                {% else %}
-                                    Архивировать
-                                {% endif %}
-                            </a>
-
-                            <a
-                                class="driver-action driver-action-blacklist"
-                                href="{% url 'toggle_driver_blacklist' d.driver_id %}"
-                            >
+                            <td>
                                 {% if d.is_blacklist %}
-                                    Убрать из ЧС
+                                    <span class="driver-yes">
+                                        Да
+                                    </span>
                                 {% else %}
-                                    Добавить в ЧС
+                                    <span class="driver-no">
+                                        Нет
+                                    </span>
                                 {% endif %}
-                            </a>
+                            </td>
 
-                        </div>
+                            <td>
+                                {% if d.is_archive %}
+                                    <span class="driver-archive-yes">
+                                        Да
+                                    </span>
+                                {% else %}
+                                    <span class="driver-archive-no">
+                                        Нет
+                                    </span>
+                                {% endif %}
+                            </td>
 
-                    </td>
+                            <td>
+                                <div class="driver-actions">
+                                    <a
+                                        href="{% url 'edit_driver' d.driver_id %}"
+                                        class="driver-action driver-action-edit"
+                                    >
+                                        Редактировать
+                                    </a>
 
-                </tr>
+                                    <a
+                                        href="{% url 'toggle_driver_archive' d.driver_id %}"
+                                        class="driver-action driver-action-archive"
+                                    >
+                                        {% if d.is_archive %}
+                                            Вернуть из архива
+                                        {% else %}
+                                            Архивировать
+                                        {% endif %}
+                                    </a>
 
-                {% empty %}
+                                    <a
+                                        href="{% url 'toggle_driver_blacklist' d.driver_id %}"
+                                        class="driver-action driver-action-blacklist"
+                                    >
+                                        {% if d.is_blacklist %}
+                                            Убрать из ЧС
+                                        {% else %}
+                                            Добавить в ЧС
+                                        {% endif %}
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="10" class="drivers-empty">
+                                <span class="drivers-empty-icon">∅</span>
 
-                <tr>
-                    <td colspan="9" class="drivers-empty">
-                        Нет водителей
-                    </td>
-                </tr>
+                                <strong>
+                                    Водители не найдены
+                                </strong>
 
-                {% endfor %}
-
-            </tbody>
-
-        </table>
-
+                                <span>
+                                    Попробуйте изменить параметры поиска
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
     </div>
-
 </div>
-
 {% endblock %}
