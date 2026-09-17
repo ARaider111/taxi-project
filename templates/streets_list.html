@@ -12,30 +12,6 @@
     <div class="streets-header">
         <div>
             <span class="streets-label">СПРАВОЧНИК ТЕРРИТОРИЙ</span>
-
-<<<<<<< HEAD
-    <button type="submit">Найти</button>
-    <a href="{% url 'streets_list' %}" style="margin-left: 10px;">Сбросить</a>
-</form>
-<table border="1" cellpadding="6">
-    <tr>
-        <th>Название</th>
-        <th>Район</th>
-        <th>Действия</th>
-    </tr>
-    {% for s in streets %}
-    <tr>
-        <td>{{ s.name }}</td>
-        <td>{{ s.district.name }}</td>
-        <td>
-            <a href="{% url 'edit_street' s.street_id %}">Редактировать</a>
-        </td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="4">Нет улиц</td></tr>
-    {% endfor %}
-</table>
-=======
             <h1>Улицы</h1>
 
             <p class="streets-subtitle">
@@ -143,5 +119,4 @@
         </div>
     </div>
 </div>
->>>>>>> d686244 (ураплюсфронтдедлайнгорит)
 {% endblock %}

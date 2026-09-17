@@ -1,66 +1,192 @@
 {% extends "base_admin.html" %}
+{% load static %}
 
-{% block title %}Логи аудита{% endblock %}
+{% block title %}Логи аудита — Taxi Control{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/audit_logs_list.css' %}">
+{% endblock %}
 
 {% block content %}
+<div class="audit-page">
+    <div class="audit-header">
+        <div>
+            <span class="audit-label">БЕЗОПАСНОСТЬ И КОНТРОЛЬ</span>
 
-<h1>Логи аудита</h1>
+            <h1>
+                Логи аудита
+            </h1>
 
-<form method="get" class="filters">
-    <label>Пользователь:
-        <select name="user">
-            <option value="">Все</option>
-            {% for u in users %}
-            <option value="{{ u.user_id }}" {% if current_user == u.user_id|slugify %}selected{% endif %}>
-                {{ u.lname }} {{ u.fname }}
-            </option>
-            {% endfor %}
-        </select>
-    </label>
+            <p class="audit-subtitle">
+                История действий пользователей в системе
+            </p>
+        </div>
+    </div>
 
-    <label>Действие:
-        <select name="action">
-            <option value="">Все</option>
-            {% for value, label in action_choices %}
-            <option value="{{ value }}" {% if current_action == value %}selected{% endif %}>
-                {{ label }}
-            </option>
-            {% endfor %}
-        </select>
-    </label>
+    <form method="get" class="audit-filters">
+        <div class="audit-filter audit-filter-user">
+            <label for="user">
+                Пользователь
+            </label>
 
-    <label>Дата с: <input type="date" name="date_from" value="{{ date_from }}"></label>
-    <label>Дата по: <input type="date" name="date_to" value="{{ date_to }}"></label>
+            <select name="user" id="user">
+                <option value="">
+                    Все пользователи
+                </option>
 
-    <button type="submit">Фильтровать</button>
-    <a href="{% url 'audit_logs_list' %}">Сбросить</a>
-</form>
+                {% for u in users %}
+                    <option
+                        value="{{ u.user_id }}"
+                        {% if current_user == u.user_id|slugify %}selected{% endif %}
+                    >
+                        {{ u.lname }} {{ u.fname }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
 
-<table border="1" cellpadding="6">
-    <thead>
-        <tr>
-            <th>Время</th>
-            <th>Пользователь</th>
-            <th>Действие</th>
-            <th>Объект</th>
-            <th>Описание</th>
-            <th>IP</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for log in logs %}
-        <tr>
-            <td>{{ log.created_at|date:"d.m.Y H:i:s" }}</td>
-            <td>{{ log.user.lname }} {{ log.user.fname }}</td>
-            <td>{{ log.get_action_display }}</td>
-            <td>{{ log.object_type }} #{{ log.object_id }}</td>
-            <td>{{ log.description }}</td>
-            <td>{{ log.ip_address }}</td>
-        </tr>
-        {% empty %}
-        <tr><td colspan="6">Нет логов</td></tr>
-        {% endfor %}
-    </tbody>
-</table>
+        <div class="audit-filter audit-filter-action">
+            <label for="action">
+                Действие
+            </label>
 
+            <select name="action" id="action">
+                <option value="">
+                    Все действия
+                </option>
+
+                {% for value, label in action_choices %}
+                    <option
+                        value="{{ value }}"
+                        {% if current_action == value %}selected{% endif %}
+                    >
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="audit-filter">
+            <label for="date_from">
+                Дата с
+            </label>
+
+            <input
+                type="date"
+                name="date_from"
+                id="date_from"
+                value="{{ date_from }}"
+            >
+        </div>
+
+        <div class="audit-filter">
+            <label for="date_to">
+                Дата по
+            </label>
+
+            <input
+                type="date"
+                name="date_to"
+                id="date_to"
+                value="{{ date_to }}"
+            >
+        </div>
+
+        <button type="submit" class="audit-search">
+            Фильтровать
+        </button>
+
+        <a
+            href="{% url 'audit_logs_list' %}"
+            class="audit-reset"
+        >
+            Сбросить
+        </a>
+    </form>
+
+    <div class="audit-table-card">
+        <div class="audit-table-header">
+            <div>
+                <h2>
+                    История операций
+                </h2>
+
+                <span>
+                    Все зарегистрированные действия пользователей
+                </span>
+            </div>
+
+            <div class="audit-counter">
+                {{ logs|length }} записей
+            </div>
+        </div>
+
+        <div class="audit-table-container">
+            <table class="audit-table">
+                <thead>
+                    <tr>
+                        <th>Время</th>
+                        <th>Пользователь</th>
+                        <th>Действие</th>
+                        <th>Объект</th>
+                        <th>Описание</th>
+                        <th>IP-адрес</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for log in logs %}
+                        <tr>
+                            <td class="audit-date">
+                                {{ log.created_at|date:"d.m.Y H:i:s" }}
+                            </td>
+
+                            <td class="audit-user">
+                                {% if log.user %}
+                                    {{ log.user.lname }} {{ log.user.fname }}
+                                {% else %}
+                                    <span class="audit-system-user">
+                                        Система
+                                    </span>
+                                {% endif %}
+                            </td>
+
+                            <td>
+                                <span class="audit-action-badge">
+                                    {{ log.get_action_display }}
+                                </span>
+                            </td>
+
+                            <td class="audit-object">
+                                {{ log.object_type }} #{{ log.object_id }}
+                            </td>
+
+                            <td class="audit-description">
+                                {{ log.description }}
+                            </td>
+
+                            <td class="audit-ip">
+                                {{ log.ip_address|default:"—" }}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="audit-empty">
+                                <span class="audit-empty-icon">∅</span>
+
+                                <strong>
+                                    Логи не найдены
+                                </strong>
+
+                                <span>
+                                    Попробуйте изменить параметры фильтрации
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}

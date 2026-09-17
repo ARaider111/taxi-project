@@ -1,76 +1,216 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>Редактировать пользователя</title>
-</head>
-<body>
-    <h1>Редактировать пользователя</h1>
-    <a href="{% url 'users_list' %}">← Назад к панели</a>
+{% extends "base_admin.html" %}
+{% load static %}
 
-    <form method="post">
-        {% csrf_token %}
+{% block title %}Редактировать пользователя — Taxi Control{% endblock %}
 
-        <p>
-            <label>Логин:<br>
-                <input type="text" name="login" required maxlength="128"
-                       value="{{ user_obj.login }}">
-            </label>
-        </p>
+{% block extra_head %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/user_edit.css' %}?v=2"
+>
+{% endblock %}
 
-        <p>
-            <label>Новый пароль (оставьте пустым, чтобы не менять):<br>
-                <input type="password" name="password" maxlength="128">
-            </label>
-        </p>
+{% block content %}
+<div class="user-edit-page">
+    <div class="user-edit-header">
+        <div>
+            <span class="user-edit-label">
+                УПРАВЛЕНИЕ СИСТЕМОЙ
+            </span>
 
-        <p>
-            <label>Фамилия:<br>
-                <input type="text" name="lname" required maxlength="128"
-                       value="{{ user_obj.lname }}">
-            </label>
-        </p>
+            <h1>
+                Редактировать пользователя
+            </h1>
 
-        <p>
-            <label>Имя:<br>
-                <input type="text" name="fname" required maxlength="128"
-                       value="{{ user_obj.fname }}">
-            </label>
-        </p>
+            <p class="user-edit-subtitle">
+                Изменение данных учётной записи сотрудника
+            </p>
+        </div>
 
-        <p>
-            <label>Отчество:<br>
-                <input type="text" name="patronimyc" maxlength="128"
-                       value="{{ user_obj.patronimyc|default:'' }}">
-            </label>
-        </p>
+        <a
+            href="{% url 'users_list' %}"
+            class="user-edit-back"
+        >
+            ← Назад к пользователям
+        </a>
+    </div>
 
-        <p>
-            <label>Телефон:<br>
-                <input type="text" name="phone" required maxlength="12"
-                       value="{{ user_obj.phone }}">
-            </label>
-        </p>
+    <div class="user-edit-card">
+        <div class="user-edit-card-header">
+            <div>
+                <h2>
+                    Данные пользователя
+                </h2>
 
-        <p>
-            <label>Роль:<br>
-                <select name="role">
-                    <option value="admin" {% if user_obj.role == "admin" %}selected{% endif %}>Admin</option>
-                    <option value="dispatcher" {% if user_obj.role == "dispatcher" %}selected{% endif %}>Dispatcher</option>
-                </select>
-            </label>
-        </p>
+                <span>
+                    Измените необходимые данные учётной записи
+                </span>
+            </div>
 
-        <p>
-            <label>
-                <input type="checkbox" name="is_active" {% if user_obj.is_active %}checked{% endif %}>
-                Активен
-            </label>
-        </p>
+            <div class="user-edit-id">
+                ID: {{ user_obj.user_id }}
+            </div>
+        </div>
 
-        <p>
-            <button type="submit">Сохранить</button>
-        </p>
-    </form>
-</body>
-</html>
+        <form method="post" class="user-edit-form">
+            {% csrf_token %}
+
+            <div class="user-edit-grid">
+                <div class="user-edit-field">
+                    <label for="login">
+                        Логин
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="login"
+                        name="login"
+                        required
+                        maxlength="128"
+                        value="{{ user_obj.login }}"
+                    >
+                </div>
+
+                <div class="user-edit-field">
+                    <label for="password">
+                        Новый пароль
+                    </label>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        maxlength="128"
+                        placeholder="Оставьте пустым, чтобы не менять"
+                    >
+                </div>
+
+                <div class="user-edit-field">
+                    <label for="lname">
+                        Фамилия
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="lname"
+                        name="lname"
+                        required
+                        maxlength="128"
+                        value="{{ user_obj.lname }}"
+                    >
+                </div>
+
+                <div class="user-edit-field">
+                    <label for="fname">
+                        Имя
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="fname"
+                        name="fname"
+                        required
+                        maxlength="128"
+                        value="{{ user_obj.fname }}"
+                    >
+                </div>
+
+                <div class="user-edit-field">
+                    <label for="patronimyc">
+                        Отчество
+                    </label>
+
+                    <input
+                        type="text"
+                        id="patronimyc"
+                        name="patronimyc"
+                        maxlength="128"
+                        value="{{ user_obj.patronimyc|default:'' }}"
+                    >
+                </div>
+
+                <div class="user-edit-field">
+                    <label for="phone">
+                        Телефон
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        required
+                        maxlength="12"
+                        value="{{ user_obj.phone }}"
+                    >
+                </div>
+
+                <div class="user-edit-field">
+                    <label for="role">
+                        Роль
+                        <span>*</span>
+                    </label>
+
+                    <select
+                        id="role"
+                        name="role"
+                        required
+                    >
+                        <option
+                            value="admin"
+                            {% if user_obj.role == "admin" %}selected{% endif %}
+                        >
+                            Admin
+                        </option>
+
+                        <option
+                            value="dispatcher"
+                            {% if user_obj.role == "dispatcher" %}selected{% endif %}
+                        >
+                            Dispatcher
+                        </option>
+                    </select>
+                </div>
+
+                <div class="user-edit-field">
+                    <label>
+                        Статус
+                    </label>
+
+                    <div class="user-edit-active">
+                        <input
+                            type="checkbox"
+                            id="is_active"
+                            name="is_active"
+                            {% if user_obj.is_active %}checked{% endif %}
+                        >
+
+                        <label for="is_active">
+                            Активен
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="user-edit-footer">
+                <a
+                    href="{% url 'users_list' %}"
+                    class="user-edit-btn user-edit-cancel"
+                >
+                    Отмена
+                </a>
+
+                <button
+                    type="submit"
+                    class="user-edit-btn user-edit-save"
+                >
+                    Сохранить изменения
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

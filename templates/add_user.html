@@ -1,103 +1,177 @@
 {% extends "base_admin.html" %}
 {% load static %}
 
-{% block title %}Добавить пользователя{% endblock %}
+{% block title %}Добавить пользователя — Taxi Control{% endblock %}
+
+{% block extra_head %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/user_form.css' %}?v=2"
+>
+{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/user_form.css' %}">
-
 <div class="user-form-page">
-
     <div class="user-form-header">
-        <h1>Добавить пользователя</h1>
-        <p class="user-form-subtitle">Создание новой учётной записи</p>
+        <div>
+            <span class="user-form-label">
+                УПРАВЛЕНИЕ СИСТЕМОЙ
+            </span>
 
-        <a href="{% url 'users_list' %}" class="user-form-back">
-            ← Назад к панели
+            <h1>
+                Добавить пользователя
+            </h1>
+
+            <p class="user-form-subtitle">
+                Создание новой учётной записи сотрудника
+            </p>
+        </div>
+
+        <a
+            href="{% url 'users_list' %}"
+            class="user-form-back"
+        >
+            ← Назад к пользователям
         </a>
     </div>
 
     <div class="user-form-card">
-        <form method="post">
+        <div class="user-form-card-header">
+            <div>
+                <h2>
+                    Данные пользователя
+                </h2>
+
+                <span>
+                    Заполните данные учётной записи и сотрудника
+                </span>
+            </div>
+        </div>
+
+        <form method="post" class="user-form">
             {% csrf_token %}
 
             <div class="user-form-grid">
-
                 <div class="user-form-field">
-                    <label for="login">Логин</label>
+                    <label for="login">
+                        Логин
+                        <span>*</span>
+                    </label>
+
                     <input
                         type="text"
                         id="login"
                         name="login"
                         required
                         maxlength="128"
+                        placeholder="Введите логин"
+                        value="{{ request.POST.login|default:'' }}"
                     >
                 </div>
 
                 <div class="user-form-field">
-                    <label for="password">Пароль</label>
+                    <label for="password">
+                        Пароль
+                        <span>*</span>
+                    </label>
+
                     <input
                         type="password"
                         id="password"
                         name="password"
                         required
                         maxlength="128"
+                        placeholder="Введите пароль"
                     >
                 </div>
 
                 <div class="user-form-field">
-                    <label for="lname">Фамилия</label>
+                    <label for="lname">
+                        Фамилия
+                        <span>*</span>
+                    </label>
+
                     <input
                         type="text"
                         id="lname"
                         name="lname"
                         required
                         maxlength="128"
+                        placeholder="Введите фамилию"
+                        value="{{ request.POST.lname|default:'' }}"
                     >
                 </div>
 
                 <div class="user-form-field">
-                    <label for="fname">Имя</label>
+                    <label for="fname">
+                        Имя
+                        <span>*</span>
+                    </label>
+
                     <input
                         type="text"
                         id="fname"
                         name="fname"
                         required
                         maxlength="128"
+                        placeholder="Введите имя"
+                        value="{{ request.POST.fname|default:'' }}"
                     >
                 </div>
 
                 <div class="user-form-field">
-                    <label for="patronimyc">Отчество</label>
+                    <label for="patronimyc">
+                        Отчество
+                    </label>
+
                     <input
                         type="text"
                         id="patronimyc"
                         name="patronimyc"
                         maxlength="128"
+                        placeholder="Введите отчество"
+                        value="{{ request.POST.patronimyc|default:'' }}"
                     >
                 </div>
 
                 <div class="user-form-field">
-                    <label for="phone">Телефон</label>
+                    <label for="phone">
+                        Телефон
+                        <span>*</span>
+                    </label>
+
                     <input
-                        type="text"
+                        type="tel"
                         id="phone"
                         name="phone"
                         required
                         maxlength="12"
+                        placeholder="+79991234567"
+                        value="{{ request.POST.phone|default:'' }}"
                     >
                 </div>
 
                 <div class="user-form-field">
-                    <label for="role">Роль</label>
-                    <select id="role" name="role">
-                        <option value="admin">Admin</option>
-                        <option value="dispatcher">Dispatcher</option>
+                    <label for="role">
+                        Роль
+                        <span>*</span>
+                    </label>
+
+                    <select id="role" name="role" required>
+                        <option value="admin">
+                            Admin
+                        </option>
+
+                        <option value="dispatcher">
+                            Dispatcher
+                        </option>
                     </select>
                 </div>
 
                 <div class="user-form-field">
-                    <label>Статус</label>
+                    <label>
+                        Статус
+                    </label>
 
                     <div class="user-form-active">
                         <input
@@ -106,23 +180,30 @@
                             name="is_active"
                             checked
                         >
-                        <label for="is_active">Активен</label>
+
+                        <label for="is_active">
+                            Активен
+                        </label>
                     </div>
                 </div>
-
             </div>
 
             <div class="user-form-footer">
-                <a href="{% url 'users_list' %}" class="user-form-btn user-form-cancel">
+                <a
+                    href="{% url 'users_list' %}"
+                    class="user-form-btn user-form-cancel"
+                >
                     Отмена
                 </a>
 
-                <button type="submit" class="user-form-btn user-form-save">
-                    Сохранить
+                <button
+                    type="submit"
+                    class="user-form-btn user-form-save"
+                >
+                    Сохранить пользователя
                 </button>
             </div>
         </form>
     </div>
-
 </div>
 {% endblock %}

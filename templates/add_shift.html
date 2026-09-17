@@ -1,39 +1,122 @@
 {% extends "base_admin.html" %}
-{% block title %}Добавить смену{% endblock %}
+{% load static %}
+
+{% block title %}Добавить смену — Taxi Control{% endblock %}
+
+{% block extra_head %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/shift_form.css' %}?v=2"
+>
+{% endblock %}
 
 {% block content %}
-<h1>Добавить смену</h1>
-<p><a href="{% url 'shifts_list' %}">← Назад к списку</a></p>
+<div class="shift-form-page">
+    <div class="shift-form-header">
+        <div>
+            <span class="shift-form-label">
+                УПРАВЛЕНИЕ РАБОЧИМИ СМЕНАМИ
+            </span>
 
-<form method="post">
-    {% csrf_token %}
+            <h1>
+                Добавить смену
+            </h1>
 
-    <p>
-        <label>Водитель:<br>
-            <select name="driver" required>
-                {% for d in drivers %}
-                <option value="{{ d.driver_id }}">
-                    {{ d.lname }} {{ d.fname }} ({{ d.car_model }} {{ d.car_number }})
-                </option>
-                {% endfor %}
-            </select>
-        </label>
-    </p>
+            <p class="shift-form-subtitle">
+                Создайте новую рабочую смену водителя
+            </p>
+        </div>
 
-    <p>
-        <label>Начало смены:<br>
-            <input type="datetime-local" name="start_shift" required>
-        </label>
-    </p>
+        <a
+            href="{% url 'shifts_list' %}"
+            class="shift-form-back"
+        >
+            ← Назад к сменам
+        </a>
+    </div>
 
-    <p>
-        <label>Конец смены:<br>
-            <input type="datetime-local" name="end_shift" required>
-        </label>
-    </p>
+    <div class="shift-form-card">
+        <div class="shift-form-card-header">
+            <div>
+                <h2>
+                    Параметры смены
+                </h2>
 
-    <p>
-        <button type="submit">Создать смену</button>
-    </p>
-</form>
+                <span>
+                    Укажите водителя и время рабочей смены
+                </span>
+            </div>
+        </div>
+
+        <form method="post" class="shift-form">
+            {% csrf_token %}
+
+            <div class="shift-form-grid">
+                <div class="shift-form-field shift-form-field-wide">
+                    <label for="driver">
+                        Водитель
+                        <span>*</span>
+                    </label>
+
+                    <select
+                        name="driver"
+                        id="driver"
+                        required
+                    >
+                        {% for d in drivers %}
+                            <option value="{{ d.driver_id }}">
+                                {{ d.lname }} {{ d.fname }}
+                                — {{ d.car_model }} {{ d.car_number }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="shift-form-field">
+                    <label for="start_shift">
+                        Начало смены
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="datetime-local"
+                        name="start_shift"
+                        id="start_shift"
+                        required
+                    >
+                </div>
+
+                <div class="shift-form-field">
+                    <label for="end_shift">
+                        Конец смены
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="datetime-local"
+                        name="end_shift"
+                        id="end_shift"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="shift-form-footer">
+                <a
+                    href="{% url 'shifts_list' %}"
+                    class="shift-form-btn shift-form-cancel"
+                >
+                    Отмена
+                </a>
+
+                <button
+                    type="submit"
+                    class="shift-form-btn shift-form-save"
+                >
+                    Создать смену
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}

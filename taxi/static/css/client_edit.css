@@ -1,48 +1,112 @@
 .client-edit-page {
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 32px 24px;
-    color: #f1f3f5;
+    width: 100%;
+    color: #ffffff;
 }
 
 .client-edit-header {
-    margin-bottom: 24px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 30px;
+    margin-bottom: 35px;
+}
+
+.client-edit-header > div:first-child {
+    min-width: 0;
+}
+
+.client-edit-label {
+    display: block;
+    margin-bottom: 11px;
+    color: #ffc107;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 2px;
 }
 
 .client-edit-header h1 {
-    margin: 0 0 8px;
-    font-size: 28px;
-    font-weight: 700;
+    margin: 0 0 9px;
+    color: #ffffff;
+    font-size: 42px;
+    line-height: 1.1;
+    letter-spacing: -1px;
 }
 
 .client-edit-subtitle {
     margin: 0;
-    color: #858e98;
-    font-size: 14px;
+    color: #7f8992;
+    font-size: 15px;
 }
 
 .client-edit-back {
     display: inline-flex;
-    margin-top: 14px;
-    color: #aeb5bd;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 0 15px;
+    box-sizing: border-box;
+    border: 1px solid #343b43;
+    border-radius: 8px;
+    background: #20252b;
+    color: #c7ccd2;
+    font-size: 13px;
+    font-weight: 700;
     text-decoration: none;
-    font-size: 14px;
-    transition: color 0.2s ease;
+    transition: 0.2s ease;
+    white-space: nowrap;
 }
 
 .client-edit-back:hover {
+    border-color: #ffc107;
+    background: #2a3037;
     color: #ffc107;
+    transform: translateY(-2px);
 }
 
 .client-edit-card {
-    background: #171b20;
-    border: 1px solid #292f36;
-    border-radius: 12px;
-    padding: 28px;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid #30363d;
+    border-radius: 14px;
+    background: #181c20;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
+}
+
+.client-edit-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 21px 24px;
+    border-bottom: 1px solid #30363d;
+    background: #1d2228;
+}
+
+.client-edit-card-header h2 {
+    margin: 0 0 6px;
+    color: #ffffff;
+    font-size: 17px;
+}
+
+.client-edit-card-header span {
+    color: #737d86;
+    font-size: 12px;
+}
+
+.client-edit-id {
+    flex-shrink: 0;
+    padding: 8px 12px;
+    border: 1px solid rgba(255, 193, 7, 0.2);
+    border-radius: 7px;
+    background: rgba(255, 193, 7, 0.08);
+    color: #ffc107;
+    font-size: 11px;
+    font-weight: 700;
+    white-space: nowrap;
 }
 
 .client-edit-form {
-    width: 100%;
+    padding: 25px;
 }
 
 .client-edit-grid {
@@ -58,95 +122,91 @@
 }
 
 .client-edit-field label {
-    color: #e6e9ed;
-    font-size: 14px;
-    font-weight: 600;
+    color: #aeb5bd;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.client-edit-field label span {
+    color: #ffc107;
 }
 
 .client-edit-field input {
     width: 100%;
+    height: 44px;
+    padding: 0 13px;
     box-sizing: border-box;
-    padding: 11px 13px;
-    border: 1px solid #343b43;
-    border-radius: 7px;
-    background: #20252b;
-    color: #f1f3f5;
-    font-size: 14px;
     outline: none;
-    transition: border-color 0.2s ease, background 0.2s ease;
+    border: 1px solid #343b43;
+    border-radius: 8px;
+    background: #0f1215;
+    color: #ffffff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    transition: 0.2s ease;
+}
+
+.client-edit-field input::placeholder {
+    color: #69717a;
+}
+
+.client-edit-field input:hover {
+    border-color: #4a535d;
 }
 
 .client-edit-field input:focus {
     border-color: #ffc107;
-    background: #242a30;
-}
-
-.client-edit-field input::placeholder {
-    color: #858e98;
+    background: #14191d;
+    box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.08);
 }
 
 .client-edit-footer {
     display: flex;
+    align-items: center;
     justify-content: flex-end;
-    gap: 12px;
+    gap: 10px;
     margin-top: 28px;
     padding-top: 22px;
-    border-top: 1px solid #292f36;
+    border-top: 1px solid #30363d;
 }
 
 .client-edit-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 120px;
-    padding: 11px 18px;
-    border-radius: 7px;
-    font-size: 14px;
-    font-weight: 600;
+    min-height: 42px;
+    padding: 0 18px;
+    box-sizing: border-box;
+    border-radius: 8px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
     text-decoration: none;
-    border: none;
-    cursor: pointer;
     transition: 0.2s ease;
 }
 
 .client-edit-cancel {
-    background: #20252b;
-    color: #aeb5bd;
     border: 1px solid #343b43;
+    background: #20252b;
+    color: #c7ccd2;
 }
 
 .client-edit-cancel:hover {
-    background: #292f36;
-    color: #f1f3f5;
+    border-color: #4a535d;
+    background: #2a3037;
+    color: #ffffff;
+    transform: translateY(-2px);
 }
 
 .client-edit-save {
+    border: 0;
     background: #ffc107;
-    color: #111;
+    color: #111111;
+    cursor: pointer;
 }
 
 .client-edit-save:hover {
-    background: #ffca2c;
-}
-
-@media (max-width: 700px) {
-    .client-edit-page {
-        padding: 24px 16px;
-    }
-
-    .client-edit-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .client-edit-card {
-        padding: 20px;
-    }
-
-    .client-edit-footer {
-        flex-direction: column;
-    }
-
-    .client-edit-btn {
-        width: 100%;
-    }
+    background: #ffd54a;
+    box-shadow: 0 8px 20px rgba(255, 193, 7, 0.2);
+    transform: translateY(-2px);
 }

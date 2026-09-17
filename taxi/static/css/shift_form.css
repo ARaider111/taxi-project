@@ -1,9 +1,9 @@
-.client-form-page {
+.shift-form-page {
     width: 100%;
     color: #ffffff;
 }
 
-.client-page-header {
+.shift-form-header {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
@@ -11,11 +11,11 @@
     margin-bottom: 35px;
 }
 
-.client-page-header > div:first-child {
+.shift-form-header > div:first-child {
     min-width: 0;
 }
 
-.client-form-label {
+.shift-form-label {
     display: block;
     margin-bottom: 11px;
     color: #ffc107;
@@ -24,7 +24,7 @@
     letter-spacing: 2px;
 }
 
-.client-page-header h1 {
+.shift-form-header h1 {
     margin: 0 0 9px;
     color: #ffffff;
     font-size: 42px;
@@ -32,13 +32,13 @@
     letter-spacing: -1px;
 }
 
-.client-page-subtitle {
+.shift-form-subtitle {
     margin: 0;
     color: #7f8992;
     font-size: 15px;
 }
 
-.client-back-link {
+.shift-form-back {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -56,14 +56,14 @@
     white-space: nowrap;
 }
 
-.client-back-link:hover {
+.shift-form-back:hover {
     border-color: #ffc107;
     background: #2a3037;
     color: #ffc107;
     transform: translateY(-2px);
 }
 
-.client-form-card {
+.shift-form-card {
     width: 100%;
     overflow: hidden;
     border: 1px solid #30363d;
@@ -72,7 +72,7 @@
     box-shadow: 0 12px 35px rgba(0, 0, 0, 0.18);
 }
 
-.client-form-card-header {
+.shift-form-card-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -81,44 +81,49 @@
     background: #1d2228;
 }
 
-.client-form-card-header h2 {
+.shift-form-card-header h2 {
     margin: 0 0 6px;
     color: #ffffff;
     font-size: 17px;
 }
 
-.client-form-card-header span {
+.shift-form-card-header span {
     color: #737d86;
     font-size: 12px;
 }
 
-.client-form {
+.shift-form {
     padding: 25px;
 }
 
-.client-form-grid {
+.shift-form-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 20px;
 }
 
-.client-form-field {
+.shift-form-field {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.client-form-field label {
+.shift-form-field-wide {
+    grid-column: 1 / -1;
+}
+
+.shift-form-field label {
     color: #aeb5bd;
     font-size: 12px;
     font-weight: 700;
 }
 
-.client-form-field label span {
+.shift-form-field label span {
     color: #ffc107;
 }
 
-.client-form-field input {
+.shift-form-field input,
+.shift-form-field select {
     width: 100%;
     height: 44px;
     padding: 0 13px;
@@ -133,21 +138,32 @@
     transition: 0.2s ease;
 }
 
-.client-form-field input::placeholder {
-    color: #69717a;
-}
-
-.client-form-field input:hover {
+.shift-form-field input:hover,
+.shift-form-field select:hover {
     border-color: #4a535d;
 }
 
-.client-form-field input:focus {
+.shift-form-field input:focus,
+.shift-form-field select:focus {
     border-color: #ffc107;
     background: #14191d;
     box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.08);
 }
 
-.client-form-footer {
+.shift-form-field select {
+    cursor: pointer;
+}
+
+.shift-form-field select option {
+    background: #181c20;
+    color: #ffffff;
+}
+
+.shift-form-field input[type="datetime-local"] {
+    color-scheme: dark;
+}
+
+.shift-form-footer {
     display: flex;
     align-items: center;
     justify-content: flex-end;
@@ -157,7 +173,7 @@
     border-top: 1px solid #30363d;
 }
 
-.client-btn {
+.shift-form-btn {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -172,27 +188,27 @@
     transition: 0.2s ease;
 }
 
-.client-btn-cancel {
+.shift-form-cancel {
     border: 1px solid #343b43;
     background: #20252b;
     color: #c7ccd2;
 }
 
-.client-btn-cancel:hover {
+.shift-form-cancel:hover {
     border-color: #4a535d;
     background: #2a3037;
     color: #ffffff;
     transform: translateY(-2px);
 }
 
-.client-btn-save {
+.shift-form-save {
     border: 0;
     background: #ffc107;
     color: #111111;
     cursor: pointer;
 }
 
-.client-btn-save:hover {
+.shift-form-save:hover {
     background: #ffd54a;
     box-shadow: 0 8px 20px rgba(255, 193, 7, 0.2);
     transform: translateY(-2px);

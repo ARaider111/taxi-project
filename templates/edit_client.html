@@ -1,30 +1,64 @@
 {% extends "base_admin.html" %}
 {% load static %}
 
-{% block title %}Редактировать клиента{% endblock %}
+{% block title %}Редактировать клиента — Taxi Control{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/client_edit.css' %}">
+{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/client_edit.css' %}">
-
 <div class="client-edit-page">
-
     <div class="client-edit-header">
-        <h1>Редактировать клиента</h1>
-        <p class="client-edit-subtitle">Изменение данных клиента</p>
+        <div>
+            <span class="client-edit-label">
+                УПРАВЛЕНИЕ КЛИЕНТАМИ
+            </span>
 
-        <a href="{% url 'clients_list' %}" class="client-edit-back">
-            ← Назад к панели
+            <h1>
+                Редактировать клиента
+            </h1>
+
+            <p class="client-edit-subtitle">
+                Измените данные клиента
+            </p>
+        </div>
+
+        <a
+            href="{% url 'clients_list' %}"
+            class="client-edit-back"
+        >
+            ← Назад к клиентам
         </a>
     </div>
 
     <div class="client-edit-card">
+        <div class="client-edit-card-header">
+            <div>
+                <h2>
+                    Данные клиента
+                </h2>
+
+                <span>
+                    Обновите контактную информацию клиента
+                </span>
+            </div>
+
+            <div class="client-edit-id">
+                ID: {{ client.client_id }}
+            </div>
+        </div>
+
         <form method="post" class="client-edit-form">
             {% csrf_token %}
 
             <div class="client-edit-grid">
-
                 <div class="client-edit-field">
-                    <label for="lname">Фамилия</label>
+                    <label for="lname">
+                        Фамилия
+                        <span>*</span>
+                    </label>
+
                     <input
                         type="text"
                         id="lname"
@@ -36,7 +70,11 @@
                 </div>
 
                 <div class="client-edit-field">
-                    <label for="fname">Имя</label>
+                    <label for="fname">
+                        Имя
+                        <span>*</span>
+                    </label>
+
                     <input
                         type="text"
                         id="fname"
@@ -48,7 +86,10 @@
                 </div>
 
                 <div class="client-edit-field">
-                    <label for="patronimyc">Отчество</label>
+                    <label for="patronimyc">
+                        Отчество
+                    </label>
+
                     <input
                         type="text"
                         id="patronimyc"
@@ -59,9 +100,13 @@
                 </div>
 
                 <div class="client-edit-field">
-                    <label for="phone">Телефон</label>
+                    <label for="phone">
+                        Телефон
+                        <span>*</span>
+                    </label>
+
                     <input
-                        type="text"
+                        type="tel"
                         id="phone"
                         name="phone"
                         required
@@ -69,20 +114,23 @@
                         value="{{ client.phone }}"
                     >
                 </div>
-
             </div>
 
             <div class="client-edit-footer">
-                <a href="{% url 'clients_list' %}" class="client-edit-btn client-edit-cancel">
+                <a
+                    href="{% url 'clients_list' %}"
+                    class="client-edit-btn client-edit-cancel"
+                >
                     Отмена
                 </a>
 
-                <button type="submit" class="client-edit-btn client-edit-save">
-                    Сохранить
+                <button
+                    type="submit"
+                    class="client-edit-btn client-edit-save">
+                    Сохранить изменения
                 </button>
             </div>
         </form>
     </div>
-
 </div>
 {% endblock %}

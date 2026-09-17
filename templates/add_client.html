@@ -1,36 +1,60 @@
 {% extends "base_admin.html" %}
 {% load static %}
 
-{% block title %}Добавить клиента{% endblock %}
+{% block title %}Добавить клиента — Taxi Control{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/client_form.css' %}">
+{% endblock %}
 
 {% block content %}
-
-<link rel="stylesheet" href="{% static 'css/client_form.css' %}">
-
 <div class="client-form-page">
-
     <div class="client-page-header">
         <div>
-            <h1>Добавить клиента</h1>
+            <span class="client-form-label">
+                УПРАВЛЕНИЕ КЛИЕНТАМИ
+            </span>
+
+            <h1>
+                Добавить клиента
+            </h1>
+
             <p class="client-page-subtitle">
                 Заполните данные нового клиента
             </p>
         </div>
 
-        <a href="{% url 'clients_list' %}" class="client-back-link">
+        <a
+            href="{% url 'clients_list' %}"
+            class="client-back-link"
+        >
             ← Назад к клиентам
         </a>
     </div>
 
     <div class="client-form-card">
+        <div class="client-form-card-header">
+            <div>
+                <h2>
+                    Данные клиента
+                </h2>
 
-        <form method="post">
+                <span>
+                    Заполните контактную информацию клиента
+                </span>
+            </div>
+        </div>
+
+        <form method="post" class="client-form">
             {% csrf_token %}
 
             <div class="client-form-grid">
-
                 <div class="client-form-field">
-                    <label for="lname">Фамилия</label>
+                    <label for="lname">
+                        Фамилия
+                        <span>*</span>
+                    </label>
+
                     <input
                         type="text"
                         id="lname"
@@ -38,11 +62,16 @@
                         required
                         maxlength="128"
                         placeholder="Введите фамилию"
+                        value="{{ request.POST.lname|default:'' }}"
                     >
                 </div>
 
                 <div class="client-form-field">
-                    <label for="fname">Имя</label>
+                    <label for="fname">
+                        Имя
+                        <span>*</span>
+                    </label>
+
                     <input
                         type="text"
                         id="fname"
@@ -50,36 +79,44 @@
                         required
                         maxlength="128"
                         placeholder="Введите имя"
+                        value="{{ request.POST.fname|default:'' }}"
                     >
                 </div>
 
                 <div class="client-form-field">
-                    <label for="patronimyc">Отчество</label>
+                    <label for="patronimyc">
+                        Отчество
+                    </label>
+
                     <input
                         type="text"
                         id="patronimyc"
                         name="patronimyc"
                         maxlength="128"
                         placeholder="Введите отчество"
+                        value="{{ request.POST.patronimyc|default:'' }}"
                     >
                 </div>
 
                 <div class="client-form-field">
-                    <label for="phone">Телефон</label>
+                    <label for="phone">
+                        Телефон
+                        <span>*</span>
+                    </label>
+
                     <input
-                        type="text"
+                        type="tel"
                         id="phone"
                         name="phone"
                         required
                         maxlength="12"
                         placeholder="+79991234567"
+                        value="{{ request.POST.phone|default:'' }}"
                     >
                 </div>
-
             </div>
 
             <div class="client-form-footer">
-
                 <a
                     href="{% url 'clients_list' %}"
                     class="client-btn client-btn-cancel"
@@ -93,13 +130,8 @@
                 >
                     Сохранить клиента
                 </button>
-
             </div>
-
         </form>
-
     </div>
-
 </div>
-
 {% endblock %}

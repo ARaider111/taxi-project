@@ -1,27 +1,105 @@
 {% extends "base_admin.html" %}
-{% block title %}Добавить район{% endblock %}
+{% load static %}
+
+{% block title %}Добавить район — Taxi Control{% endblock %}
+
+{% block extra_head %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/district_edit.css' %}?v=2"
+>
+{% endblock %}
 
 {% block content %}
-<h1>Добавить район</h1>
-<p><a href="{% url 'districts_list' %}">← Назад к списку</a></p>
+<div class="district-edit-page">
+    <div class="district-edit-header">
+        <div>
+            <span class="district-edit-label">
+                СПРАВОЧНИК ТЕРРИТОРИЙ
+            </span>
 
-<form method="post">
-    {% csrf_token %}
+            <h1>
+                Добавить район
+            </h1>
 
-    <p>
-        <label>Название:<br>
-            <input type="text" name="name" required>
-        </label>
-    </p>
+            <p class="district-edit-subtitle">
+                Создание нового района и настройка базового коэффициента
+            </p>
+        </div>
 
-    <p>
-        <label>Базовый коэффициент:<br>
-            <input type="number" step="0.01" name="base_coefficient" required>
-        </label>
-    </p>
+        <a
+            href="{% url 'districts_list' %}"
+            class="district-edit-back"
+        >
+            ← Назад к списку
+        </a>
+    </div>
 
-    <p>
-        <button type="submit">Создать</button>
-    </p>
-</form>
+    <div class="district-edit-card">
+        <div class="district-edit-card-header">
+            <div>
+                <h2>
+                    Новый район
+                </h2>
+
+                <span>
+                    Заполните форму для добавления записи
+                </span>
+            </div>
+
+            <div class="district-edit-id">
+                НОВЫЙ
+            </div>
+        </div>
+
+        <form method="post" class="district-edit-form">
+            {% csrf_token %}
+
+            <div class="district-edit-grid">
+                <div class="district-edit-field">
+                    <label for="id_name">
+                        Название <span>*</span>
+                    </label>
+                    <input
+                        type="text"
+                        id="id_name"
+                        name="name"
+                        placeholder="Введите название района"
+                        required
+                    >
+                </div>
+
+                <div class="district-edit-field">
+                    <label for="id_base_coefficient">
+                        Базовый коэффициент <span>*</span>
+                    </label>
+                    <input
+                        type="number"
+                        id="id_base_coefficient"
+                        name="base_coefficient"
+                        step="0.01"
+                        placeholder="1.00"
+                        required
+                    >
+                </div>
+            </div>
+
+            <div class="district-edit-footer">
+                <a
+                    href="{% url 'districts_list' %}"
+                    class="district-edit-btn district-edit-cancel"
+                >
+                    Отмена
+                </a>
+
+                <button
+                    type="submit"
+                    class="district-edit-btn district-edit-save"
+                >
+                    Создать район
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}

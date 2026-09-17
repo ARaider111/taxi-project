@@ -1,67 +1,181 @@
 {% extends "base_admin.html" %}
-{% block title %}Редактировать смену{% endblock %}
+{% load static %}
+
+{% block title %}Редактировать смену — Taxi Control{% endblock %}
+
+{% block extra_head %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/shift_edit.css' %}?v=2"
+>
+{% endblock %}
 
 {% block content %}
-<h1>Редактировать смену</h1>
-<p><a href="{% url 'shifts_list' %}">← Назад к списку</a></p>
+<div class="shift-edit-page">
+    <div class="shift-edit-header">
+        <div>
+            <span class="shift-edit-label">
+                УПРАВЛЕНИЕ РАБОЧИМИ СМЕНАМИ
+            </span>
 
-<form method="post">
-    {% csrf_token %}
+            <h1>
+                Редактировать смену
+            </h1>
 
-    <p>
-        <label>Водитель:<br>
-            <select name="driver" required>
-                {% for d in drivers %}
-                <option value="{{ d.driver_id }}" {% if d.driver_id == shift.driver.driver_id %}selected{% endif %}>
-                    {{ d.lname }} {{ d.fname }} ({{ d.car_model }} {{ d.car_number }})
-                </option>
-                {% endfor %}
-            </select>
-        </label>
-    </p>
+            <p class="shift-edit-subtitle">
+                Измените параметры рабочей смены
+            </p>
+        </div>
 
-    <p>
-        <label>Начало смены:<br>
-            <input type="datetime-local" name="start_shift" required
-                   value="{{ shift.start_shift|date:'Y-m-d\TH:i' }}">
-        </label>
-    </p>
+        <a
+            href="{% url 'shifts_list' %}"
+            class="shift-edit-back"
+        >
+            ← Назад к сменам
+        </a>
+    </div>
 
-    <p>
-        <label>Конец смены:<br>
-            <input type="datetime-local" name="end_shift" required
-                   value="{{ shift.end_shift|date:'Y-m-d\TH:i' }}">
-        </label>
-    </p>
+    <div class="shift-edit-card">
+        <div class="shift-edit-card-header">
+            <div>
+                <h2>
+                    Параметры смены
+                </h2>
 
-    <p>
-        <label>Открыл пользователь:<br>
-            <select name="opened_user">
-                <option value="">— не выбрано —</option>
-                {% for u in users %}
-                <option value="{{ u.user_id }}" {% if shift.opened_user and u.user_id == shift.opened_user.user_id %}selected{% endif %}>
-                    {{ u.lname }} {{ u.fname }} ({{ u.role }})
-                </option>
-                {% endfor %}
-            </select>
-        </label>
-    </p>
-    
-    <p>
-        <label>Закрыл пользователь:<br>
-            <select name="closed_user">
-                <option value="">— не выбрано —</option>
-                {% for u in users %}
-                <option value="{{ u.user_id }}" {% if shift.closed_user and u.user_id == shift.closed_user.user_id %}selected{% endif %}>
-                    {{ u.lname }} {{ u.fname }} ({{ u.role }})
-                </option>
-                {% endfor %}
-            </select>
-        </label>
-    </p>
+                <span>
+                    Обновите водителя, время и ответственных пользователей
+                </span>
+            </div>
 
-    <p>
-        <button type="submit">Сохранить</button>
-    </p>
-</form>
+            <div class="shift-edit-id">
+                ID: {{ shift.shift_id }}
+            </div>
+        </div>
+
+        <form method="post" class="shift-edit-form">
+            {% csrf_token %}
+
+            <div class="shift-edit-grid">
+                <div class="shift-edit-field shift-edit-field-wide">
+                    <label for="driver">
+                        Водитель
+                        <span>*</span>
+                    </label>
+
+                    <select
+                        name="driver"
+                        id="driver"
+                        required
+                    >
+                        {% for d in drivers %}
+                            <option
+                                value="{{ d.driver_id }}"
+                                {% if d.driver_id == shift.driver.driver_id %}selected{% endif %}
+                            >
+                                {{ d.lname }} {{ d.fname }}
+                                — {{ d.car_model }} {{ d.car_number }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="shift-edit-field">
+                    <label for="start_shift">
+                        Начало смены
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="datetime-local"
+                        name="start_shift"
+                        id="start_shift"
+                        required
+                        value="{{ shift.start_shift|date:'Y-m-d\TH:i' }}"
+                    >
+                </div>
+
+                <div class="shift-edit-field">
+                    <label for="end_shift">
+                        Конец смены
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="datetime-local"
+                        name="end_shift"
+                        id="end_shift"
+                        required
+                        value="{{ shift.end_shift|date:'Y-m-d\TH:i' }}"
+                    >
+                </div>
+
+                <div class="shift-edit-field">
+                    <label for="opened_user">
+                        Открыл пользователь
+                    </label>
+
+                    <select
+                        name="opened_user"
+                        id="opened_user"
+                    >
+                        <option value="">
+                            — не выбрано —
+                        </option>
+
+                        {% for u in users %}
+                            <option
+                                value="{{ u.user_id }}"
+                                {% if shift.opened_user and u.user_id == shift.opened_user.user_id %}selected{% endif %}
+                            >
+                                {{ u.lname }} {{ u.fname }}
+                                — {{ u.role }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="shift-edit-field">
+                    <label for="closed_user">
+                        Закрыл пользователь
+                    </label>
+
+                    <select
+                        name="closed_user"
+                        id="closed_user"
+                    >
+                        <option value="">
+                            — не выбрано —
+                        </option>
+
+                        {% for u in users %}
+                            <option
+                                value="{{ u.user_id }}"
+                                {% if shift.closed_user and u.user_id == shift.closed_user.user_id %}selected{% endif %}
+                            >
+                                {{ u.lname }} {{ u.fname }}
+                                — {{ u.role }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="shift-edit-footer">
+                <a
+                    href="{% url 'shifts_list' %}"
+                    class="shift-edit-btn shift-edit-cancel"
+                >
+                    Отмена
+                </a>
+
+                <button
+                    type="submit"
+                    class="shift-edit-btn shift-edit-save"
+                >
+                    Сохранить изменения
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
