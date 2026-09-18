@@ -1,50 +1,164 @@
 {% extends "base_admin.html" %}
-{% block title %}Добавить тариф{% endblock %}
+{% load static %}
+
+{% block title %}Добавить тариф — Taxi Control{% endblock %}
+
+{% block extra_head %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/tariff_form.css' %}?v=2"
+>
+{% endblock %}
 
 {% block content %}
-<h1>Добавить тариф</h1>
-<p><a href="{% url 'tariffs_list' %}">← Назад к списку</a></p>
+<div class="tariff-form-page">
+    <div class="tariff-form-header">
+        <div>
+            <span class="tariff-form-label">
+                НАСТРОЙКА СИСТЕМЫ
+            </span>
 
-<form method="post">
-    {% csrf_token %}
+            <h1>
+                Добавить тариф
+            </h1>
 
-    <p>
-        <label>Название:<br>
-            <input type="text" name="name" required>
-        </label>
-    </p>
+            <p class="tariff-form-subtitle">
+                Создайте новый тариф для расчёта стоимости поездок
+            </p>
+        </div>
 
-    <p>
-        <label>Цена:<br>
-            <input type="number" step="0.01" name="price" required>
-        </label>
-    </p>
+        <a
+            href="{% url 'tariffs_list' %}"
+            class="tariff-form-back"
+        >
+            ← Назад к тарифам
+        </a>
+    </div>
 
-    <p>
-        <label>Время с:<br>
-            <input type="time" name="time_from" required>
-        </label>
-    </p>
+    <div class="tariff-form-card">
+        <div class="tariff-form-card-header">
+            <div>
+                <h2>
+                    Параметры тарифа
+                </h2>
 
-    <p>
-        <label>Время по:<br>
-            <input type="time" name="time_to" required>
-        </label>
-    </p>
+                <span>
+                    Укажите стоимость, время действия и дни недели
+                </span>
+            </div>
+        </div>
 
-    <p>
-        <label>Дни недели:<br>
-            {% for value, label in days_choices %}
-            <label>
-                <input type="checkbox" name="days_of_week" value="{{ value }}">
-                {{ label }}
-            </label>
-            {% endfor %}
-        </label>
-    </p>
+        <form method="post" class="tariff-form">
+            {% csrf_token %}
 
-    <p>
-        <button type="submit">Создать</button>
-    </p>
-</form>
+            <div class="tariff-form-grid">
+                <div class="tariff-form-field">
+                    <label for="name">
+                        Название тарифа
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        required
+                        maxlength="128"
+                        placeholder="Например, Дневной тариф"
+                        value="{{ request.POST.name|default:'' }}"
+                    >
+                </div>
+
+                <div class="tariff-form-field">
+                    <label for="price">
+                        Цена
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="number"
+                        id="price"
+                        name="price"
+                        required
+                        min="0"
+                        step="0.01"
+                        placeholder="Например, 150.00"
+                        value="{{ request.POST.price|default:'' }}"
+                    >
+                </div>
+
+                <div class="tariff-form-field">
+                    <label for="time_from">
+                        Время начала
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="time"
+                        id="time_from"
+                        name="time_from"
+                        required
+                        value="{{ request.POST.time_from|default:'' }}"
+                    >
+                </div>
+
+                <div class="tariff-form-field">
+                    <label for="time_to">
+                        Время окончания
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="time"
+                        id="time_to"
+                        name="time_to"
+                        required
+                        value="{{ request.POST.time_to|default:'' }}"
+                    >
+                </div>
+            </div>
+
+            <div class="tariff-form-days">
+                <div class="tariff-form-days-title">
+                    Дни недели
+                    <span>*</span>
+                </div>
+
+                <div class="tariff-days-grid">
+                    {% for value, label in days_choices %}
+                        <label class="tariff-day-item">
+                            <input
+                                type="checkbox"
+                                name="days_of_week"
+                                value="{{ value }}"
+                            >
+
+                            <span class="tariff-day-check"></span>
+
+                            <span class="tariff-day-label">
+                                {{ label }}
+                            </span>
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="tariff-form-footer">
+                <a
+                    href="{% url 'tariffs_list' %}"
+                    class="tariff-form-btn tariff-form-cancel"
+                >
+                    Отмена
+                </a>
+
+                <button
+                    type="submit"
+                    class="tariff-form-btn tariff-form-save"
+                >
+                    Создать тариф
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}

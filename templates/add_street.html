@@ -1,32 +1,117 @@
 {% extends "base_admin.html" %}
-{% block title %}Добавить улицу{% endblock %}
+{% load static %}
+
+{% block title %}Добавить улицу — Taxi Control{% endblock %}
+
+{% block extra_head %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/street_form.css' %}?v=2"
+>
+{% endblock %}
 
 {% block content %}
-<h1>Добавить улицу</h1>
-<p><a href="{% url 'streets_list' %}">← Назад к списку</a></p>
+<div class="street-form-page">
+    <div class="street-form-header">
+        <div>
+            <span class="street-form-label">
+                СПРАВОЧНИК ТЕРРИТОРИЙ
+            </span>
 
-<form method="post">
-    {% csrf_token %}
+            <h1>
+                Добавить улицу
+            </h1>
 
-    <p>
-        <label>Название:<br>
-            <input type="text" name="name" required>
-        </label>
-    </p>
+            <p class="street-form-subtitle">
+                Добавьте улицу и укажите её район
+            </p>
+        </div>
 
-    <p>
-        <label>Район:<br>
-            <select name="district" required>
-                <option value="">— выберите район —</option>
-                {% for d in districts %}
-                <option value="{{ d.district_id }}">{{ d.name }}</option>
-                {% endfor %}
-            </select>
-        </label>
-    </p>
+        <a
+            href="{% url 'streets_list' %}"
+            class="street-form-back"
+        >
+            ← Назад к улицам
+        </a>
+    </div>
 
-    <p>
-        <button type="submit">Создать</button>
-    </p>
-</form>
+    <div class="street-form-card">
+        <div class="street-form-card-header">
+            <div>
+                <h2>
+                    Данные улицы
+                </h2>
+
+                <span>
+                    Укажите название улицы и район
+                </span>
+            </div>
+        </div>
+
+        <form method="post" class="street-form">
+            {% csrf_token %}
+
+            <div class="street-form-grid">
+                <div class="street-form-field">
+                    <label for="name">
+                        Название улицы
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        required
+                        maxlength="128"
+                        placeholder="Введите название улицы"
+                        value="{{ request.POST.name|default:'' }}"
+                    >
+                </div>
+
+                <div class="street-form-field">
+                    <label for="district">
+                        Район
+                        <span>*</span>
+                    </label>
+
+                    <select
+                        name="district"
+                        id="district"
+                        required
+                    >
+                        <option value="">
+                            — выберите район —
+                        </option>
+
+                        {% for d in districts %}
+                            <option
+                                value="{{ d.district_id }}"
+                                {% if request.POST.district == d.district_id|stringformat:"s" %}selected{% endif %}
+                            >
+                                {{ d.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="street-form-footer">
+                <a
+                    href="{% url 'streets_list' %}"
+                    class="street-form-btn street-form-cancel"
+                >
+                    Отмена
+                </a>
+
+                <button
+                    type="submit"
+                    class="street-form-btn street-form-save"
+                >
+                    Создать улицу
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}

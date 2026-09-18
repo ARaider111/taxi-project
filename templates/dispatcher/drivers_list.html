@@ -1,51 +1,179 @@
 {% extends "dispatcher/base_dispatcher.html" %}
+{% load static %}
+
 {% block title %}Водители — Диспетчер{% endblock %}
 
+{% block extra_head %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/dispatcher_drivers.css' %}?v=1"
+>
+{% endblock %}
+
 {% block content %}
-<h1>Водители</h1>
+<div class="dispatcher-drivers-page">
+    <div class="dispatcher-drivers-header">
+        <div>
+            <span class="dispatcher-drivers-label">
+                ДИСПЕТЧЕРСКАЯ СИСТЕМА
+            </span>
 
-<form method="get" style="margin-bottom: 20px;">
-    <label for="q">Поиск:</label>
-    <input type="text" name="q" id="q" value="{{ query }}" placeholder="Фамилия, имя, телефон, авто, номер">
+            <h1>
+                Водители
+            </h1>
 
-    <label for="status">Статус:</label>
-    <select name="status" id="status">
-        <option value="">Все статусы</option>
-        {% for value, label in statuses %}
-        <option value="{{ value }}" {% if value == current_status %}selected{% endif %}>
-            {{ label }}
-        </option>
-        {% endfor %}
-    </select>
+            <p class="dispatcher-drivers-subtitle">
+                Просмотр водителей и их текущих статусов
+            </p>
+        </div>
+    </div>
 
-    <button type="submit">Найти</button>
-    <a href="{% url 'dispatcher_drivers' %}" style="margin-left: 10px;">Сбросить</a>
-</form>
+    <form method="get" class="dispatcher-drivers-filters">
+        <div class="dispatcher-driver-filter dispatcher-driver-filter-search">
+            <label for="q">
+                Поиск
+            </label>
 
-<table border="1" cellpadding="6">
-    <tr>
-        <th>Фамилия</th>
-        <th>Имя</th>
-        <th>Отчество</th>
-        <th>Телефон</th>
-        <th>Авто</th>
-        <th>Номер</th>
-        <th>Статус</th>
-        <th>Чёрный список</th>
-    </tr>
-    {% for d in drivers %}
-    <tr>
-        <td>{{ d.lname }}</td>
-        <td>{{ d.fname }}</td>
-        <td>{{ d.patronimyc|default_if_none:"—" }}</td>
-        <td>{{ d.phone }}</td>
-        <td>{{ d.car_model }}</td>
-        <td>{{ d.car_number }}</td>
-        <td>{{ d.status }}</td>
-        <td>{{ d.is_blacklist|yesno:"Да,Нет" }}</td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="5">Нет водителей</td></tr>
-    {% endfor %}
-</table>
+            <input
+                type="text"
+                name="q"
+                id="q"
+                value="{{ query }}"
+                placeholder="Фамилия, имя, телефон, авто, номер"
+            >
+        </div>
+
+        <div class="dispatcher-driver-filter">
+            <label for="status">
+                Статус
+            </label>
+
+            <select name="status" id="status">
+                <option value="">
+                    Все статусы
+                </option>
+
+                {% for value, label in statuses %}
+                    <option
+                        value="{{ value }}"
+                        {% if value == current_status %}selected{% endif %}
+                    >
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button
+            type="submit"
+            class="dispatcher-drivers-search"
+        >
+            Найти
+        </button>
+
+        <a
+            href="{% url 'dispatcher_drivers' %}"
+            class="dispatcher-drivers-reset"
+        >
+            Сбросить
+        </a>
+    </form>
+
+    <div class="dispatcher-drivers-table-card">
+        <div class="dispatcher-drivers-table-header">
+            <div>
+                <h2>
+                    Список водителей
+                </h2>
+
+                <span>
+                    Доступные водители диспетчерской системы
+                </span>
+            </div>
+
+            <div class="dispatcher-drivers-counter">
+                {{ drivers|length }} записей
+            </div>
+        </div>
+
+        <div class="dispatcher-drivers-table-container">
+            <table class="dispatcher-drivers-table">
+                <thead>
+                    <tr>
+                        <th>Фамилия</th>
+                        <th>Имя</th>
+                        <th>Телефон</th>
+                        <th>Автомобиль</th>
+                        <th>Номер</th>
+                        <th>Статус</th>
+                        <th>Чёрный список</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    {% for d in drivers %}
+                        <tr>
+                            <td class="dispatcher-driver-last-name">
+                                {{ d.lname }}
+                            </td>
+
+                            <td class="dispatcher-driver-first-name">
+                                {{ d.fname }}
+                            </td>
+
+                            <td class="dispatcher-driver-phone">
+                                {{ d.phone }}
+                            </td>
+
+                            <td class="dispatcher-driver-car">
+                                {{ d.car_model }}
+                            </td>
+
+                            <td class="dispatcher-driver-number">
+                                {{ d.car_number }}
+                            </td>
+
+                            <td>
+                                <span class="dispatcher-driver-status">
+                                    {{ d.status }}
+                                </span>
+                            </td>
+
+                            <td>
+                                {% if d.is_blacklist %}
+                                    <span class="dispatcher-blacklist dispatcher-blacklist-yes">
+                                        Да
+                                    </span>
+                                {% else %}
+                                    <span class="dispatcher-blacklist dispatcher-blacklist-no">
+                                        Нет
+                                    </span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td
+                                colspan="7"
+                                class="dispatcher-drivers-empty"
+                            >
+                                <span class="dispatcher-drivers-empty-icon">
+                                    ∅
+                                </span>
+
+                                <strong>
+                                    Водители не найдены
+                                </strong>
+
+                                <span>
+                                    Попробуйте изменить параметры поиска
+                                </span>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% endblock %}

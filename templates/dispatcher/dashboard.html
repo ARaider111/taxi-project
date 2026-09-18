@@ -1,7 +1,152 @@
 {% extends "dispatcher/base_dispatcher.html" %}
-{% block title %}Главная — Диспетчер{% endblock %}
+{% load static %}
+
+{% block title %}
+    Главная — Диспетчер
+{% endblock %}
+
+{% block extra_head %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/dispatcher_home.css' %}?v=1"
+>
+{% endblock %}
 
 {% block content %}
-<h1>Главная страница диспетчера</h1>
-<p>Добро пожаловать, {{ user.lname }} {{ user.fname }}.</p>
+<div class="dispatcher-home">
+    <div class="dispatcher-home-header">
+        <div>
+            <span class="dispatcher-home-label">
+                ДИСПЕТЧЕРСКАЯ СИСТЕМА
+            </span>
+
+            <h1>
+                Главная страница диспетчера
+            </h1>
+
+            <p>
+                Управляйте заказами, водителями и рабочими сменами.
+            </p>
+        </div>
+
+        <div class="dispatcher-status">
+            <span class="dispatcher-status-dot"></span>
+            Система активна
+        </div>
+    </div>
+
+    <div class="dispatcher-welcome-card">
+        <div class="dispatcher-welcome-icon">
+            🚕
+        </div>
+
+        <div class="dispatcher-welcome-content">
+            <span class="dispatcher-welcome-label">
+                ДОБРО ПОЖАЛОВАТЬ
+            </span>
+
+            <h2>
+                {{ user.lname }} {{ user.fname }}
+            </h2>
+
+            <p>
+                Вы вошли в диспетчерскую панель Taxi Control.
+            </p>
+        </div>
+    </div>
+
+    <div class="dispatcher-menu">
+        <a
+            href="{% url 'orders_list' %}"
+            class="dispatcher-menu-card"
+        >
+            <div class="dispatcher-menu-icon">
+                📋
+            </div>
+
+            <div class="dispatcher-menu-text">
+                <h2>
+                    Заказы
+                </h2>
+
+                <p>
+                    Просмотр и обработка заказов клиентов
+                </p>
+            </div>
+
+            <span class="dispatcher-menu-arrow">
+                →
+            </span>
+        </a>
+
+        <a
+            href="{% url 'drivers_list' %}"
+            class="dispatcher-menu-card"
+        >
+            <div class="dispatcher-menu-icon">
+                🚗
+            </div>
+
+            <div class="dispatcher-menu-text">
+                <h2>
+                    Водители
+                </h2>
+
+                <p>
+                    Просмотр доступных водителей и их статусов
+                </p>
+            </div>
+
+            <span class="dispatcher-menu-arrow">
+                →
+            </span>
+        </a>
+
+        <a
+            href="{% url 'shifts_list' %}"
+            class="dispatcher-menu-card"
+        >
+            <div class="dispatcher-menu-icon">
+                🕐
+            </div>
+
+            <div class="dispatcher-menu-text">
+                <h2>
+                    Смены
+                </h2>
+
+                <p>
+                    Просмотр текущих и завершённых смен
+                </p>
+            </div>
+
+            <span class="dispatcher-menu-arrow">
+                →
+            </span>
+        </a>
+
+        <a
+            href="{% url 'clients_list' %}"
+            class="dispatcher-menu-card"
+        >
+            <div class="dispatcher-menu-icon">
+                👥
+            </div>
+
+            <div class="dispatcher-menu-text">
+                <h2>
+                    Клиенты
+                </h2>
+
+                <p>
+                    Просмотр информации о клиентах системы
+                </p>
+            </div>
+
+            <span class="dispatcher-menu-arrow">
+                →
+            </span>
+        </a>
+    </div>
+</div>
 {% endblock %}

@@ -1,34 +1,121 @@
 {% extends "base_admin.html" %}
-{% block title %}Редактировать улицу{% endblock %}
+{% load static %}
+
+{% block title %}Редактировать улицу — Taxi Control{% endblock %}
+
+{% block extra_head %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/street_edit.css' %}?v=2"
+>
+{% endblock %}
 
 {% block content %}
-<h1>Редактировать улицу</h1>
-<p><a href="{% url 'streets_list' %}">← Назад к списку</a></p>
+<div class="street-edit-page">
+    <div class="street-edit-header">
+        <div>
+            <span class="street-edit-label">
+                СПРАВОЧНИК ТЕРРИТОРИЙ
+            </span>
 
-<form method="post">
-    {% csrf_token %}
+            <h1>
+                Редактировать улицу
+            </h1>
 
-    <p>
-        <label>Название:<br>
-            <input type="text" name="name" value="{{ street.name }}" required>
-        </label>
-    </p>
+            <p class="street-edit-subtitle">
+                Измените название улицы и её район
+            </p>
+        </div>
 
-    <p>
-        <label>Район:<br>
-            <select name="district" required>
-                <option value="">— выберите район —</option>
-                {% for d in districts %}
-                <option value="{{ d.district_id }}" {% if d.district_id == street.district.district_id %}selected{% endif %}>
-                    {{ d.name }}
-                </option>
-                {% endfor %}
-            </select>
-        </label>
-    </p>
+        <a
+            href="{% url 'streets_list' %}"
+            class="street-edit-back"
+        >
+            ← Назад к улицам
+        </a>
+    </div>
 
-    <p>
-        <button type="submit">Сохранить</button>
-    </p>
-</form>
+    <div class="street-edit-card">
+        <div class="street-edit-card-header">
+            <div>
+                <h2>
+                    Данные улицы
+                </h2>
+
+                <span>
+                    Обновите название улицы и район
+                </span>
+            </div>
+
+            <div class="street-edit-id">
+                ID: {{ street.street_id }}
+            </div>
+        </div>
+
+        <form method="post" class="street-edit-form">
+            {% csrf_token %}
+
+            <div class="street-edit-grid">
+                <div class="street-edit-field">
+                    <label for="name">
+                        Название улицы
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        required
+                        maxlength="128"
+                        value="{{ street.name }}"
+                        placeholder="Введите название улицы"
+                    >
+                </div>
+
+                <div class="street-edit-field">
+                    <label for="district">
+                        Район
+                        <span>*</span>
+                    </label>
+
+                    <select
+                        name="district"
+                        id="district"
+                        required
+                    >
+                        <option value="">
+                            — выберите район —
+                        </option>
+
+                        {% for d in districts %}
+                            <option
+                                value="{{ d.district_id }}"
+                                {% if d.district_id == street.district.district_id %}selected{% endif %}
+                            >
+                                {{ d.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="street-edit-footer">
+                <a
+                    href="{% url 'streets_list' %}"
+                    class="street-edit-btn street-edit-cancel"
+                >
+                    Отмена
+                </a>
+
+                <button
+                    type="submit"
+                    class="street-edit-btn street-edit-save"
+                >
+                    Сохранить изменения
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
 {% endblock %}
