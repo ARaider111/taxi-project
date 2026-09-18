@@ -1,0 +1,103 @@
+{% extends "base_admin.html" %}
+{% load static %}
+
+{% block title %}Отчет по клиентам — Taxi Control{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/orders_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="orders-page">
+    <div class="orders-header">
+        <div>
+            <span class="orders-label">АДМИН-ПАНЕЛЬ</span>
+            <h1>Отчет по клиентам</h1>
+            <p class="orders-subtitle">
+                Экспорт данных о клиентах в Excel
+            </p>
+        </div>
+    </div>
+
+    <form method="get" action="{% url 'export_clients_report' %}" class="orders-filters">
+        <div class="order-filter">
+            <label for="is_blacklist">Чёрный список</label>
+            <select name="is_blacklist" id="is_blacklist">
+                <option value="">Все</option>
+                <option value="1">Да</option>
+                <option value="0">Нет</option>
+            </select>
+        </div>
+
+        <div class="order-filter">
+            <label for="min_orders">Мин. заказов</label>
+            <input
+                type="number"
+                name="min_orders"
+                id="min_orders"
+                placeholder="Например: 5"
+                min="0"
+            >
+        </div>
+
+        <button type="submit" class="order-search">
+            Экспорт в Excel
+        </button>
+
+        <a href="{% url 'clients_list' %}" class="order-reset">
+            ← К клиентам
+        </a>
+    </form>
+
+    <div class="orders-table-card">
+        <div class="orders-table-header">
+            <div>
+                <h2>Параметры отчета</h2>
+                <span>
+                    Выберите фильтры и нажмите "Экспорт в Excel"
+                </span>
+            </div>
+        </div>
+
+        <div class="report-info">
+            <p><strong>Формат:</strong> Excel (.xlsx)</p>
+            <p><strong>Колонки:</strong></p>
+            <ul>
+                <li>ID</li>
+                <li>Фамилия</li>
+                <li>Имя</li>
+                <li>Отчество</li>
+                <li>Телефон</li>
+                <li>Чёрный список</li>
+                <li>Всего заказов</li>
+                <li>Последний заказ (дата)</li>
+                <li>Общая сумма (завершенные)</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<style>
+.report-info {
+    padding: 24px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 24px;
+}
+
+.report-info p {
+    margin: 8px 0;
+    color: #333;
+}
+
+.report-info ul {
+    margin: 12px 0;
+    padding-left: 24px;
+}
+
+.report-info li {
+    margin: 4px 0;
+    color: #555;
+}
+</style>
+{% endblock %}

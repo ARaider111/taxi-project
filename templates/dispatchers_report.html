@@ -1,0 +1,114 @@
+{% extends "base_admin.html" %}
+{% load static %}
+
+{% block title %}Отчет по диспетчерам — Taxi Control{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/orders_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="orders-page">
+    <div class="orders-header">
+        <div>
+            <span class="orders-label">АДМИН-ПАНЕЛЬ</span>
+            <h1>Отчет по диспетчерам</h1>
+            <p class="orders-subtitle">
+                Экспорт данных о пользователях в Excel
+            </p>
+        </div>
+    </div>
+
+    <form method="get" action="{% url 'export_dispatchers_report' %}" class="orders-filters">
+        <div class="order-filter">
+            <label for="role">Роль</label>
+            <select name="role" id="role">
+                <option value="">Все</option>
+                {% for value, label in roles %}
+                    <option value="{{ value }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="order-filter">
+            <label for="is_active">Активен</label>
+            <select name="is_active" id="is_active">
+                <option value="">Все</option>
+                <option value="1">Да</option>
+                <option value="0">Нет</option>
+            </select>
+        </div>
+
+        <div class="order-filter">
+            <label for="is_archive">Архив</label>
+            <select name="is_archive" id="is_archive">
+                <option value="">Все</option>
+                <option value="1">Да</option>
+                <option value="0">Нет</option>
+            </select>
+        </div>
+
+        <button type="submit" class="order-search">
+            Экспорт в Excel
+        </button>
+
+        <a href="{% url 'users_list' %}" class="order-reset">
+            ← К пользователям
+        </a>
+    </form>
+
+    <div class="orders-table-card">
+        <div class="orders-table-header">
+            <div>
+                <h2>Параметры отчета</h2>
+                <span>
+                    Выберите фильтры и нажмите "Экспорт в Excel"
+                </span>
+            </div>
+        </div>
+
+        <div class="report-info">
+            <p><strong>Формат:</strong> Excel (.xlsx)</p>
+            <p><strong>Колонки:</strong></p>
+            <ul>
+                <li>ID</li>
+                <li>Логин</li>
+                <li>Фамилия</li>
+                <li>Имя</li>
+                <li>Отчество</li>
+                <li>Телефон</li>
+                <li>Роль</li>
+                <li>Активен</li>
+                <li>Архив</li>
+                <li>Создано заказов</li>
+                <li>Открыто смен</li>
+                <li>Закрыто смен</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<style>
+.report-info {
+    padding: 24px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 24px;
+}
+
+.report-info p {
+    margin: 8px 0;
+    color: #333;
+}
+
+.report-info ul {
+    margin: 12px 0;
+    padding-left: 24px;
+}
+
+.report-info li {
+    margin: 4px 0;
+    color: #555;
+}
+</style>
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends "base_admin.html" %}
+{% load static %}
+
+{% block title %}Отчет по доходам — Taxi Control{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/orders_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="orders-page">
+    <div class="orders-header">
+        <div>
+            <span class="orders-label">АДМИН-ПАНЕЛЬ</span>
+            <h1>Отчет по доходам</h1>
+            <p class="orders-subtitle">
+                Анализ выручки по периодам
+            </p>
+        </div>
+    </div>
+
+    <form method="get" action="{% url 'export_revenue_report' %}" class="orders-filters">
+        <div class="order-filter">
+            <label for="period">Период</label>
+            <select name="period" id="period">
+                <option value="day">По дням</option>
+                <option value="month">По месяцам</option>
+                <option value="year">По годам</option>
+                <option value="">Всего</option>
+            </select>
+        </div>
+
+        <div class="order-filter">
+            <label for="date_from">С даты</label>
+            <input
+                type="date"
+                name="date_from"
+                id="date_from"
+            >
+        </div>
+
+        <div class="order-filter">
+            <label for="date_to">По дату</label>
+            <input
+                type="date"
+                name="date_to"
+                id="date_to"
+            >
+        </div>
+
+        <button type="submit" class="order-search">
+            Экспорт в Excel
+        </button>
+
+        <a href="{% url 'admin_panel' %}" class="order-reset">
+            ← В админку
+        </a>
+    </form>
+
+    <div class="orders-table-card">
+        <div class="orders-table-header">
+            <div>
+                <h2>Параметры отчета</h2>
+                <span>
+                    Выберите период и нажмите "Экспорт в Excel"
+                </span>
+            </div>
+        </div>
+
+        <div class="report-info">
+            <p><strong>Формат:</strong> Excel (.xlsx)</p>
+            <p><strong>Колонки:</strong></p>
+            <ul>
+                <li>Период (день/месяц/год)</li>
+                <li>Количество заказов</li>
+                <li>Выручка</li>
+                <li>Средний чек</li>
+            </ul>
+            <p><strong>Фильтры:</strong></p>
+            <ul>
+                <li>Период группировки (день, месяц, год)</li>
+                <li>Диапазон дат (опционально)</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<style>
+.report-info {
+    padding: 24px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 24px;
+}
+
+.report-info p {
+    margin: 8px 0;
+    color: #333;
+}
+
+.report-info ul {
+    margin: 12px 0;
+    padding-left: 24px;
+}
+
+.report-info li {
+    margin: 4px 0;
+    color: #555;
+}
+</style>
+{% endblock %}
