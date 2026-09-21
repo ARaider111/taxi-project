@@ -1,0 +1,169 @@
+{% extends "base_admin.html" %}
+{% load static %}
+
+{% block title %}
+    Отчёт по клиентам — Taxi Control
+{% endblock %}
+
+{% block page_name %}
+    Отчёт по клиентам
+{% endblock %}
+
+{% block extra_head %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/clients_report.css' %}"
+>
+{% endblock %}
+
+{% block content %}
+<div class="clients-report-page">
+
+    <div class="clients-report-hero">
+        <div>
+            <span class="clients-report-label">
+                АДМИН-ПАНЕЛЬ
+            </span>
+
+            <h1>
+                Отчёт по клиентам
+            </h1>
+
+            <p>
+                Экспорт статистики и данных о клиентах в Excel
+            </p>
+        </div>
+
+        <a
+            href="{% url 'clients_list' %}"
+            class="clients-report-back"
+        >
+            ← К клиентам
+        </a>
+    </div>
+
+    <form
+        method="get"
+        action="{% url 'export_clients_report' %}"
+        class="clients-report-filters"
+    >
+        <div class="clients-report-filter">
+            <label for="is_blacklist">
+                Чёрный список
+            </label>
+
+            <select
+                name="is_blacklist"
+                id="is_blacklist"
+            >
+                <option value="">
+                    Все
+                </option>
+
+                <option value="1">
+                    Да
+                </option>
+
+                <option value="0">
+                    Нет
+                </option>
+            </select>
+        </div>
+
+        <div class="clients-report-filter">
+            <label for="min_orders">
+                Минимум заказов
+            </label>
+
+            <input
+                type="number"
+                name="min_orders"
+                id="min_orders"
+                min="0"
+                placeholder="Например: 5"
+            >
+        </div>
+
+        <button
+            type="submit"
+            class="clients-report-export"
+        >
+            <span>
+                ↓
+            </span>
+
+            Экспорт в Excel
+        </button>
+    </form>
+
+    <section class="clients-report-card">
+
+        <div class="clients-report-card-header">
+            <div>
+                <span>
+                    ФОРМАТ ОТЧЁТА
+                </span>
+
+                <h2>
+                    Параметры отчёта
+                </h2>
+
+                <p>
+                    Выберите фильтры и нажмите «Экспорт в Excel»
+                </p>
+            </div>
+
+            <div class="clients-report-format">
+                XLSX
+            </div>
+        </div>
+
+        <div class="clients-report-summary">
+            <div class="clients-report-summary-item">
+                <span>
+                    Формат файла
+                </span>
+
+                <strong>
+                    Excel (.xlsx)
+                </strong>
+            </div>
+
+            <div class="clients-report-summary-item">
+                <span>
+                    Назначение
+                </span>
+
+                <strong>
+                    Аналитика клиентов
+                </strong>
+            </div>
+        </div>
+
+        <div class="clients-report-columns">
+            <div class="clients-report-columns-header">
+                <h3>
+                    Колонки в отчёте
+                </h3>
+
+                <span>
+                    9 полей
+                </span>
+            </div>
+
+            <div class="clients-report-column-grid">
+                <span>ID</span>
+                <span>Фамилия</span>
+                <span>Имя</span>
+                <span>Отчество</span>
+                <span>Телефон</span>
+                <span>Чёрный список</span>
+                <span>Всего заказов</span>
+                <span>Последний заказ</span>
+                <span>Общая сумма завершённых заказов</span>
+            </div>
+        </div>
+
+    </section>
+</div>
+{% endblock %}

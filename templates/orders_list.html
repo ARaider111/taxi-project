@@ -10,17 +10,33 @@
 {% block content %}
 <div class="orders-page">
     <div class="orders-header">
-        <div>
-            <span class="orders-label">ДИСПЕТЧЕРСКАЯ СИСТЕМА</span>
+    <div>
+        <span class="orders-label">
+            ДИСПЕТЧЕРСКАЯ СИСТЕМА
+        </span>
 
-            <h1>Заказы</h1>
+        <h1>
+            Заказы
+        </h1>
 
-            <p class="orders-subtitle">
-                Просмотр и управление заказами клиентов
-            </p>
-        </div>
+        <p class="orders-subtitle">
+            Просмотр и управление заказами клиентов
+        </p>
     </div>
 
+    <div class="orders-header-actions">
+        <a
+            href="{% url 'orders_report_page' %}"
+            class="orders-report"
+        >
+            <span class="orders-report-icon">
+                ↗
+            </span>
+
+            Отчёт по заказам
+        </a>
+    </div>
+</div>
     <form method="get" class="orders-filters">
         <div class="order-filter order-filter-search">
             <label for="q">Поиск</label>

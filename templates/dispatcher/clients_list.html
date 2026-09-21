@@ -1,41 +1,235 @@
 {% extends "dispatcher/base_dispatcher.html" %}
-{% block title %}Клиенты — Диспетчер{% endblock %}
+
+{% load static %}
+
+{% block title %}
+    Клиенты — Диспетчер
+{% endblock %}
+
+{% block extra_head %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/dispatcher_clients_list.css' %}?v=2"
+>
+{% endblock %}
 
 {% block content %}
-<h1>Клиенты</h1>
-<p>
-    <a href="{% url 'dispatcher_client_form' %}">Добавить клиента</a>
-</p>
-<form method="get" style="margin-bottom: 20px;">
-    <label for="q">Поиск:</label>
-    <input type="text" name="q" id="q" value="{{ query }}" placeholder="Фамилия, имя, телефон">
 
-    <button type="submit">Найти</button>
-    <a href="{% url 'dispatcher_clients' %}" style="margin-left: 10px;">Сбросить</a>
-</form>
+<div class="dispatcher-clients-page">
 
-<table border="1" cellpadding="6">
-    <tr>
-        <th>Фамилия</th>
-        <th>Имя</th>
-        <th>Отчество</th>
-        <th>Телефон</th>
-        <th>Чёрный список</th>
-        <th>Действия</th>
-    </tr>
-    {% for c in clients %}
-    <tr>
-        <td>{{ c.lname }}</td>
-        <td>{{ c.fname }}</td>
-        <td>{{ c.patronimyc|default:"—" }}</td>
-        <td>{{ c.phone }}</td>
-        <td>{{ c.is_blacklist|yesno:"Да,Нет" }}</td>
-        <td>
-            <a href="{% url 'dispatcher_edit_client' c.client_id %}">Редактировать</a>
-        </td>
-    </tr>
-    {% empty %}
-    <tr><td colspan="3">Нет клиентов</td></tr>
-    {% endfor %}
-</table>
+    <div class="dispatcher-clients-header">
+
+        <div>
+            <span class="dispatcher-clients-label">
+                ДИСПЕТЧЕРСКАЯ СИСТЕМА
+            </span>
+
+            <h1>
+                Клиенты
+            </h1>
+
+            <p class="dispatcher-clients-subtitle">
+                Управление клиентами диспетчерской системы
+            </p>
+        </div>
+
+        <a
+            href="{% url 'dispatcher_add_client' %}"
+            class="dispatcher-clients-add"
+        >
+            <span>+</span>
+            Добавить клиента
+        </a>
+
+    </div>
+
+
+    <form
+        method="get"
+        class="dispatcher-clients-filters"
+    >
+
+        <div class="dispatcher-client-filter dispatcher-client-filter-search">
+
+            <label for="q">
+                Поиск
+            </label>
+
+            <input
+                type="text"
+                name="q"
+                id="q"
+                value="{{ query }}"
+                placeholder="Фамилия, имя, телефон"
+            >
+
+        </div>
+
+        <button
+            type="submit"
+            class="dispatcher-clients-search"
+        >
+            Найти
+        </button>
+
+        <a
+            href="{% url 'dispatcher_clients' %}"
+            class="dispatcher-clients-reset"
+        >
+            Сбросить
+        </a>
+
+    </form>
+
+
+    <div class="dispatcher-clients-table-card">
+
+        <div class="dispatcher-clients-table-header">
+
+            <div>
+                <h2>
+                    Список клиентов
+                </h2>
+
+                <span>
+                    Все клиенты диспетчерской системы
+                </span>
+            </div>
+
+            <div class="dispatcher-clients-counter">
+                {{ clients|length }} записей
+            </div>
+
+        </div>
+
+
+        <div class="dispatcher-clients-table-container">
+
+            <table class="dispatcher-clients-table">
+
+                <thead>
+                    <tr>
+
+                        <th>
+                            Фамилия
+                        </th>
+
+                        <th>
+                            Имя
+                        </th>
+
+                        <th>
+                            Отчество
+                        </th>
+
+                        <th>
+                            Телефон
+                        </th>
+
+                        <th>
+                            Чёрный список
+                        </th>
+
+                        <th>
+                            Действия
+                        </th>
+
+                    </tr>
+                </thead>
+
+
+                <tbody>
+
+                    {% for c in clients %}
+
+                    <tr>
+
+                        <td class="dispatcher-client-last-name">
+                            {{ c.lname }}
+                        </td>
+
+                        <td class="dispatcher-client-first-name">
+                            {{ c.fname }}
+                        </td>
+
+                        <td class="dispatcher-client-patronymic">
+                            {{ c.patronimyc|default:"—" }}
+                        </td>
+
+                        <td class="dispatcher-client-phone">
+                            {{ c.phone }}
+                        </td>
+
+                        <td>
+
+                            {% if c.is_blacklist %}
+
+                                <span class="dispatcher-client-blacklist dispatcher-client-blacklist-yes">
+                                    Да
+                                </span>
+
+                            {% else %}
+
+                                <span class="dispatcher-client-blacklist dispatcher-client-blacklist-no">
+                                    Нет
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+                        <td>
+
+                            <div class="dispatcher-client-actions">
+
+                                <a
+                                    href="{% url 'dispatcher_edit_client' c.client_id %}"
+                                    class="dispatcher-client-action dispatcher-client-action-edit"
+                                >
+                                    Редактировать
+                                </a>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                    {% empty %}
+
+                    <tr>
+
+                        <td
+                            colspan="6"
+                            class="dispatcher-clients-empty"
+                        >
+
+                            <span class="dispatcher-clients-empty-icon">
+                                ∅
+                            </span>
+
+                            <strong>
+                                Клиенты не найдены
+                            </strong>
+
+                            <span>
+                                Попробуйте изменить параметры поиска
+                            </span>
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</div>
+
 {% endblock %}

@@ -1,49 +1,94 @@
 {% extends "base_admin.html" %}
 {% load static %}
 
-{% block title %}Водители — Taxi Control{% endblock %}
+{% block title %}
+    Водители — Taxi Control
+{% endblock %}
+
+{% block page_name %}
+    Водители
+{% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="{% static 'css/drivers_list.css' %}">
+<link
+    rel="stylesheet"
+    href="{% static 'css/drivers_list.css' %}"
+>
 {% endblock %}
 
 {% block content %}
 <div class="drivers-page">
+
     <div class="drivers-header">
         <div>
-            <span class="drivers-label">УПРАВЛЕНИЕ АВТОПАРКОМ</span>
+            <span class="drivers-label">
+                УПРАВЛЕНИЕ АВТОПАРКОМ
+            </span>
 
-            <h1>Водители</h1>
+            <h1>
+                Водители
+            </h1>
 
             <p class="drivers-subtitle">
                 Просмотр, поиск и управление водителями системы
             </p>
         </div>
 
-        <a href="{% url 'add_driver' %}" class="drivers-add">
-            <span>+</span>
-            Добавить водителя
-        </a>
+        <div class="drivers-header-actions">
+            <a
+                href="{% url 'drivers_report_page' %}"
+                class="drivers-report"
+            >
+                <span class="drivers-report-icon">
+                    ↗
+                </span>
+
+                Отчёт по водителям
+            </a>
+
+            <a
+                href="{% url 'add_driver' %}"
+                class="drivers-add"
+            >
+                <span>
+                    +
+                </span>
+
+                Добавить водителя
+            </a>
+        </div>
     </div>
 
-    <form method="get" class="drivers-filters">
+    <form
+        method="get"
+        class="drivers-filters"
+    >
         <div class="driver-filter driver-filter-search">
-            <label for="q">Поиск</label>
+            <label for="q">
+                Поиск
+            </label>
 
             <input
                 type="text"
                 name="q"
                 id="q"
-                value="{{ query }}"
+                value="{{ query|default:'' }}"
                 placeholder="Фамилия, имя, телефон, авто, номер"
             >
         </div>
 
         <div class="driver-filter">
-            <label for="status">Статус</label>
+            <label for="status">
+                Статус
+            </label>
 
-            <select name="status" id="status">
-                <option value="">Все статусы</option>
+            <select
+                name="status"
+                id="status"
+            >
+                <option value="">
+                    Все статусы
+                </option>
 
                 {% for value, label in statuses %}
                     <option
@@ -57,10 +102,17 @@
         </div>
 
         <div class="driver-filter">
-            <label for="blacklist">Чёрный список</label>
+            <label for="blacklist">
+                Чёрный список
+            </label>
 
-            <select name="blacklist" id="blacklist">
-                <option value="">Все</option>
+            <select
+                name="blacklist"
+                id="blacklist"
+            >
+                <option value="">
+                    Все
+                </option>
 
                 <option
                     value="1"
@@ -79,10 +131,17 @@
         </div>
 
         <div class="driver-filter">
-            <label for="archive">Архив</label>
+            <label for="archive">
+                Архив
+            </label>
 
-            <select name="archive" id="archive">
-                <option value="">Все</option>
+            <select
+                name="archive"
+                id="archive"
+            >
+                <option value="">
+                    Все
+                </option>
 
                 <option
                     value="1"
@@ -100,19 +159,28 @@
             </select>
         </div>
 
-        <button type="submit" class="driver-search">
+        <button
+            type="submit"
+            class="driver-search"
+        >
             Найти
         </button>
 
-        <a href="{% url 'drivers_list' %}" class="driver-reset">
+        <a
+            href="{% url 'drivers_list' %}"
+            class="driver-reset"
+        >
             Сбросить
         </a>
     </form>
 
     <div class="drivers-table-card">
+
         <div class="drivers-table-header">
             <div>
-                <h2>Список водителей</h2>
+                <h2>
+                    Список водителей
+                </h2>
 
                 <span>
                     Все зарегистрированные водители системы
@@ -200,6 +268,7 @@
 
                             <td>
                                 <div class="driver-actions">
+
                                     <a
                                         href="{% url 'edit_driver' d.driver_id %}"
                                         class="driver-action driver-action-edit"
@@ -228,13 +297,21 @@
                                             Добавить в ЧС
                                         {% endif %}
                                     </a>
+
                                 </div>
                             </td>
                         </tr>
+
                     {% empty %}
+
                         <tr>
-                            <td colspan="10" class="drivers-empty">
-                                <span class="drivers-empty-icon">∅</span>
+                            <td
+                                colspan="10"
+                                class="drivers-empty"
+                            >
+                                <span class="drivers-empty-icon">
+                                    ∅
+                                </span>
 
                                 <strong>
                                     Водители не найдены
@@ -245,10 +322,12 @@
                                 </span>
                             </td>
                         </tr>
+
                     {% endfor %}
                 </tbody>
             </table>
         </div>
+
     </div>
 </div>
 {% endblock %}

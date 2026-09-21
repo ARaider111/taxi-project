@@ -1,49 +1,94 @@
 {% extends "base_admin.html" %}
 {% load static %}
 
-{% block title %}Клиенты — Taxi Control{% endblock %}
+{% block title %}
+    Клиенты — Taxi Control
+{% endblock %}
+
+{% block page_name %}
+    Клиенты
+{% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="{% static 'css/clients_list.css' %}">
+<link
+    rel="stylesheet"
+    href="{% static 'css/clients_list.css' %}"
+>
 {% endblock %}
 
 {% block content %}
 <div class="clients-page">
+
     <div class="clients-header">
         <div>
-            <span class="clients-label">УПРАВЛЕНИЕ КЛИЕНТАМИ</span>
+            <span class="clients-label">
+                УПРАВЛЕНИЕ КЛИЕНТАМИ
+            </span>
 
-            <h1>Клиенты</h1>
+            <h1>
+                Клиенты
+            </h1>
 
             <p class="clients-subtitle">
                 Просмотр и управление клиентами системы
             </p>
         </div>
 
-        <a href="{% url 'add_client' %}" class="clients-add">
-            <span>+</span>
-            Добавить клиента
-        </a>
+        <div class="clients-header-actions">
+            <a
+                href="{% url 'clients_report_page' %}"
+                class="clients-report"
+            >
+                <span class="clients-report-icon">
+                    ↗
+                </span>
+
+                Отчёт по клиентам
+            </a>
+
+            <a
+                href="{% url 'add_client' %}"
+                class="clients-add"
+            >
+                <span>
+                    +
+                </span>
+
+                Добавить клиента
+            </a>
+        </div>
     </div>
 
-    <form method="get" class="clients-filters">
+    <form
+        method="get"
+        class="clients-filters"
+    >
         <div class="client-filter client-filter-search">
-            <label for="q">Поиск</label>
+            <label for="q">
+                Поиск
+            </label>
 
             <input
                 type="text"
                 name="q"
                 id="q"
-                value="{{ query }}"
+                value="{{ query|default:'' }}"
                 placeholder="Фамилия, имя, телефон"
             >
         </div>
 
         <div class="client-filter">
-            <label for="blacklist">Чёрный список</label>
+            <label for="blacklist">
+                Чёрный список
+            </label>
 
-            <select name="blacklist" id="blacklist">
-                <option value="">Все</option>
+            <select
+                name="blacklist"
+                id="blacklist"
+            >
+                <option value="">
+                    Все
+                </option>
 
                 <option
                     value="1"
@@ -61,19 +106,28 @@
             </select>
         </div>
 
-        <button type="submit" class="client-search">
+        <button
+            type="submit"
+            class="client-search"
+        >
             Найти
         </button>
 
-        <a href="{% url 'clients_list' %}" class="client-reset">
+        <a
+            href="{% url 'clients_list' %}"
+            class="client-reset"
+        >
             Сбросить
         </a>
     </form>
 
     <div class="clients-table-card">
+
         <div class="clients-table-header">
             <div>
-                <h2>Список клиентов</h2>
+                <h2>
+                    Список клиентов
+                </h2>
 
                 <span>
                     Все зарегистрированные клиенты системы
@@ -151,10 +205,17 @@
                                 </div>
                             </td>
                         </tr>
+
                     {% empty %}
+
                         <tr>
-                            <td colspan="6" class="clients-empty">
-                                <span class="clients-empty-icon">∅</span>
+                            <td
+                                colspan="6"
+                                class="clients-empty"
+                            >
+                                <span class="clients-empty-icon">
+                                    ∅
+                                </span>
 
                                 <strong>
                                     Клиенты не найдены
@@ -165,10 +226,12 @@
                                 </span>
                             </td>
                         </tr>
+
                     {% endfor %}
                 </tbody>
             </table>
         </div>
+
     </div>
 </div>
 {% endblock %}

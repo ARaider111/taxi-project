@@ -10,18 +10,33 @@
 {% block content %}
 <div class="audit-page">
     <div class="audit-header">
-        <div>
-            <span class="audit-label">БЕЗОПАСНОСТЬ И КОНТРОЛЬ</span>
+    <div>
+        <span class="audit-label">
+            БЕЗОПАСНОСТЬ И КОНТРОЛЬ
+        </span>
 
-            <h1>
-                Логи аудита
-            </h1>
+        <h1>
+            Логи аудита
+        </h1>
 
-            <p class="audit-subtitle">
-                История действий пользователей в системе
-            </p>
-        </div>
+        <p class="audit-subtitle">
+            История действий пользователей в системе
+        </p>
     </div>
+
+    <div class="audit-header-actions">
+        <a
+            href="{% url 'export_audit_report' %}"
+            class="audit-export-btn"
+        >
+            <span class="audit-export-icon">
+                ↗
+            </span>
+
+            Экспорт в Excel
+        </a>
+    </div>
+</div>
 
     <form method="get" class="audit-filters">
         <div class="audit-filter audit-filter-user">

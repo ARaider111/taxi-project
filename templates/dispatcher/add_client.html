@@ -1,39 +1,172 @@
-{% extends "dispatcher/base_dispatcher.html" %}ЫЫ
-{% block title %}Добавить клиента{% endblock %}
+{% extends "dispatcher/base_dispatcher.html" %}
+
+{% load static %}
+
+{% block title %}
+    Добавить клиента
+{% endblock %}
+
+{% block extra_head %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/dispatcher_client_form.css' %}?v=1"
+>
+{% endblock %}
 
 {% block content %}
-<h1>Добавить клиента</h1>
-<p><a href="{% url 'dispatcher_clients' %}">← Назад к списку</a></p>
 
-<form method="post">
-    {% csrf_token %}
+<div class="dispatcher-client-form-page">
 
-    <p>
-        <label>Фамилия:<br>
-            <input type="text" name="lname" required>
-        </label>
-    </p>
+    <div class="dispatcher-client-form-header">
 
-    <p>
-        <label>Имя:<br>
-            <input type="text" name="fname" required>
-        </label>
-    </p>
+        <div>
+            <span class="dispatcher-client-form-label">
+                ДИСПЕТЧЕРСКАЯ СИСТЕМА
+            </span>
 
-    <p>
-        <label>Отчество (необязательно):<br>
-            <input type="text" name="patronimyc">
-        </label>
-    </p>
+            <h1>
+                Добавить клиента
+            </h1>
 
-    <p>
-        <label>Телефон:<br>
-            <input type="text" name="phone" required>
-        </label>
-    </p>
+            <p class="dispatcher-client-form-subtitle">
+                Создание нового клиента диспетчерской системы
+            </p>
+        </div>
 
-    <p>
-        <button type="submit">Создать</button>
-    </p>
-</form>
+        <a
+            href="{% url 'dispatcher_clients' %}"
+            class="dispatcher-client-form-back"
+        >
+            ← Назад к списку
+        </a>
+
+    </div>
+
+
+    <div class="dispatcher-client-form-card">
+
+        <div class="dispatcher-client-form-card-header">
+
+            <div>
+                <h2>
+                    Данные клиента
+                </h2>
+
+                <span>
+                    Заполните контактную информацию клиента
+                </span>
+            </div>
+
+        </div>
+
+
+        <form
+            method="post"
+            class="dispatcher-client-form"
+        >
+
+            {% csrf_token %}
+
+            <div class="dispatcher-client-form-grid">
+
+                <div class="dispatcher-client-form-field">
+
+                    <label for="lname">
+                        Фамилия
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="lname"
+                        name="lname"
+                        required
+                        maxlength="128"
+                        placeholder="Введите фамилию"
+                    >
+
+                </div>
+
+
+                <div class="dispatcher-client-form-field">
+
+                    <label for="fname">
+                        Имя
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="fname"
+                        name="fname"
+                        required
+                        maxlength="128"
+                        placeholder="Введите имя"
+                    >
+
+                </div>
+
+
+                <div class="dispatcher-client-form-field">
+
+                    <label for="patronimyc">
+                        Отчество
+                    </label>
+
+                    <input
+                        type="text"
+                        id="patronimyc"
+                        name="patronimyc"
+                        maxlength="128"
+                        placeholder="Введите отчество"
+                    >
+
+                </div>
+
+
+                <div class="dispatcher-client-form-field">
+
+                    <label for="phone">
+                        Телефон
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="phone"
+                        name="phone"
+                        required
+                        maxlength="12"
+                        placeholder="+79991234567"
+                    >
+
+                </div>
+
+            </div>
+
+
+            <div class="dispatcher-client-form-footer">
+
+                <a
+                    href="{% url 'dispatcher_clients' %}"
+                    class="dispatcher-client-form-button dispatcher-client-form-cancel"
+                >
+                    Отмена
+                </a>
+
+                <button
+                    type="submit"
+                    class="dispatcher-client-form-button dispatcher-client-form-save"
+                >
+                    Создать
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
 {% endblock %}

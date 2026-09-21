@@ -1,5 +1,10 @@
+* {
+    box-sizing: border-box;
+}
+
 .districts-page {
     width: 100%;
+    min-width: 0;
     color: #ffffff;
 }
 
@@ -16,26 +21,36 @@
 }
 
 .districts-label {
-    display: block;
-    margin-bottom: 11px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
     color: #ffc107;
-    font-size: 11px;
-    font-weight: 800;
+    font-size: 10px;
+    font-weight: 900;
     letter-spacing: 2px;
+}
+
+.districts-label::before {
+    width: 21px;
+    height: 2px;
+    background: #ffc107;
+    content: "";
 }
 
 .districts-header h1 {
     margin: 0 0 9px;
     color: #ffffff;
     font-size: 42px;
+    font-weight: 800;
     line-height: 1.1;
-    letter-spacing: -1px;
+    letter-spacing: -1.2px;
 }
 
 .districts-subtitle {
     margin: 0;
     color: #7f8992;
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .districts-add {
@@ -45,15 +60,15 @@
     gap: 9px;
     min-height: 43px;
     padding: 0 17px;
-    box-sizing: border-box;
+    border: 1px solid #ffc107;
     border-radius: 8px;
     background: #ffc107;
     color: #111111;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 800;
     text-decoration: none;
-    transition: 0.2s ease;
     white-space: nowrap;
+    transition: 0.2s ease;
 }
 
 .districts-add span {
@@ -63,6 +78,7 @@
 }
 
 .districts-add:hover {
+    border-color: #ffd54a;
     background: #ffd54a;
     box-shadow: 0 8px 22px rgba(255, 193, 7, 0.2);
     transform: translateY(-2px);
@@ -84,6 +100,13 @@
     gap: 20px;
     padding: 21px 24px;
     border-bottom: 1px solid #30363d;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255, 193, 7, 0.07),
+            transparent 45%
+        ),
+        #1a2025;
 }
 
 .districts-table-header > div:first-child {
@@ -93,7 +116,8 @@
 .districts-table-header h2 {
     margin: 0 0 6px;
     color: #ffffff;
-    font-size: 17px;
+    font-size: 18px;
+    font-weight: 800;
 }
 
 .districts-table-header span {
@@ -109,7 +133,7 @@
     background: rgba(255, 193, 7, 0.08);
     color: #ffc107 !important;
     font-size: 11px !important;
-    font-weight: 700;
+    font-weight: 800;
     white-space: nowrap;
 }
 
@@ -130,25 +154,25 @@
 }
 
 .districts-table th {
-    padding: 15px 14px;
+    padding: 15px 12px;
     overflow: hidden;
     border-bottom: 1px solid #343b43;
     color: #89929a;
-    font-size: 11px;
+    font-size: 9px;
     font-weight: 800;
+    letter-spacing: 0.5px;
     text-align: left;
     text-overflow: ellipsis;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
     white-space: nowrap;
 }
 
 .districts-table td {
-    padding: 16px 14px;
+    padding: 15px 12px;
     overflow: hidden;
     border-bottom: 1px solid #292f36;
     color: #e6e9ed;
-    font-size: 13px;
+    font-size: 11px;
     text-overflow: ellipsis;
     vertical-align: middle;
     white-space: nowrap;
@@ -168,27 +192,17 @@
 
 .districts-table th:nth-child(1),
 .districts-table td:nth-child(1) {
-    width: 14%;
+    width: 42%;
 }
 
 .districts-table th:nth-child(2),
 .districts-table td:nth-child(2) {
-    width: 36%;
+    width: 28%;
 }
 
 .districts-table th:nth-child(3),
 .districts-table td:nth-child(3) {
-    width: 24%;
-}
-
-.districts-table th:nth-child(4),
-.districts-table td:nth-child(4) {
-    width: 26%;
-}
-
-.district-id {
-    color: #ffc107 !important;
-    font-weight: 700;
+    width: 30%;
 }
 
 .district-name {
@@ -197,13 +211,15 @@
 }
 
 .district-coefficient {
-    color: #72d491 !important;
-    font-weight: 700;
+    color: #ffc107 !important;
+    font-weight: 800;
 }
 
 .district-actions {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 5px;
     min-width: 0;
 }
 
@@ -211,16 +227,14 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 0;
-    min-height: 31px;
-    padding: 5px 10px;
-    box-sizing: border-box;
+    min-height: 30px;
+    padding: 5px 8px;
     overflow: hidden;
     border: 1px solid #343b43;
     border-radius: 6px;
     background: #20252b;
     color: #c7ccd2;
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 600;
     text-decoration: none;
     text-overflow: ellipsis;

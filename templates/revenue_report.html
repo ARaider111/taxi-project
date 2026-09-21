@@ -1,0 +1,269 @@
+{% extends "base_admin.html" %}
+{% load static %}
+
+{% block title %}
+    Отчёт по доходам — Taxi Control
+{% endblock %}
+
+{% block page_name %}
+    Отчёт по доходам
+{% endblock %}
+
+{% block extra_head %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/revenue_report.css' %}"
+>
+{% endblock %}
+
+{% block content %}
+<div class="revenue-report-page">
+
+    <div class="revenue-report-header">
+        <div>
+            <span class="revenue-report-label">
+                АДМИН-ПАНЕЛЬ
+            </span>
+
+            <h1>
+                Отчёт по доходам
+            </h1>
+
+            <p>
+                Анализ выручки по выбранным периодам
+            </p>
+        </div>
+        </div>
+    </div>
+
+    <form
+        method="get"
+        action="{% url 'export_revenue_report' %}"
+        id="revenue-report-form"
+        class="revenue-report-filters"
+    >
+        <div class="revenue-report-filter">
+            <label for="period">
+                Период
+            </label>
+
+            <select
+                name="period"
+                id="period"
+            >
+                <option value="day">
+                    По дням
+                </option>
+
+                <option value="month">
+                    По месяцам
+                </option>
+
+                <option value="year">
+                    По годам
+                </option>
+
+                <option value="">
+                    Всего
+                </option>
+            </select>
+        </div>
+
+        <div class="revenue-report-filter">
+            <label for="date_from">
+                С даты
+            </label>
+
+            <input
+                type="date"
+                name="date_from"
+                id="date_from"
+            >
+        </div>
+
+        <div class="revenue-report-filter">
+            <label for="date_to">
+                По дату
+            </label>
+
+            <input
+                type="date"
+                name="date_to"
+                id="date_to"
+            >
+        </div>
+
+        <button
+            type="submit"
+            class="revenue-report-export"
+        >
+            <span>
+                ↓
+            </span>
+
+            Экспорт в Excel
+        </button>
+
+        <a
+            href="{% url 'admin_panel' %}"
+            class="revenue-report-back"
+        >
+            ← В админку
+        </a>
+    </form>
+
+    <section class="revenue-report-card">
+
+        <div class="revenue-report-card-header">
+            <div>
+                <span>
+                    ФИНАНСОВАЯ АНАЛИТИКА
+                </span>
+
+                <h2>
+                    Параметры отчёта
+                </h2>
+
+                <p>
+                    Выберите период группировки и диапазон дат
+                </p>
+            </div>
+
+            <div class="revenue-report-format">
+                XLSX
+            </div>
+        </div>
+
+        <div class="revenue-report-summary">
+            <div class="revenue-report-summary-item">
+                <span>
+                    Формат файла
+                </span>
+
+                <strong>
+                    Excel (.xlsx)
+                </strong>
+            </div>
+
+            <div class="revenue-report-summary-item">
+                <span>
+                    Назначение
+                </span>
+
+                <strong>
+                    Анализ выручки
+                </strong>
+            </div>
+        </div>
+
+        <div class="revenue-report-section">
+            <div class="revenue-report-section-header">
+                <h3>
+                    Доступные группировки
+                </h3>
+
+                <span>
+                    4 варианта
+                </span>
+            </div>
+
+            <div class="revenue-report-options">
+                <div class="revenue-report-option">
+                    <span class="revenue-report-option-icon">
+                        D
+                    </span>
+
+                    <div>
+                        <strong>
+                            По дням
+                        </strong>
+
+                        <p>
+                            Выручка и заказы за каждый день
+                        </p>
+                    </div>
+                </div>
+
+                <div class="revenue-report-option">
+                    <span class="revenue-report-option-icon">
+                        M
+                    </span>
+
+                    <div>
+                        <strong>
+                            По месяцам
+                        </strong>
+
+                        <p>
+                            Сводная статистика по месяцам
+                        </p>
+                    </div>
+                </div>
+
+                <div class="revenue-report-option">
+                    <span class="revenue-report-option-icon">
+                        Y
+                    </span>
+
+                    <div>
+                        <strong>
+                            По годам
+                        </strong>
+
+                        <p>
+                            Сравнение годовых показателей
+                        </p>
+                    </div>
+                </div>
+
+                <div class="revenue-report-option">
+                    <span class="revenue-report-option-icon">
+                        Σ
+                    </span>
+
+                    <div>
+                        <strong>
+                            Всего
+                        </strong>
+
+                        <p>
+                            Общая сумма и средний чек
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="revenue-report-section">
+            <div class="revenue-report-section-header">
+                <h3>
+                    Колонки в отчёте
+                </h3>
+
+                <span>
+                    4 поля
+                </span>
+            </div>
+
+            <div class="revenue-report-columns">
+                <span>
+                    Период
+                </span>
+
+                <span>
+                    Количество заказов
+                </span>
+
+                <span>
+                    Выручка
+                </span>
+
+                <span>
+                    Средний чек
+                </span>
+            </div>
+        </div>
+
+    </section>
+</div>
+{% endblock %}

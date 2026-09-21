@@ -1,5 +1,12 @@
 {% extends "dispatcher/base_dispatcher.html" %}
+
+{% load static %}
+
 {% block title %}Редактировать клиента{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/dispatcher_client_edit.css' %}?v=1">
+{% endblock %}
 
 {% block content %}
 <h1>Редактировать клиента</h1>

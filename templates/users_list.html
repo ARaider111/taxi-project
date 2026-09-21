@@ -1,75 +1,118 @@
 {% extends "base_admin.html" %}
 {% load static %}
 
-{% block title %}Пользователи — Taxi Control{% endblock %}
+{% block title %}
+    Пользователи — Taxi Control
+{% endblock %}
+
+{% block page_name %}
+    Пользователи
+{% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="{% static 'css/users_list.css' %}">
+<link
+    rel="stylesheet"
+    href="{% static 'css/users_list.css' %}"
+>
 {% endblock %}
 
 {% block content %}
 <div class="users-page">
+
     <div class="users-header">
         <div>
-            <span class="users-label">УПРАВЛЕНИЕ СИСТЕМОЙ</span>
+            <span class="users-label">
+                УПРАВЛЕНИЕ СИСТЕМОЙ
+            </span>
 
-            <h1>Пользователи</h1>
+            <h1>
+                Пользователи
+            </h1>
 
             <p class="users-subtitle">
                 Управление учётными записями сотрудников системы
             </p>
         </div>
 
-        <a href="{% url 'add_user' %}" class="users-add-btn">
-            <span>+</span>
-            Добавить пользователя
-        </a>
+        <div class="users-header-actions">
+            <a
+                href="{% url 'dispatchers_report_page' %}"
+                class="users-report-btn"
+            >
+                <span class="users-report-icon">
+                    ↗
+                </span>
+
+                Отчёт по диспетчерам
+            </a>
+
+            <a
+                href="{% url 'add_user' %}"
+                class="users-add-btn"
+            >
+                <span>
+                    +
+                </span>
+
+                Добавить пользователя
+            </a>
+        </div>
     </div>
 
-    <form method="get" class="users-filters">
+    <form
+        method="get"
+        class="users-filters"
+    >
         <div class="filter-item filter-search">
-            <label for="q">Поиск</label>
+            <label for="q">
+                Поиск
+            </label>
 
             <input
                 type="text"
                 name="q"
                 id="q"
-                value="{{ query }}"
+                value="{{ query|default:'' }}"
                 placeholder="Логин, фамилия, имя, телефон"
             >
         </div>
 
         <div class="filter-item">
-            <label for="role">Роль</label>
+            <label for="role">
+                Роль
+            </label>
 
-            <select name="role" id="role">
-                <option value="">Все роли</option>
+            <select
+                name="role"
+                id="role"
+            >
+                <option value="">
+                    Все роли
+                </option>
 
-                {% for r in roles %}
-                    {% if r is tuple %}
-                        <option
-                            value="{{ r.0 }}"
-                            {% if r.0 == current_role %}selected{% endif %}
-                        >
-                            {{ r.1 }}
-                        </option>
-                    {% else %}
-                        <option
-                            value="{{ r }}"
-                            {% if r == current_role %}selected{% endif %}
-                        >
-                            {{ r }}
-                        </option>
-                    {% endif %}
+                {% for role in roles %}
+                    <option
+                        value="{{ role }}"
+                        {% if role == current_role %}selected{% endif %}
+                    >
+                        {{ role }}
+                    </option>
                 {% endfor %}
             </select>
         </div>
 
         <div class="filter-item">
-            <label for="is_active">Статус</label>
+            <label for="is_active">
+                Статус
+            </label>
 
-            <select name="is_active" id="is_active">
-                <option value="">Все</option>
+            <select
+                name="is_active"
+                id="is_active"
+            >
+                <option value="">
+                    Все
+                </option>
 
                 <option
                     value="1"
@@ -88,10 +131,17 @@
         </div>
 
         <div class="filter-item">
-            <label for="archive">Архив</label>
+            <label for="archive">
+                Архив
+            </label>
 
-            <select name="archive" id="archive">
-                <option value="">Все</option>
+            <select
+                name="archive"
+                id="archive"
+            >
+                <option value="">
+                    Все
+                </option>
 
                 <option
                     value="0"
@@ -110,24 +160,37 @@
         </div>
 
         <div class="filter-buttons">
-            <button type="submit" class="users-search-btn">
+            <button
+                type="submit"
+                class="users-search-btn"
+            >
                 Найти
             </button>
 
-            <a href="{% url 'users_list' %}" class="users-reset-btn">
+            <a
+                href="{% url 'users_list' %}"
+                class="users-reset-btn"
+            >
                 Сбросить
             </a>
         </div>
     </form>
 
     <div class="users-table-card">
+
         <div class="users-table-header">
             <div>
-                <h2>Список пользователей</h2>
-
-                <span>
-                    Все учётные записи сотрудников системы
+                <span class="users-table-label">
+                    УЧЁТНЫЕ ЗАПИСИ
                 </span>
+
+                <h2>
+                    Список пользователей
+                </h2>
+
+                <p>
+                    Все учётные записи сотрудников системы
+                </p>
             </div>
 
             <div class="users-counter">
@@ -153,7 +216,11 @@
 
                 <tbody>
                     {% for u in users %}
-                        <tr {% if u.is_archive %}class="user-archived"{% endif %}>
+                        <tr
+                            {% if u.is_archive %}
+                                class="user-archived"
+                            {% endif %}
+                        >
                             <td class="user-login">
                                 {{ u.login }}
                             </td>
@@ -228,10 +295,17 @@
                                 </div>
                             </td>
                         </tr>
+
                     {% empty %}
+
                         <tr>
-                            <td colspan="9" class="users-empty">
-                                <span class="users-empty-icon">∅</span>
+                            <td
+                                colspan="9"
+                                class="users-empty"
+                            >
+                                <span class="users-empty-icon">
+                                    ∅
+                                </span>
 
                                 <strong>
                                     Пользователи не найдены
@@ -242,10 +316,12 @@
                                 </span>
                             </td>
                         </tr>
+
                     {% endfor %}
                 </tbody>
             </table>
         </div>
+
     </div>
 </div>
 {% endblock %}

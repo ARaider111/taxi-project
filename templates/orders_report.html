@@ -1,0 +1,221 @@
+{% extends "base_admin.html" %}
+{% load static %}
+
+{% block title %}
+    Отчёт по заказам — Taxi Control
+{% endblock %}
+
+{% block page_name %}
+    Отчёт по заказам
+{% endblock %}
+
+{% block extra_head %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/orders_report.css' %}"
+>
+{% endblock %}
+
+{% block content %}
+<div class="orders-report-page">
+
+    <div class="orders-report-header">
+        <div>
+            <span class="orders-report-label">
+                АДМИН-ПАНЕЛЬ
+            </span>
+
+            <h1>
+                Отчёт по заказам
+            </h1>
+
+            <p>
+                Экспорт данных о заказах в Excel
+            </p>
+        </div>
+
+        <div class="orders-report-header-actions">
+            <button
+                type="submit"
+                form="orders-report-form"
+                class="orders-report-export-top"
+            >
+                <span>
+                    ↓
+                </span>
+
+                Экспорт в Excel
+            </button>
+        </div>
+    </div>
+
+    <form
+        method="get"
+        action="{% url 'export_orders_report' %}"
+        id="orders-report-form"
+        class="orders-report-filters"
+    >
+        <div class="orders-report-filter">
+            <label for="date_from">
+                Дата с
+            </label>
+
+            <input
+                type="date"
+                name="date_from"
+                id="date_from"
+                value="{{ date_from|default:'' }}"
+            >
+        </div>
+
+        <div class="orders-report-filter">
+            <label for="date_to">
+                Дата по
+            </label>
+
+            <input
+                type="date"
+                name="date_to"
+                id="date_to"
+                value="{{ date_to|default:'' }}"
+            >
+        </div>
+
+        <div class="orders-report-filter">
+            <label for="status">
+                Статус
+            </label>
+
+            <select
+                name="status"
+                id="status"
+            >
+                <option value="">
+                    Все
+                </option>
+
+                {% for value, label in status_choices %}
+                    <option value="{{ value }}">
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="orders-report-filter">
+            <label for="driver">
+                Водитель
+            </label>
+
+            <select
+                name="driver"
+                id="driver"
+            >
+                <option value="">
+                    Все
+                </option>
+
+                {% for d in drivers %}
+                    <option value="{{ d.driver_id }}">
+                        {{ d.lname }} {{ d.fname }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button
+            type="submit"
+            class="orders-report-export"
+        >
+            <span>
+                ↓
+            </span>
+
+            Экспорт в Excel
+        </button>
+
+        <a
+            href="{% url 'orders_list' %}"
+            class="orders-report-back"
+        >
+            ← К заказам
+        </a>
+    </form>
+
+    <section class="orders-report-card">
+
+        <div class="orders-report-card-header">
+            <div>
+                <span>
+                    ФОРМАТ ОТЧЁТА
+                </span>
+
+                <h2>
+                    Параметры отчёта
+                </h2>
+
+                <p>
+                    Выберите фильтры и нажмите «Экспорт в Excel»
+                </p>
+            </div>
+
+            <div class="orders-report-format">
+                XLSX
+            </div>
+        </div>
+
+        <div class="orders-report-summary">
+            <div class="orders-report-summary-item">
+                <span>
+                    Формат файла
+                </span>
+
+                <strong>
+                    Excel (.xlsx)
+                </strong>
+            </div>
+
+            <div class="orders-report-summary-item">
+                <span>
+                    Назначение
+                </span>
+
+                <strong>
+                    Аналитика заказов
+                </strong>
+            </div>
+        </div>
+
+        <div class="orders-report-columns">
+            <div class="orders-report-columns-header">
+                <h3>
+                    Колонки в отчёте
+                </h3>
+
+                <span>
+                    15 полей
+                </span>
+            </div>
+
+            <div class="orders-report-column-grid">
+                <span>Номер заказа</span>
+                <span>Дата создания</span>
+                <span>Статус</span>
+                <span>Клиент — ФИО</span>
+                <span>Телефон клиента</span>
+                <span>Водитель — ФИО</span>
+                <span>Автомобиль</span>
+                <span>Улица откуда</span>
+                <span>Дом откуда</span>
+                <span>Улица куда</span>
+                <span>Дом куда</span>
+                <span>Тариф</span>
+                <span>Цена</span>
+                <span>Создал диспетчер</span>
+                <span>Время выполнения — минуты</span>
+            </div>
+        </div>
+
+    </section>
+</div>
+{% endblock %}

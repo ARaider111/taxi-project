@@ -1,5 +1,10 @@
+* {
+    box-sizing: border-box;
+}
+
 .audit-page {
     width: 100%;
+    min-width: 0;
     color: #ffffff;
 }
 
@@ -11,31 +16,87 @@
     margin-bottom: 35px;
 }
 
-.audit-header > div {
+.audit-header > div:first-child {
     min-width: 0;
 }
 
 .audit-label {
-    display: block;
-    margin-bottom: 11px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
     color: #ffc107;
-    font-size: 11px;
-    font-weight: 800;
+    font-size: 10px;
+    font-weight: 900;
     letter-spacing: 2px;
+}
+
+.audit-label::before {
+    width: 21px;
+    height: 2px;
+    background: #ffc107;
+    content: "";
 }
 
 .audit-header h1 {
     margin: 0 0 9px;
     color: #ffffff;
     font-size: 42px;
+    font-weight: 800;
     line-height: 1.1;
-    letter-spacing: -1px;
+    letter-spacing: -1.2px;
 }
 
 .audit-subtitle {
     margin: 0;
     color: #7f8992;
-    font-size: 15px;
+    font-size: 14px;
+}
+
+.audit-header-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.audit-export-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 43px;
+    padding: 0 15px;
+    border: 1px solid rgba(255, 193, 7, 0.45);
+    border-radius: 8px;
+    background: rgba(255, 193, 7, 0.08);
+    color: #ffc107;
+    font-size: 12px;
+    font-weight: 800;
+    text-decoration: none;
+    white-space: nowrap;
+    transition: 0.2s ease;
+}
+
+.audit-export-btn:hover {
+    border-color: #ffc107;
+    background: rgba(255, 193, 7, 0.16);
+    color: #ffd54a;
+    box-shadow: 0 8px 22px rgba(255, 193, 7, 0.12);
+    transform: translateY(-2px);
+}
+
+.audit-export-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 19px;
+    height: 19px;
+    border: 1px solid rgba(255, 193, 7, 0.45);
+    border-radius: 5px;
+    font-size: 13px;
+    line-height: 1;
 }
 
 .audit-filters {
@@ -44,9 +105,9 @@
     gap: 12px;
     margin-bottom: 24px;
     padding: 20px;
-    background: #181c20;
     border: 1px solid #30363d;
     border-radius: 12px;
+    background: #181c20;
 }
 
 .audit-filter {
@@ -56,14 +117,9 @@
     min-width: 145px;
 }
 
-.audit-filter-user {
-    flex: 1;
-    min-width: 0;
-}
-
+.audit-filter-user,
 .audit-filter-action {
-    flex: 1;
-    min-width: 0;
+    min-width: 190px;
 }
 
 .audit-filter label {
@@ -78,8 +134,7 @@
 .audit-filter select {
     width: 100%;
     height: 42px;
-    box-sizing: border-box;
-    padding: 0 11px;
+    padding: 0 12px;
     outline: none;
     border: 1px solid #343b43;
     border-radius: 7px;
@@ -117,12 +172,12 @@
     align-items: center;
     justify-content: center;
     height: 42px;
-    box-sizing: border-box;
     padding: 0 16px;
     border-radius: 7px;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 12px;
     font-weight: 700;
+    white-space: nowrap;
     transition: 0.2s ease;
 }
 
@@ -169,6 +224,13 @@
     gap: 20px;
     padding: 21px 24px;
     border-bottom: 1px solid #30363d;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255, 193, 7, 0.07),
+            transparent 45%
+        ),
+        #1a2025;
 }
 
 .audit-table-header > div:first-child {
@@ -178,7 +240,8 @@
 .audit-table-header h2 {
     margin: 0 0 6px;
     color: #ffffff;
-    font-size: 17px;
+    font-size: 18px;
+    font-weight: 800;
 }
 
 .audit-table-header span {
@@ -194,7 +257,7 @@
     background: rgba(255, 193, 7, 0.08);
     color: #ffc107 !important;
     font-size: 11px !important;
-    font-weight: 700;
+    font-weight: 800;
     white-space: nowrap;
 }
 
@@ -215,21 +278,21 @@
 }
 
 .audit-table th {
-    padding: 15px 9px;
+    padding: 15px 10px;
     overflow: hidden;
     border-bottom: 1px solid #343b43;
     color: #89929a;
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 800;
+    letter-spacing: 0.5px;
     text-align: left;
     text-overflow: ellipsis;
     text-transform: uppercase;
-    letter-spacing: 0.4px;
     white-space: nowrap;
 }
 
 .audit-table td {
-    padding: 15px 9px;
+    padding: 15px 10px;
     overflow: hidden;
     border-bottom: 1px solid #292f36;
     color: #e6e9ed;
@@ -253,37 +316,36 @@
 
 .audit-table th:nth-child(1),
 .audit-table td:nth-child(1) {
-    width: 15%;
+    width: 16%;
 }
 
 .audit-table th:nth-child(2),
 .audit-table td:nth-child(2) {
-    width: 15%;
+    width: 16%;
 }
 
 .audit-table th:nth-child(3),
 .audit-table td:nth-child(3) {
-    width: 14%;
+    width: 15%;
 }
 
 .audit-table th:nth-child(4),
 .audit-table td:nth-child(4) {
-    width: 14%;
+    width: 15%;
 }
 
 .audit-table th:nth-child(5),
 .audit-table td:nth-child(5) {
-    width: 28%;
+    width: 26%;
 }
 
 .audit-table th:nth-child(6),
 .audit-table td:nth-child(6) {
-    width: 14%;
+    width: 12%;
 }
 
 .audit-date {
     color: #aeb5bd !important;
-    font-size: 10px !important;
 }
 
 .audit-user {
@@ -292,9 +354,9 @@
 }
 
 .audit-system-user {
-    color: #737d86;
-    font-style: italic;
-    font-weight: 400;
+    color: #ffc107;
+    font-size: 10px;
+    font-weight: 700;
 }
 
 .audit-action-badge {
@@ -303,12 +365,11 @@
     max-width: 100%;
     min-height: 25px;
     padding: 0 8px;
-    box-sizing: border-box;
     overflow: hidden;
-    border: 1px solid rgba(255, 193, 7, 0.18);
-    border-radius: 6px;
-    background: rgba(255, 193, 7, 0.08);
-    color: #ffc107;
+    border: 1px solid rgba(143, 195, 255, 0.25);
+    border-radius: 20px;
+    background: rgba(143, 195, 255, 0.08);
+    color: #8fc3ff;
     font-size: 9px;
     font-weight: 700;
     text-overflow: ellipsis;
@@ -316,8 +377,8 @@
 }
 
 .audit-object {
-    color: #72b7ff !important;
-    font-weight: 600;
+    color: #ffc107 !important;
+    font-weight: 700;
 }
 
 .audit-description {
@@ -325,7 +386,7 @@
 }
 
 .audit-ip {
-    color: #89929a !important;
+    color: #aeb5bd !important;
     font-family: Consolas, monospace;
     font-size: 10px !important;
 }

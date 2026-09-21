@@ -8,11 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>{% block title %}Taxi Control — Админ-панель{% endblock %}</title>
-
-    <!-- Основной CSS админ-панели -->
     <link rel="stylesheet" href="{% static 'css/admin_panel.css' %}">
-
-    <!-- CSS конкретной страницы -->
     {% block extra_head %}
     {% endblock %}
 </head>
@@ -21,14 +17,12 @@
 
 <div class="admin-page">
 
-    <!-- ================= HEADER ================= -->
-
     <header class="admin-header">
 
         <div class="logo">
 
             <div class="logo-icon">
-                🚕
+                TC
             </div>
 
             <span>Taxi Control</span>
@@ -77,9 +71,6 @@
 
     </header>
 
-
-    <!-- ================= NAVIGATION ================= -->
-
     <nav class="admin-nav">
 
         <a href="{% url 'admin_panel' %}">
@@ -120,11 +111,11 @@
             Аудит
         </a>
 
+        <a href="{% url 'revenue_report_page' %}" class="btn-report">
+        Отчет по доходам
+        </a>
 
     </nav>
-
-
-    <!-- ================= CONTENT ================= -->
 
     <main class="admin-content">
 
@@ -132,9 +123,6 @@
         {% endblock %}
 
     </main>
-
-
-    <!-- ================= FOOTER ================= -->
 
     <footer class="admin-footer">
 

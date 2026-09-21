@@ -1,5 +1,10 @@
+* {
+    box-sizing: border-box;
+}
+
 .tariffs-page {
     width: 100%;
+    min-width: 0;
     color: #ffffff;
 }
 
@@ -16,26 +21,36 @@
 }
 
 .tariffs-label {
-    display: block;
-    margin-bottom: 11px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
     color: #ffc107;
-    font-size: 11px;
-    font-weight: 800;
+    font-size: 10px;
+    font-weight: 900;
     letter-spacing: 2px;
+}
+
+.tariffs-label::before {
+    width: 21px;
+    height: 2px;
+    background: #ffc107;
+    content: "";
 }
 
 .tariffs-header h1 {
     margin: 0 0 9px;
     color: #ffffff;
     font-size: 42px;
+    font-weight: 800;
     line-height: 1.1;
-    letter-spacing: -1px;
+    letter-spacing: -1.2px;
 }
 
 .tariffs-subtitle {
     margin: 0;
     color: #7f8992;
-    font-size: 15px;
+    font-size: 14px;
 }
 
 .tariffs-add {
@@ -45,15 +60,15 @@
     gap: 9px;
     min-height: 43px;
     padding: 0 17px;
-    box-sizing: border-box;
+    border: 1px solid #ffc107;
     border-radius: 8px;
     background: #ffc107;
     color: #111111;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 800;
     text-decoration: none;
-    transition: 0.2s ease;
     white-space: nowrap;
+    transition: 0.2s ease;
 }
 
 .tariffs-add span {
@@ -63,6 +78,7 @@
 }
 
 .tariffs-add:hover {
+    border-color: #ffd54a;
     background: #ffd54a;
     box-shadow: 0 8px 22px rgba(255, 193, 7, 0.2);
     transform: translateY(-2px);
@@ -84,6 +100,13 @@
     gap: 20px;
     padding: 21px 24px;
     border-bottom: 1px solid #30363d;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255, 193, 7, 0.07),
+            transparent 45%
+        ),
+        #1a2025;
 }
 
 .tariffs-table-header > div:first-child {
@@ -93,7 +116,8 @@
 .tariffs-table-header h2 {
     margin: 0 0 6px;
     color: #ffffff;
-    font-size: 17px;
+    font-size: 18px;
+    font-weight: 800;
 }
 
 .tariffs-table-header span {
@@ -109,7 +133,7 @@
     background: rgba(255, 193, 7, 0.08);
     color: #ffc107 !important;
     font-size: 11px !important;
-    font-weight: 700;
+    font-weight: 800;
     white-space: nowrap;
 }
 
@@ -134,21 +158,21 @@
     overflow: hidden;
     border-bottom: 1px solid #343b43;
     color: #89929a;
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 800;
+    letter-spacing: 0.45px;
     text-align: left;
     text-overflow: ellipsis;
     text-transform: uppercase;
-    letter-spacing: 0.4px;
     white-space: nowrap;
 }
 
 .tariffs-table td {
-    padding: 16px 9px;
+    padding: 15px 9px;
     overflow: hidden;
     border-bottom: 1px solid #292f36;
     color: #e6e9ed;
-    font-size: 12px;
+    font-size: 11px;
     text-overflow: ellipsis;
     vertical-align: middle;
     white-space: nowrap;
@@ -173,7 +197,7 @@
 
 .tariffs-table th:nth-child(2),
 .tariffs-table td:nth-child(2) {
-    width: 17%;
+    width: 18%;
 }
 
 .tariffs-table th:nth-child(3),
@@ -198,17 +222,17 @@
 
 .tariffs-table th:nth-child(7),
 .tariffs-table td:nth-child(7) {
-    width: 11%;
+    width: 12%;
 }
 
 .tariffs-table th:nth-child(8),
 .tariffs-table td:nth-child(8) {
-    width: 14%;
+    width: 22%;
 }
 
 .tariff-id {
     color: #ffc107 !important;
-    font-weight: 700;
+    font-weight: 800;
 }
 
 .tariff-name {
@@ -218,7 +242,7 @@
 
 .tariff-price {
     color: #72d491 !important;
-    font-weight: 700;
+    font-weight: 800;
 }
 
 .tariff-time {
@@ -226,47 +250,42 @@
 }
 
 .tariff-days {
-    color: #c7ccd2 !important;
+    color: #dce1e6 !important;
 }
 
 .tariff-archive {
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    max-width: 100%;
+    gap: 6px;
     min-height: 25px;
     padding: 0 8px;
-    box-sizing: border-box;
-    overflow: hidden;
     border-radius: 20px;
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 700;
-    text-overflow: ellipsis;
     white-space: nowrap;
 }
 
 .tariff-archive::before {
     width: 6px;
     height: 6px;
-    flex-shrink: 0;
     border-radius: 50%;
     content: "";
 }
 
 .tariff-archive-yes {
-    border: 1px solid rgba(255, 152, 50, 0.18);
-    background: rgba(255, 152, 50, 0.08);
-    color: #ffa34f;
+    border: 1px solid rgba(255, 193, 7, 0.25);
+    background: rgba(255, 193, 7, 0.08);
+    color: #ffc107;
 }
 
 .tariff-archive-yes::before {
-    background: #ffa34f;
-    box-shadow: 0 0 7px rgba(255, 163, 79, 0.6);
+    background: #ffc107;
+    box-shadow: 0 0 7px rgba(255, 193, 7, 0.6);
 }
 
 .tariff-archive-no {
-    border: 1px solid rgba(49, 196, 92, 0.2);
-    background: rgba(49, 196, 92, 0.08);
+    border: 1px solid rgba(114, 212, 145, 0.25);
+    background: rgba(114, 212, 145, 0.08);
     color: #72d491;
 }
 
@@ -287,10 +306,8 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 0;
     min-height: 30px;
     padding: 5px 6px;
-    box-sizing: border-box;
     overflow: hidden;
     border: 1px solid #343b43;
     border-radius: 6px;
@@ -316,8 +333,8 @@
 }
 
 .tariff-action-archive:hover {
-    border-color: #ffa34f;
-    color: #ffa34f;
+    border-color: #72b7ff;
+    color: #72b7ff;
 }
 
 .tariffs-empty {

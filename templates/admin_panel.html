@@ -19,7 +19,7 @@
     <header class="admin-header">
 
         <div class="logo">
-            <div class="logo-icon"></div>
+            <div class="logo-icon">TC</div>
             <span>Taxi Control</span>
         </div>
 
@@ -96,6 +96,10 @@
             Аудит
         </a>
 
+        <a href="{% url 'revenue_report_page' %}" class="btn-report">
+        Отчет по доходам
+        </a>
+
 
     </nav>
     <main class="admin-content">
@@ -141,7 +145,7 @@
 
             <a href="{% url 'clients_list' %}" class="menu-card">
                 <div class="menu-icon">
-                    👥
+                    
                 </div>
 
                 <div class="menu-text">
@@ -162,7 +166,7 @@
             <a href="{% url 'users_list' %}" class="menu-card">
 
                 <div class="menu-icon">
-                    👤
+                    
                 </div>
 
                 <div class="menu-text">
@@ -183,7 +187,7 @@
             <a href="{% url 'shifts_list' %}" class="menu-card">
 
                 <div class="menu-icon">
-                    🕐
+                    
                 </div>
 
                 <div class="menu-text">

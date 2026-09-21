@@ -1,0 +1,202 @@
+{% extends "base_admin.html" %}
+{% load static %}
+
+{% block title %}
+    Отчёт по диспетчерам — Taxi Control
+{% endblock %}
+
+{% block page_name %}
+    Отчёт по диспетчерам
+{% endblock %}
+
+{% block extra_head %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/dispatchers_report.css' %}"
+>
+{% endblock %}
+
+{% block content %}
+<div class="dispatchers-report-page">
+
+    <div class="dispatchers-report-hero">
+        <div>
+            <span class="dispatchers-report-label">
+                АДМИН-ПАНЕЛЬ
+            </span>
+
+            <h1>
+                Отчёт по диспетчерам
+            </h1>
+
+            <p>
+                Экспорт данных о пользователях системы в Excel
+            </p>
+        </div>
+
+        <a
+            href="{% url 'users_list' %}"
+            class="dispatchers-report-back"
+        >
+            ← К пользователям
+        </a>
+    </div>
+
+    <form
+        method="get"
+        action="{% url 'export_dispatchers_report' %}"
+        class="dispatchers-report-filters"
+    >
+        <div class="dispatchers-report-filter">
+            <label for="role">
+                Роль
+            </label>
+
+            <select
+                name="role"
+                id="role"
+            >
+                <option value="">
+                    Все роли
+                </option>
+
+                {% for value, label in roles %}
+                    <option value="{{ value }}">
+                        {{ label }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="dispatchers-report-filter">
+            <label for="is_active">
+                Активен
+            </label>
+
+            <select
+                name="is_active"
+                id="is_active"
+            >
+                <option value="">
+                    Все
+                </option>
+
+                <option value="1">
+                    Да
+                </option>
+
+                <option value="0">
+                    Нет
+                </option>
+            </select>
+        </div>
+
+        <div class="dispatchers-report-filter">
+            <label for="is_archive">
+                Архив
+            </label>
+
+            <select
+                name="is_archive"
+                id="is_archive"
+            >
+                <option value="">
+                    Все
+                </option>
+
+                <option value="1">
+                    Да
+                </option>
+
+                <option value="0">
+                    Нет
+                </option>
+            </select>
+        </div>
+
+        <button
+            type="submit"
+            class="dispatchers-report-export"
+        >
+            <span>
+                ↓
+            </span>
+
+            Экспорт в Excel
+        </button>
+    </form>
+
+    <section class="dispatchers-report-card">
+
+        <div class="dispatchers-report-card-header">
+            <div>
+                <span>
+                    ФОРМАТ ОТЧЁТА
+                </span>
+
+                <h2>
+                    Параметры отчёта
+                </h2>
+
+                <p>
+                    Выберите фильтры и нажмите «Экспорт в Excel»
+                </p>
+            </div>
+
+            <div class="dispatchers-report-format">
+                XLSX
+            </div>
+        </div>
+
+        <div class="dispatchers-report-summary">
+            <div class="dispatchers-report-summary-item">
+                <span>
+                    Формат файла
+                </span>
+
+                <strong>
+                    Excel (.xlsx)
+                </strong>
+            </div>
+
+            <div class="dispatchers-report-summary-item">
+                <span>
+                    Назначение
+                </span>
+
+                <strong>
+                    Аналитика диспетчеров
+                </strong>
+            </div>
+        </div>
+
+        <div class="dispatchers-report-columns">
+            <div class="dispatchers-report-columns-header">
+                <h3>
+                    Колонки в отчёте
+                </h3>
+
+                <span>
+                    12 полей
+                </span>
+            </div>
+
+            <div class="dispatchers-report-column-grid">
+                <span>ID</span>
+                <span>Логин</span>
+                <span>Фамилия</span>
+                <span>Имя</span>
+                <span>Отчество</span>
+                <span>Телефон</span>
+                <span>Роль</span>
+                <span>Активен</span>
+                <span>Архив</span>
+                <span>Создано заказов</span>
+                <span>Открыто смен</span>
+                <span>Закрыто смен</span>
+            </div>
+        </div>
+
+    </section>
+</div>
+{% endblock %}

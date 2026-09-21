@@ -10,20 +10,44 @@
 {% block content %}
 <div class="shifts-page">
     <div class="shifts-header">
-        <div>
-            <span class="shifts-label">УПРАВЛЕНИЕ РАБОЧИМИ СМЕНАМИ</span>
+    <div>
+        <span class="shifts-label">
+            УПРАВЛЕНИЕ РАБОЧИМИ СМЕНАМИ
+        </span>
 
-            <h1>Смены</h1>
-            <p>
-                Просмотр и управление рабочими сменами водителей
-            </p>
-        </div>
+        <h1>
+            Смены
+        </h1>
 
-        <a href="{% url 'add_shift' %}" class="shifts-add-btn">
-            <span>+</span>
+        <p>
+            Просмотр и управление рабочими сменами водителей
+        </p>
+    </div>
+
+    <div class="shifts-header-actions">
+        <a
+            href="{% url 'shifts_report_page' %}"
+            class="shifts-report"
+        >
+            <span class="shifts-report-icon">
+                ↗
+            </span>
+
+            Отчёт по сменам
+        </a>
+
+        <a
+            href="{% url 'add_shift' %}"
+            class="shifts-add-btn"
+        >
+            <span>
+                +
+            </span>
+
             Добавить смену
         </a>
     </div>
+</div>
 
     <form method="get" class="shifts-filters">
         <div class="shift-filter shift-filter-search">

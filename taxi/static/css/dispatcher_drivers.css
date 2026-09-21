@@ -1,5 +1,10 @@
+* {
+    box-sizing: border-box;
+}
+
 .dispatcher-drivers-page {
     width: 100%;
+    min-width: 0;
     color: #ffffff;
 }
 
@@ -11,32 +16,45 @@
     margin-bottom: 35px;
 }
 
-.dispatcher-drivers-header > div {
+.dispatcher-drivers-header > div:first-child {
     min-width: 0;
 }
 
 .dispatcher-drivers-label {
-    display: block;
-    margin-bottom: 11px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
     color: #ffc107;
-    font-size: 11px;
-    font-weight: 800;
+    font-size: 10px;
+    font-weight: 900;
     letter-spacing: 2px;
+}
+
+.dispatcher-drivers-label::before {
+    width: 21px;
+    height: 2px;
+    background: #ffc107;
+    content: "";
 }
 
 .dispatcher-drivers-header h1 {
     margin: 0 0 9px;
     color: #ffffff;
     font-size: 42px;
+    font-weight: 800;
     line-height: 1.1;
-    letter-spacing: -1px;
+    letter-spacing: -1.2px;
 }
 
 .dispatcher-drivers-subtitle {
     margin: 0;
     color: #7f8992;
-    font-size: 15px;
+    font-size: 14px;
 }
+
+
+/* Фильтры */
 
 .dispatcher-drivers-filters {
     display: flex;
@@ -44,9 +62,9 @@
     gap: 12px;
     margin-bottom: 24px;
     padding: 20px;
-    background: #181c20;
     border: 1px solid #30363d;
     border-radius: 12px;
+    background: #181c20;
 }
 
 .dispatcher-driver-filter {
@@ -74,14 +92,13 @@
     width: 100%;
     height: 42px;
     padding: 0 12px;
-    box-sizing: border-box;
     outline: none;
     border: 1px solid #343b43;
     border-radius: 7px;
     background: #0f1215;
     color: #ffffff;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 13px;
+    font-size: 12px;
     transition: 0.2s ease;
 }
 
@@ -116,12 +133,12 @@
     align-items: center;
     justify-content: center;
     height: 42px;
-    padding: 0 18px;
-    box-sizing: border-box;
+    padding: 0 16px;
     border-radius: 7px;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 13px;
+    font-size: 12px;
     font-weight: 700;
+    white-space: nowrap;
     transition: 0.2s ease;
 }
 
@@ -152,6 +169,9 @@
     transform: translateY(-2px);
 }
 
+
+/* Таблица */
+
 .dispatcher-drivers-table-card {
     width: 100%;
     overflow: hidden;
@@ -168,6 +188,13 @@
     gap: 20px;
     padding: 21px 24px;
     border-bottom: 1px solid #30363d;
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255, 193, 7, 0.07),
+            transparent 45%
+        ),
+        #1a2025;
 }
 
 .dispatcher-drivers-table-header > div:first-child {
@@ -177,7 +204,8 @@
 .dispatcher-drivers-table-header h2 {
     margin: 0 0 6px;
     color: #ffffff;
-    font-size: 17px;
+    font-size: 18px;
+    font-weight: 800;
 }
 
 .dispatcher-drivers-table-header span {
@@ -191,9 +219,9 @@
     border: 1px solid rgba(255, 193, 7, 0.2);
     border-radius: 7px;
     background: rgba(255, 193, 7, 0.08);
-    color: #ffc107;
-    font-size: 11px;
-    font-weight: 700;
+    color: #ffc107 !important;
+    font-size: 11px !important;
+    font-weight: 800;
     white-space: nowrap;
 }
 
@@ -218,12 +246,12 @@
     overflow: hidden;
     border-bottom: 1px solid #343b43;
     color: #89929a;
-    font-size: 10px;
+    font-size: 9px;
     font-weight: 800;
+    letter-spacing: 0.5px;
     text-align: left;
     text-overflow: ellipsis;
     text-transform: uppercase;
-    letter-spacing: 0.4px;
     white-space: nowrap;
 }
 
@@ -232,7 +260,7 @@
     overflow: hidden;
     border-bottom: 1px solid #292f36;
     color: #e6e9ed;
-    font-size: 12px;
+    font-size: 11px;
     text-overflow: ellipsis;
     vertical-align: middle;
     white-space: nowrap;
@@ -250,9 +278,12 @@
     border-bottom: 0;
 }
 
+
+/* Ширина колонок */
+
 .dispatcher-drivers-table th:nth-child(1),
 .dispatcher-drivers-table td:nth-child(1) {
-    width: 16%;
+    width: 15%;
 }
 
 .dispatcher-drivers-table th:nth-child(2),
@@ -277,13 +308,16 @@
 
 .dispatcher-drivers-table th:nth-child(6),
 .dispatcher-drivers-table td:nth-child(6) {
-    width: 14%;
+    width: 12%;
 }
 
 .dispatcher-drivers-table th:nth-child(7),
 .dispatcher-drivers-table td:nth-child(7) {
-    width: 11%;
+    width: 14%;
 }
+
+
+/* Данные */
 
 .dispatcher-driver-last-name {
     color: #ffffff !important;
@@ -294,43 +328,53 @@
     color: #e6e9ed !important;
 }
 
-.dispatcher-driver-phone {
+.dispatcher-driver-phone,
+.dispatcher-driver-car,
+.dispatcher-driver-number {
     color: #aeb5bd !important;
 }
 
-.dispatcher-driver-car {
-    color: #c7ccd2 !important;
-}
 
-.dispatcher-driver-number {
-    color: #ffc107 !important;
-    font-weight: 700;
-}
+/* Статус */
 
 .dispatcher-driver-status {
     display: inline-flex;
     align-items: center;
-    max-width: 100%;
+    gap: 5px;
     min-height: 25px;
-    padding: 0 8px;
-    box-sizing: border-box;
-    overflow: hidden;
-    border: 1px solid rgba(255, 193, 7, 0.18);
+    padding: 0 9px;
+    border: 1px solid rgba(255, 193, 7, 0.2);
     border-radius: 20px;
-    background: rgba(255, 193, 7, 0.09);
+    background: rgba(255, 193, 7, 0.08);
     color: #ffc107;
     font-size: 10px;
     font-weight: 700;
-    text-overflow: ellipsis;
     white-space: nowrap;
 }
+
+.dispatcher-driver-status::before {
+    width: 6px;
+    height: 6px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: #ffc107;
+    box-shadow: 0 0 8px rgba(255, 193, 7, 0.6);
+    content: "";
+}
+
+
+/* Чёрный список */
 
 .dispatcher-blacklist {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    font-size: 11px;
+    min-height: 25px;
+    padding: 0 9px;
+    border-radius: 20px;
+    font-size: 10px;
     font-weight: 700;
+    white-space: nowrap;
 }
 
 .dispatcher-blacklist::before {
@@ -342,6 +386,8 @@
 }
 
 .dispatcher-blacklist-yes {
+    border: 1px solid rgba(255, 70, 70, 0.2);
+    background: rgba(255, 70, 70, 0.1);
     color: #ff7070;
 }
 
@@ -351,6 +397,8 @@
 }
 
 .dispatcher-blacklist-no {
+    border: 1px solid rgba(49, 196, 92, 0.2);
+    background: rgba(49, 196, 92, 0.1);
     color: #72d491;
 }
 
@@ -358,6 +406,9 @@
     background: #72d491;
     box-shadow: 0 0 8px rgba(114, 212, 145, 0.6);
 }
+
+
+/* Пустая таблица */
 
 .dispatcher-drivers-empty {
     height: 230px;
