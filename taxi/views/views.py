@@ -1457,8 +1457,10 @@ def shifts_report_page(request):
     if not hasattr(request.user, "role") or request.user.role != "admin":
         return HttpResponse("Доступ запрещён", status=403)
 
+    drivers = Driver.objects.filter(is_archive=False)
+
     return render(request, "shifts_report.html", {
-        "statuses": Shift.STATUS_CHOICES,
+        "drivers": drivers,
     })
 
 
@@ -1467,13 +1469,10 @@ def export_shifts_report(request):
     if not hasattr(request.user, "role") or request.user.role != "admin":
         return HttpResponse("Доступ запрещён", status=403)
 
-    status_filter = request.GET.get("status", "")
     driver_filter = request.GET.get("driver", "")
 
     shifts = Shift.objects.select_related("driver").all()
 
-    if status_filter:
-        shifts = shifts.filter(status=status_filter)
     if driver_filter:
         shifts = shifts.filter(driver__driver_id=driver_filter)
 
@@ -1483,8 +1482,7 @@ def export_shifts_report(request):
 
     headers = [
         "ID", "Водитель (ФИО)", "Водитель (телефон)", "Авто (модель)", "Авто (номер)",
-        "Начало", "Конец", "Длительность (часы)", "Статус",
-        "Заказов", "Выручка"
+        "Начало", "Конец", "Длительность (часы)"
     ]
     ws.append(headers)
 
@@ -1494,12 +1492,8 @@ def export_shifts_report(request):
         cell.alignment = Alignment(horizontal="center")
 
     for shift in shifts:
-        orders = Order.objects.filter(shift=shift)
-        orders_count = orders.count()
-        revenue = orders.aggregate(total=models.Sum("price"))["total"] or 0
-
-        if shift.started_at and shift.ended_at:
-            duration = (shift.ended_at - shift.started_at).total_seconds() / 3600
+        if shift.start_shift and shift.end_shift:
+            duration = (shift.end_shift - shift.start_shift).total_seconds() / 3600
             duration_str = f"{duration:.1f}"
         else:
             duration_str = ""
@@ -1510,12 +1504,9 @@ def export_shifts_report(request):
             shift.driver.phone,
             shift.driver.car_model,
             shift.driver.car_number,
-            shift.started_at.strftime("%d.%m.%Y %H:%M") if shift.started_at else "",
-            shift.ended_at.strftime("%d.%m.%Y %H:%M") if shift.ended_at else "",
+            shift.start_shift.strftime("%d.%m.%Y %H:%M") if shift.start_shift else "",
+            shift.end_shift.strftime("%d.%m.%Y %H:%M") if shift.end_shift else "",
             duration_str,
-            shift.status,
-            orders_count,
-            str(revenue),
         ])
 
     for column in ws.columns:
