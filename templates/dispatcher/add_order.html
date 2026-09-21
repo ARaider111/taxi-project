@@ -1,6 +1,12 @@
 {% extends "dispatcher/base_dispatcher.html" %}
 
+{% load static %}
+
 {% block title %}Добавить заказ{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/dispatcher_order_form.css' %}?v=1">
+{% endblock %}
 
 {% block content %}
 

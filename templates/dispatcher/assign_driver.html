@@ -1,31 +1,135 @@
 {% extends "dispatcher/base_dispatcher.html" %}
+{% load static %}
 
-{% block title %}Назначить водителя{% endblock %}
+{% block title %}
+    Назначить водителя — Taxi Control
+{% endblock %}
+
+{% block extra_head %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/dispatcher_assign_driver.css' %}?v=1"
+>
+{% endblock %}
 
 {% block content %}
+<div class="assign-driver-page">
 
-<h1>Назначить водителя на заказ {{ order.order_number }}</h1>
-<p><a href="{% url 'dispatcher_orders_list' %}">← Назад к списку</a></p>
+    <div class="assign-driver-header">
+        <div>
+            <span class="assign-driver-label">
+                УПРАВЛЕНИЕ ЗАКАЗОМ
+            </span>
 
-<form method="post">
-    {% csrf_token %}
+            <h1>
+                Назначить водителя
+            </h1>
 
-    <p>
-        <label>Водитель:<br>
-            <select name="driver" required>
-                <option value="">Выберите водителя</option>
-                {% for d in drivers %}
-                <option value="{{ d.driver_id }}">
-                    {{ d.lname }} {{ d.fname }} ({{ d.car_model }} {{ d.car_number }})
-                </option>
-                {% endfor %}
-            </select>
-        </label>
-    </p>
+            <p>
+                Выберите водителя для заказа №{{ order.order_number }}
+            </p>
+        </div>
 
-    <p>
-        <button type="submit">Назначить</button>
-    </p>
-</form>
+        <a
+            href="{% url 'dispatcher_orders_list' %}"
+            class="assign-driver-back"
+        >
+            ← К заказам
+        </a>
+    </div>
 
+    <section class="assign-driver-card">
+
+        <div class="assign-driver-card-header">
+            <div>
+                <span>
+                    ЗАКАЗ
+                </span>
+
+                <h2>
+                    №{{ order.order_number }}
+                </h2>
+
+                <p>
+                    Назначение исполнителя на текущий заказ
+                </p>
+            </div>
+
+            <div class="assign-driver-status">
+                {{ order.status }}
+            </div>
+        </div>
+
+        <div class="assign-driver-info">
+            <div class="assign-driver-info-item">
+                <span>
+                    Клиент
+                </span>
+
+                <strong>
+                    {{ order.client.lname }} {{ order.client.fname }}
+                </strong>
+            </div>
+
+            <div class="assign-driver-info-item">
+                <span>
+                    Маршрут
+                </span>
+
+                <strong>
+                    {{ order.street_from.name }}, д. {{ order.house_from }}
+                    →
+                    {{ order.street_to.name }}, д. {{ order.house_to }}
+                </strong>
+            </div>
+        </div>
+
+        <form
+            method="post"
+            class="assign-driver-form"
+        >
+            {% csrf_token %}
+
+            <div class="assign-driver-field">
+                <label for="driver">
+                    Водитель
+                </label>
+
+                <select
+                    name="driver"
+                    id="driver"
+                    required
+                >
+                    <option value="">
+                        Выберите водителя
+                    </option>
+
+                    {% for d in drivers %}
+                        <option value="{{ d.driver_id }}">
+                            {{ d.lname }} {{ d.fname }}
+                            — {{ d.car_model }} {{ d.car_number }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="assign-driver-actions">
+                <a
+                    href="{% url 'dispatcher_orders_list' %}"
+                    class="assign-driver-cancel"
+                >
+                    Отмена
+                </a>
+
+                <button
+                    type="submit"
+                    class="assign-driver-submit"
+                >
+                    Назначить водителя
+                </button>
+            </div>
+        </form>
+
+    </section>
+</div>
 {% endblock %}
