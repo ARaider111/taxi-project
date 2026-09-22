@@ -111,7 +111,6 @@
             <table class="dispatcher-shifts-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Водитель</th>
                         <th>Начало</th>
                         <th>Конец</th>
@@ -124,10 +123,6 @@
                 <tbody>
                     {% for s in shifts %}
                         <tr>
-                            <td class="dispatcher-shift-id">
-                                #{{ s.shift_id }}
-                            </td>
-
                             <td class="dispatcher-shift-driver">
                                 {{ s.driver.lname }} {{ s.driver.fname }}
                             </td>

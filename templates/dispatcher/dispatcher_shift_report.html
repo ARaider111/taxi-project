@@ -1,0 +1,101 @@
+{% extends "dispatcher/dashboard.html" %}
+{% load static %}
+
+{% block title %}Отчет за смену — Taxi Control{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="{% static 'css/orders_list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="orders-page">
+    <div class="orders-header">
+        <div>
+            <span class="orders-label">ОТЧЕТНОСТЬ</span>
+            <h1>Отчет за смену</h1>
+            <p class="orders-subtitle">
+                Заказ, созданные вами за смену
+            </p>
+        </div>
+    </div>
+
+    <form method="get" action="{% url 'export_dispatcher_shift_report' %}" class="orders-filters">
+        <div class="order-filter">
+            <label for="shift">Смена</label>
+            <select name="shift" id="shift">
+                <option value="">Все смены</option>
+                {% for shift in user_shifts %}
+                    <option value="{{ shift.shift_id }}">
+                        {{ shift.start_shift|date:"d.m.Y H:i" }} - {{ shift.end_shift|date:"d.m.Y H:i" }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="order-search">
+            Экспорт в Excel
+        </button>
+
+        <a href="{% url 'dispatcher_orders_list' %}" class="order-reset">
+            ← К заказам
+        </a>
+    </form>
+
+    <div class="orders-table-card">
+        <div class="orders-table-header">
+            <div>
+                <h2>Параметры отчета</h2>
+                <span>
+                    Выберите смену и нажмите "Экспорт в Excel"
+                </span>
+            </div>
+        </div>
+
+        <div class="report-info">
+            <p><strong>Формат:</strong> Excel (.xlsx)</p>
+            <p><strong>Колонки:</strong></p>
+            <ul>
+                <li>ID заказа</li>
+                <li>Номер заказа</li>
+                <li>Клиент (ФИО)</li>
+                <li>Адрес откуда</li>
+                <li>Адрес куда</li>
+                <li>Водитель</li>
+                <li>Тариф</li>
+                <li>Цена</li>
+                <li>Статус</li>
+                <li>Время создания</li>
+                <li>Время завершения</li>
+            </ul>
+            <p><strong>Фильтры:</strong></p>
+            <ul>
+                <li>Смена (период работы диспетчера)</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<style>
+.report-info {
+    padding: 24px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    margin-top: 24px;
+}
+
+.report-info p {
+    margin: 8px 0;
+    color: #333;
+}
+
+.report-info ul {
+    margin: 12px 0;
+    padding-left: 24px;
+}
+
+.report-info li {
+    margin: 4px 0;
+    color: #555;
+}
+</style>
+{% endblock %}

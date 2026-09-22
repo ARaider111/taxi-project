@@ -10,7 +10,7 @@ from taxi.views import (
 from taxi.views.dispatcher_views import (
      dispatcher_dashboard, dispatcher_drivers, dispatcher_clients, dispatcher_shifts, dispatcher_add_client,
     dispatcher_edit_client,  dispatcher_open_shift, dispatcher_close_shift,  dispatcher_orders_list, dispatcher_add_order, dispatcher_edit_order,
-    dispatcher_assign_driver, dispatcher_complete_order)
+    dispatcher_assign_driver, dispatcher_complete_order, dispatcher_shift_report, export_dispatcher_shift_report)
 
 urlpatterns = [
     path(
@@ -98,4 +98,6 @@ urlpatterns = [
     path("dashboard/orders/<int:order_id>/edit/", dispatcher_edit_order, name="dispatcher_edit_order"),
     path("dashboard/orders/<int:order_id>/assign-driver/", dispatcher_assign_driver, name="dispatcher_assign_driver"),
     path("dashboard/orders/<int:order_id>/complete/", dispatcher_complete_order, name="dispatcher_complete_order"),
+    path("dispatcher/shift-report/", dispatcher_shift_report, name="dispatcher_shift_report"),
+    path("dispatcher/shift-report/export/", export_dispatcher_shift_report, name="export_dispatcher_shift_report"),
 ]

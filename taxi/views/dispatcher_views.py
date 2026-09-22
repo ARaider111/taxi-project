@@ -1,12 +1,14 @@
+import openpyxl
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.contrib.auth.decorators import login_required
-from taxi.models import User, Driver, Client, Shift, Street, Tariff, Order
-from django.contrib.auth import logout
+from taxi.models import Driver, Client, Shift, Street, Tariff, Order
 from django.utils import timezone
 from django.db.models import Q
+from openpyxl import Workbook
 from django.db import models
 from taxi.utils import log_action
+from openpyxl.styles import Font, PatternFill, Alignment
 
 @login_required
 def dispatcher_dashboard(request):
@@ -295,7 +297,7 @@ def dispatcher_add_order(request):
             ip_address=request.META.get("REMOTE_ADDR"),
         )
 
-        return redirect("orders_list")
+        return redirect("dispatcher_orders_list")
 
    
     clients = Client.objects.all()
@@ -438,3 +440,96 @@ def dispatcher_complete_order(request, order_id):
     )
 
     return redirect("orders_list")
+
+
+@login_required
+def dispatcher_shift_report(request):
+    if not hasattr(request.user, "role") or request.user.role not in ["admin", "dispatcher"]:
+        return HttpResponse("Доступ запрещён", status=403)
+
+    user_shifts = Shift.objects.filter(
+        models.Q(opened_user=request.user) | models.Q(closed_user=request.user)
+    ).distinct()
+
+    return render(request, "dispatcher/dispatcher_shift_report.html", {
+        "user_shifts": user_shifts,
+    })
+
+
+@login_required
+def export_dispatcher_shift_report(request):
+
+    if not hasattr(request.user, "role") or request.user.role not in ["admin", "dispatcher"]:
+        return HttpResponse("Доступ запрещён", status=403)
+    
+    shift_filter = request.GET.get("shift", "")
+   
+    user_shifts = Shift.objects.filter(
+        models.Q(opened_user=request.user) | models.Q(closed_user=request.user)
+    ).distinct()
+
+    if shift_filter:
+        user_shifts = user_shifts.filter(shift_id=shift_filter)
+
+    wb = Workbook()
+    ws = wb.active
+    ws.title = "Отчет диспетчера"
+
+    headers = [
+        "ID заказа", "Номер заказа", "Клиент", "Адрес откуда", "Адрес куда",
+        "Водитель", "Тариф", "Цена", "Статус", "Время создания", "Время завершения"
+    ]
+    ws.append(headers)
+
+    for cell in ws[1]:
+        cell.font = Font(bold=True, color="FFFFFF")
+        cell.fill = PatternFill(start_color="4472C4", fill_type="solid")
+        cell.alignment = Alignment(horizontal="center")
+
+    orders = Order.objects.filter(created_by=request.user).select_related(
+        "client", "driver", "tariff", "street_from", "street_to"
+    )
+
+  
+    if shift_filter and user_shifts.exists():
+        shift = user_shifts.filter(shift_id=shift_filter).first()
+        if shift:
+            orders = orders.filter(
+                created_at__gte=shift.start_shift,
+                created_at__lte=shift.end_shift,
+            )
+
+    for order in orders:
+        ws.append([
+            order.order_id,
+            order.order_number,
+            f"{order.client.lname} {order.client.fname}",
+            f"{order.street_from.name}, {order.house_from}",
+            f"{order.street_to.name}, {order.house_to}",
+            f"{order.driver.lname} {order.driver.fname}" if order.driver else "Не назначен",
+            order.tariff.name,
+            str(order.price),
+            order.status,
+            order.created_at.strftime("%d.%m.%Y %H:%M"),
+            order.completed_at.strftime("%d.%m.%Y %H:%M") if order.completed_at else "",
+        ])
+
+    for column in ws.columns:
+        max_length = 0
+        column_letter = column[0].column_letter
+        for cell in column:
+            try:
+                if len(str(cell.value)) > max_length:
+                    max_length = len(str(cell.value))
+            except:
+                pass
+        adjusted_width = min(max_length + 2, 50)
+        ws.column_dimensions[column_letter].width = adjusted_width
+
+    response = HttpResponse(
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )
+    filename = f"dispatcher_report_{timezone.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+    response["Content-Disposition"] = f"attachment; filename={filename}"
+    wb.save(response)
+    return response

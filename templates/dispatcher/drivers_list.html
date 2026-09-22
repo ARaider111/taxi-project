@@ -102,6 +102,7 @@
                     <tr>
                         <th>Фамилия</th>
                         <th>Имя</th>
+                        <th>Отчество</th>
                         <th>Телефон</th>
                         <th>Автомобиль</th>
                         <th>Номер</th>
@@ -119,6 +120,10 @@
 
                             <td class="dispatcher-driver-first-name">
                                 {{ d.fname }}
+                            </td>
+
+                            <td class="driver-patronymic">
+                                {{ d.patronimyc|default:"—" }}
                             </td>
 
                             <td class="dispatcher-driver-phone">
