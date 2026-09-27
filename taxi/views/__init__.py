@@ -1,2 +1,2 @@
 from .dispatcher_views import *
-from .views import *
+from .admin_views import *

@@ -66,7 +66,6 @@
             <table class="streets-table">
                 <thead>
                     <tr>
-                        <th>ID</th>
                         <th>Название</th>
                         <th>Район</th>
                         <th>Действия</th>
@@ -76,10 +75,6 @@
                 <tbody>
                     {% for s in streets %}
                         <tr>
-                            <td class="street-id">
-                                #{{ s.street_id }}
-                            </td>
-
                             <td class="street-name">
                                 {{ s.name }}
                             </td>
