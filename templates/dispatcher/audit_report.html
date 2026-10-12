@@ -1,4 +1,4 @@
-{% extends "base_admin.html" %}
+{% extends "dispatcher/base_dispatcher.html" %}
 {% load static %}
 
 {% block title %}Отчет по аудиту — Taxi Control{% endblock %}
@@ -72,7 +72,7 @@
             Экспорт в Excel
         </button>
 
-        <a href="{% url 'admin_dashboard' %}" class="order-reset">
+        <a href="{% url 'dashboard' %}" class="order-reset">
             ← В админку
         </a>
     </form>

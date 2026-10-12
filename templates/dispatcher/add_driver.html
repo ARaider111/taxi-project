@@ -1,59 +1,75 @@
-{% extends "base_admin.html" %}
+{% extends "dispatcher/base_dispatcher.html" %}
 {% load static %}
 
-{% block title %}Редактировать водителя — Taxi Control{% endblock %}
+{% block title %}Добавить водителя — Taxi Control{% endblock %}
 
 {% block extra_head %}
-<link rel="stylesheet" href="{% static 'css/driver_edit.css' %}">
+<link rel="stylesheet" href="{% static 'css/driver_form.css' %}">
 {% endblock %}
 
 {% block content %}
-<div class="driver-edit-page">
-    <div class="driver-edit-header">
+<div class="driver-form-page">
+    <div class="driver-page-header">
         <div>
-            <span class="driver-edit-label">
+            <span class="driver-form-label">
                 УПРАВЛЕНИЕ АВТОПАРКОМ
             </span>
 
             <h1>
-                Редактировать водителя
+                Добавить водителя
             </h1>
 
-            <p class="driver-edit-subtitle">
-                Измените данные водителя и его автомобиля
+            <p class="driver-page-subtitle">
+                Заполните данные нового водителя
             </p>
         </div>
 
         <a
             href="{% url 'drivers_list' %}"
-            class="driver-edit-back"
+            class="driver-back-link"
         >
             ← Назад к водителям
         </a>
     </div>
 
-    <div class="driver-edit-card">
-        <div class="driver-edit-card-header">
+    <div class="driver-form-card">
+        <div class="driver-form-card-header">
             <div>
                 <h2>
                     Данные водителя
                 </h2>
 
                 <span>
-                    Обновите необходимую информацию
+                    Заполните информацию о водителе и автомобиле
                 </span>
-            </div>
-
-            <div class="driver-edit-id">
-                ID: {{ driver.driver_id }}
             </div>
         </div>
 
-        <form method="post" class="driver-edit-form">
+        <form method="post" class="driver-form">
             {% csrf_token %}
 
-            <div class="driver-edit-grid">
-                <div class="driver-edit-field">
+            {% if messages %}
+                <div class="driver-messages">
+                    {% for message in messages %}
+                        <div class="driver-message">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% if form.errors %}
+                <div class="driver-form-errors">
+                    <strong>
+                        Проверьте правильность заполнения формы
+                    </strong>
+
+                    {{ form.errors }}
+                </div>
+            {% endif %}
+
+            <div class="driver-form-grid">
+                <div class="driver-form-field">
                     <label for="lname">
                         Фамилия
                         <span>*</span>
@@ -63,13 +79,14 @@
                         type="text"
                         id="lname"
                         name="lname"
-                        required
                         maxlength="128"
-                        value="{{ driver.lname }}"
+                        required
+                        placeholder="Введите фамилию"
+                        value="{{ request.POST.lname|default:'' }}"
                     >
                 </div>
 
-                <div class="driver-edit-field">
+                <div class="driver-form-field">
                     <label for="fname">
                         Имя
                         <span>*</span>
@@ -79,13 +96,14 @@
                         type="text"
                         id="fname"
                         name="fname"
-                        required
                         maxlength="128"
-                        value="{{ driver.fname }}"
+                        required
+                        placeholder="Введите имя"
+                        value="{{ request.POST.fname|default:'' }}"
                     >
                 </div>
 
-                <div class="driver-edit-field">
+                <div class="driver-form-field">
                     <label for="patronimyc">
                         Отчество
                     </label>
@@ -95,11 +113,12 @@
                         id="patronimyc"
                         name="patronimyc"
                         maxlength="128"
-                        value="{{ driver.patronimyc|default:'' }}"
+                        placeholder="Введите отчество"
+                        value="{{ request.POST.patronimyc|default:'' }}"
                     >
                 </div>
 
-                <div class="driver-edit-field">
+                <div class="driver-form-field">
                     <label for="phone">
                         Телефон
                         <span>*</span>
@@ -109,13 +128,14 @@
                         type="tel"
                         id="phone"
                         name="phone"
-                        required
                         maxlength="12"
-                        value="{{ driver.phone }}"
+                        required
+                        placeholder="+79991234567"
+                        value="{{ request.POST.phone|default:'' }}"
                     >
                 </div>
 
-                <div class="driver-edit-field">
+                <div class="driver-form-field">
                     <label for="car_model">
                         Модель автомобиля
                         <span>*</span>
@@ -125,13 +145,14 @@
                         type="text"
                         id="car_model"
                         name="car_model"
-                        required
                         maxlength="128"
-                        value="{{ driver.car_model }}"
+                        required
+                        placeholder="Например, Kia Rio"
+                        value="{{ request.POST.car_model|default:'' }}"
                     >
                 </div>
 
-                <div class="driver-edit-field">
+                <div class="driver-form-field">
                     <label for="car_number">
                         Номер автомобиля
                         <span>*</span>
@@ -141,59 +162,30 @@
                         type="text"
                         id="car_number"
                         name="car_number"
-                        required
                         maxlength="8"
-                        value="{{ driver.car_number }}"
+                        required
+                        placeholder="А123ВС70"
+                        value="{{ request.POST.car_number|default:'' }}"
                     >
-                </div>
-
-                <div class="driver-edit-field">
-                    <label for="status">
-                        Статус
-                        <span>*</span>
-                    </label>
-
-                    <select name="status" id="status" required>
-                        <option
-                            value="В ожидании"
-                            {% if driver.status == "В ожидании" %}selected{% endif %}
-                        >
-                            В ожидании
-                        </option>
-
-                        <option
-                            value="В работе"
-                            {% if driver.status == "В работе" %}selected{% endif %}
-                        >
-                            В работе
-                        </option>
-
-                        <option
-                            value="Вне работы"
-                            {% if driver.status == "Вне работы" %}selected{% endif %}
-                        >
-                            Вне работы
-                        </option>
-                    </select>
                 </div>
             </div>
 
-            <div class="driver-edit-footer">
+            <div class="driver-form-footer">
                 <a
                     href="{% url 'drivers_list' %}"
-                    class="driver-edit-btn driver-edit-cancel"
+                    class="driver-form-btn driver-form-btn-light"
                 >
                     Отмена
                 </a>
 
                 <button
                     type="submit"
-                    class="driver-edit-btn driver-edit-save"
+                    class="driver-form-btn driver-form-btn-primary"
                 >
-                    Сохранить изменения
+                    Сохранить водителя
                 </button>
             </div>
         </form>
     </div>
 </div>
-{% endblock %}  
+{% endblock %}

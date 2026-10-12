@@ -9,7 +9,7 @@ from datetime import datetime, timedelta
 
 from taxi.models import AuditLog, Client, Driver, Order, Shift, User
 
-from .helpers import admin_required
+from .helpers import admin_required, dispatcher_required
 from taxi.views.excel_reports import (
     autofit_columns,
     create_workbook,
@@ -17,19 +17,19 @@ from taxi.views.excel_reports import (
 )
 
 @login_required
-@admin_required
+@dispatcher_required
 def orders_report_page(request):
 
     drivers = Driver.objects.filter(is_archive=False)
 
-    return render(request, "orders_report.html", {
+    return render(request, "dispatcher/orders_report.html", {
         "drivers": drivers,
         "status_choices": Order.STATUS_CHOICES,
     })
 
 
 @login_required
-@admin_required
+@dispatcher_required
 def export_orders_report(request):
 
     date_from = request.GET.get("date_from", "")
@@ -91,100 +91,15 @@ def export_orders_report(request):
 
 
 @login_required
-@admin_required
-def dispatchers_report_page(request):
-    return render(request, "dispatchers_report.html", {
-        "roles": User.ROLE_CHOICES,
-    })
-
-
-@login_required
-@admin_required
-def export_dispatchers_report(request):
-    role_filter = request.GET.get("role", "")
-    is_active_filter = request.GET.get("is_active", "")
-    is_archive_filter = request.GET.get("is_archive", "")
-    date_from = request.GET.get("date_from", "")
-    date_to = request.GET.get("date_to", "")
-
-    users = User.objects.filter(role="dispatcher")
-
-    if role_filter:
-        users = users.filter(role=role_filter)
-    if is_active_filter == "1":
-        users = users.filter(is_active=True)
-    elif is_active_filter == "0":
-        users = users.filter(is_active=False)
-    if is_archive_filter == "1":
-        users = users.filter(is_archive=True)
-    elif is_archive_filter == "0":
-        users = users.filter(is_archive=False)
-
-    headers = [
-        "ID",
-        "Логин",
-        "Фамилия",
-        "Имя",
-        "Отчество",
-        "Телефон",
-        "Роль",
-        "Активен",
-        "Архив",
-        "Создано заказов",
-        "Открыто смен",
-        "Закрыто смен",
-        "Последний вход",
-    ]
-
-    workbook, worksheet = create_workbook("Диспетчеры", headers)
-
-    for user in users:
-        orders_count = Order.objects.filter(created_by=user).count()
-        opened_shifts = Shift.objects.filter(opened_user=user).count()
-        closed_shifts = Shift.objects.filter(closed_user=user).count()
-
-        last_login = (
-            user.last_login.strftime("%d.%m.%Y %H:%M")
-            if user.last_login
-            else "—"
-        )
-
-        worksheet.append([
-            user.user_id,
-            user.login,
-            user.lname,
-            user.fname,
-            user.patronimyc or "",
-            user.phone,
-            user.role,
-            "Да" if user.is_active else "Нет",
-            "Да" if user.is_archive else "Нет",
-            orders_count,
-            opened_shifts,
-            closed_shifts,
-            last_login,
-        ])
-
-    autofit_columns(worksheet)
-
-    filename = (
-        "dispatchers_report_"
-        f"{timezone.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
-    )
-
-    return workbook_response(workbook, filename)
-
-
-@login_required
-@admin_required
+@dispatcher_required
 def drivers_report_page(request):
-    return render(request, "drivers_report.html", {
+    return render(request, "dispatcher/drivers_report.html", {
         "statuses": Driver.STATUS_CHOICES,
     })
 
 
 @login_required
-@admin_required
+@dispatcher_required
 def export_drivers_report(request):
     status_filter = request.GET.get("status", "")
     is_blacklist_filter = request.GET.get("is_blacklist", "")
@@ -264,13 +179,13 @@ def export_drivers_report(request):
 
 
 @login_required
-@admin_required
+@dispatcher_required
 def clients_report_page(request):
-    return render(request, "clients_report.html", {})
+    return render(request, "dispatcher/clients_report.html", {})
 
 
 @login_required
-@admin_required
+@dispatcher_required
 def export_clients_report(request):
     is_blacklist_filter = request.GET.get("is_blacklist", "")
     min_orders = request.GET.get("min_orders", "")
@@ -351,7 +266,7 @@ def export_clients_report(request):
 def shifts_report_page(request):
     drivers = Driver.objects.filter(is_archive=False)
 
-    return render(request, "shifts_report.html", {
+    return render(request, "dispatcher/shifts_report.html", {
         "drivers": drivers,
     })
 
@@ -418,13 +333,13 @@ def export_shifts_report(request):
 
 
 @login_required
-@admin_required
+@dispatcher_required
 def revenue_report_page(request):
-    return render(request, "revenue_report.html", {})
+    return render(request, "dispatcher/revenue_report.html", {})
 
 
 @login_required
-@admin_required
+@dispatcher_required
 def export_revenue_report(request):
     period = request.GET.get("period", "day")
     date_from = request.GET.get("date_from", "")
@@ -582,7 +497,7 @@ def export_revenue_report(request):
 
 
 @login_required
-@admin_required
+@dispatcher_required
 def audit_report_page(request):
     actions = AuditLog.ACTION_CHOICES
     users = User.objects.all()
@@ -594,7 +509,7 @@ def audit_report_page(request):
 
 
 @login_required
-@admin_required
+@dispatcher_required
 def export_audit_report(request):
     action_filter = request.GET.get("action", "")
     user_filter = request.GET.get("user", "")
@@ -666,4 +581,71 @@ def export_audit_report(request):
         f"{timezone.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
     )
 
+    return workbook_response(workbook, filename)
+
+
+@login_required
+@dispatcher_required
+def dispatcher_shift_report(request):
+    user_shifts = Shift.objects.filter(
+        models.Q(opened_user=request.user) | models.Q(closed_user=request.user)
+    ).distinct()
+
+    return render(request, "dispatcher/dispatcher_shift_report.html", {
+        "user_shifts": user_shifts,
+    })
+
+
+@login_required
+@dispatcher_required
+def export_dispatcher_shift_report(request):
+    shift_filter = request.GET.get("shift", "")
+   
+    user_shifts = Shift.objects.filter(
+        models.Q(opened_user=request.user) | models.Q(closed_user=request.user)
+    ).distinct()
+
+    if shift_filter:
+        user_shifts = user_shifts.filter(shift_id=shift_filter)
+
+    orders = Order.objects.filter(created_by=request.user).select_related(
+        "client", "driver", "tariff", "street_from", "street_to"
+    )
+
+  
+    if shift_filter and user_shifts.exists():
+        shift = user_shifts.filter(shift_id=shift_filter).first()
+        if shift:
+            orders = orders.filter(
+                created_at__gte=shift.start_shift,
+                created_at__lte=shift.end_shift,
+            )
+
+    headers = [
+            "ID заказа", "Номер заказа", "Клиент", "Адрес откуда", "Адрес куда",
+            "Водитель", "Тариф", "Цена", "Статус", "Время создания", "Время завершения"
+        ]
+    
+    workbook, worksheet = create_workbook("Отчет диспетчера", headers)
+
+    for order in orders:
+        worksheet.append([
+            order.order_id,
+            order.order_number,
+            f"{order.client.lname} {order.client.fname}",
+            f"{order.street_from.name}, {order.house_from}",
+            f"{order.street_to.name}, {order.house_to}",
+            f"{order.driver.lname} {order.driver.fname}" if order.driver else "Не назначен",
+            order.tariff.name,
+            str(order.price),
+            order.status,
+            order.created_at.strftime("%d.%m.%Y %H:%M"),
+            order.completed_at.strftime("%d.%m.%Y %H:%M") if order.completed_at else "",
+        ])
+
+
+    autofit_columns(worksheet)
+
+    filename = f"dispatcher_report_{timezone.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+    
     return workbook_response(workbook, filename)

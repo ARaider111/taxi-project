@@ -26,7 +26,31 @@
                 Контроль рабочих смен водителей
             </p>
         </div>
+        <div class="shifts-header-actions">
+        <a
+            href="{% url 'shifts_report_page' %}"
+            class="shifts-report"
+        >
+            <span class="shifts-report-icon">
+                ↗
+            </span>
+
+            Отчёт по сменам
+        </a>
+
+        <a
+            href="{% url 'add_shift' %}"
+            class="shifts-add-btn"
+        >
+            <span>
+                +
+            </span>
+
+            Добавить смену
+        </a>
     </div>
+    </div>
+    
     <form method="get" class="dispatcher-shifts-filters">
         <div class="dispatcher-shift-filter dispatcher-shift-filter-search">
             <label for="q">
@@ -83,7 +107,7 @@
         </button>
 
         <a
-            href="{% url 'dispatcher_shifts' %}"
+            href="{% url 'shifts_list' %}"
             class="dispatcher-shifts-reset"
         >
             Сбросить
@@ -161,6 +185,17 @@
                                         Не закрыта
                                     </span>
                                 {% endif %}
+                            </td>
+
+                            <td>
+                                <div class="shift-actions">
+                                    <a
+                                        href="{% url 'edit_shift' s.shift_id %}"
+                                        class="shift-action shift-action-edit"
+                                    >
+                                        Редактировать
+                                    </a>
+                                </div>
                             </td>
 
                             <td>

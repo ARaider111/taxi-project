@@ -10,7 +10,7 @@
 
 {% block content %}
 <h1>Редактировать клиента</h1>
-<p><a href="{% url 'dispatcher_clients' %}">← Назад к списку</a></p>
+<p><a href="{% url 'clients_list' %}">← Назад к списку</a></p>
 
 <form method="post">
     {% csrf_token %}

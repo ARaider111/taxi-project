@@ -19,7 +19,7 @@
         </div>
     </div>
 
-    <form method="get" action="{% url 'export_dispatcher_shift_report' %}" class="orders-filters">
+    <form method="get" action="{% url 'orders_list' %}" class="orders-filters">
         <div class="order-filter">
             <label for="shift">Смена</label>
             <select name="shift" id="shift">
@@ -36,7 +36,7 @@
             Экспорт в Excel
         </button>
 
-        <a href="{% url 'dispatcher_orders_list' %}" class="order-reset">
+        <a href="{% url 'orders_list' %}" class="order-reset">
             ← К заказам
         </a>
     </form>

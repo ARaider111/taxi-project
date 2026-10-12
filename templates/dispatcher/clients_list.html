@@ -34,7 +34,18 @@
         </div>
 
         <a
-            href="{% url 'dispatcher_add_client' %}"
+                href="{% url 'clients_report_page' %}"
+                class="clients-report"
+            >
+                <span class="clients-report-icon">
+                    ↗
+                </span>
+
+                Отчёт по клиентам
+        </a>
+
+        <a
+            href="{% url 'add_client' %}"
             class="dispatcher-clients-add"
         >
             <span>+</span>
@@ -64,6 +75,34 @@
             >
 
         </div>
+        <div class="client-filter">
+            <label for="blacklist">
+                Чёрный список
+            </label>
+
+            <select
+                name="blacklist"
+                id="blacklist"
+            >
+                <option value="">
+                    Все
+                </option>
+
+                <option
+                    value="1"
+                    {% if current_blacklist == "1" %}selected{% endif %}
+                >
+                    В чёрном списке
+                </option>
+
+                <option
+                    value="0"
+                    {% if current_blacklist == "0" %}selected{% endif %}
+                >
+                    Не в чёрном списке
+                </option>
+            </select>
+        </div>
 
         <button
             type="submit"
@@ -73,7 +112,7 @@
         </button>
 
         <a
-            href="{% url 'dispatcher_clients' %}"
+            href="{% url 'clients_list' %}"
             class="dispatcher-clients-reset"
         >
             Сбросить
@@ -178,20 +217,27 @@
 
                         </td>
 
-                        <td>
+                          <td>
+                                <div class="client-actions">
+                                    <a
+                                        href="{% url 'edit_client' c.client_id %}"
+                                        class="client-action client-action-edit"
+                                    >
+                                        Редактировать
+                                    </a>
 
-                            <div class="dispatcher-client-actions">
-
-                                <a
-                                    href="{% url 'dispatcher_edit_client' c.client_id %}"
-                                    class="dispatcher-client-action dispatcher-client-action-edit"
-                                >
-                                    Редактировать
-                                </a>
-
-                            </div>
-
-                        </td>
+                                    <a
+                                        href="{% url 'toggle_client_blacklist' c.client_id %}"
+                                        class="client-action client-action-blacklist"
+                                    >
+                                        {% if c.is_blacklist %}
+                                            Убрать из ЧС
+                                        {% else %}
+                                            Добавить в ЧС
+                                        {% endif %}
+                                    </a>
+                                </div>
+                            </td>
 
                     </tr>
 

@@ -1,4 +1,4 @@
-{% extends "base_admin.html" %}
+{% extends "dispatcher/base_dispatcher.html" %}
 {% load static %}
 
 {% block title %}
@@ -105,7 +105,7 @@
         </button>
 
         <a
-            href="{% url 'admin_panel' %}"
+            href="{% url 'dashboard' %}"
             class="revenue-report-back"
         >
             ← В админку

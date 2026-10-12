@@ -25,11 +25,41 @@
             <p class="dispatcher-drivers-subtitle">
                 Просмотр водителей и их текущих статусов
             </p>
+              
+        </div>
+         <div class="drivers-header-actions">
+ <a
+                href="{% url 'add_driver' %}"
+                class="drivers-add"
+            >
+                <span>
+                    +
+                </span>
+
+                Добавить водителя
+            </a>
+         </div>
+            <div class="drivers-header-actions">
+            <a
+                href="{% url 'drivers_report_page' %}"
+                class="drivers-report"
+            >
+                <span class="drivers-report-icon">
+                    ↗
+                </span>
+
+                Отчёт по водителям
+            </a>
+
+         
         </div>
     </div>
 
-    <form method="get" class="dispatcher-drivers-filters">
-        <div class="dispatcher-driver-filter dispatcher-driver-filter-search">
+    <form
+        method="get"
+        class="drivers-filters"
+    >
+        <div class="driver-filter driver-filter-search">
             <label for="q">
                 Поиск
             </label>
@@ -38,17 +68,20 @@
                 type="text"
                 name="q"
                 id="q"
-                value="{{ query }}"
+                value="{{ query|default:'' }}"
                 placeholder="Фамилия, имя, телефон, авто, номер"
             >
         </div>
 
-        <div class="dispatcher-driver-filter">
+        <div class="driver-filter">
             <label for="status">
                 Статус
             </label>
 
-            <select name="status" id="status">
+            <select
+                name="status"
+                id="status"
+            >
                 <option value="">
                     Все статусы
                 </option>
@@ -64,16 +97,74 @@
             </select>
         </div>
 
+        <div class="driver-filter">
+            <label for="blacklist">
+                Чёрный список
+            </label>
+
+            <select
+                name="blacklist"
+                id="blacklist"
+            >
+                <option value="">
+                    Все
+                </option>
+
+                <option
+                    value="1"
+                    {% if current_blacklist == "1" %}selected{% endif %}
+                >
+                    В чёрном списке
+                </option>
+
+                <option
+                    value="0"
+                    {% if current_blacklist == "0" %}selected{% endif %}
+                >
+                    Не в чёрном списке
+                </option>
+            </select>
+        </div>
+
+        <div class="driver-filter">
+            <label for="archive">
+                Архив
+            </label>
+
+            <select
+                name="archive"
+                id="archive"
+            >
+                <option value="">
+                    Все
+                </option>
+
+                <option
+                    value="1"
+                    {% if current_archive == "1" %}selected{% endif %}
+                >
+                    В архиве
+                </option>
+
+                <option
+                    value="0"
+                    {% if current_archive == "0" %}selected{% endif %}
+                >
+                    Не в архиве
+                </option>
+            </select>
+        </div>
+
         <button
             type="submit"
-            class="dispatcher-drivers-search"
+            class="driver-search"
         >
             Найти
         </button>
 
         <a
-            href="{% url 'dispatcher_drivers' %}"
-            class="dispatcher-drivers-reset"
+            href="{% url 'drivers_list' %}"
+            class="driver-reset"
         >
             Сбросить
         </a>
@@ -108,6 +199,8 @@
                         <th>Номер</th>
                         <th>Статус</th>
                         <th>Чёрный список</th>
+                        <th>Архив</th>
+                        <th>Действия</th>
                     </tr>
                 </thead>
 
@@ -154,6 +247,52 @@
                                         Нет
                                     </span>
                                 {% endif %}
+                            </td>
+                            <td>
+                                {% if d.is_archive %}
+                                    <span class="driver-archive-yes">
+                                        Да
+                                    </span>
+                                {% else %}
+                                    <span class="driver-archive-no">
+                                        Нет
+                                    </span>
+                                {% endif %}
+                            </td>
+
+                             <td>
+                                <div class="driver-actions">
+
+                                    <a
+                                        href="{% url 'edit_driver' d.driver_id %}"
+                                        class="driver-action driver-action-edit"
+                                    >
+                                        Редактировать
+                                    </a>
+
+                                    <a
+                                        href="{% url 'toggle_driver_archive' d.driver_id %}"
+                                        class="driver-action driver-action-archive"
+                                    >
+                                        {% if d.is_archive %}
+                                            Вернуть из архива
+                                        {% else %}
+                                            Архивировать
+                                        {% endif %}
+                                    </a>
+
+                                    <a
+                                        href="{% url 'toggle_driver_blacklist' d.driver_id %}"
+                                        class="driver-action driver-action-blacklist"
+                                    >
+                                        {% if d.is_blacklist %}
+                                            Убрать из ЧС
+                                        {% else %}
+                                            Добавить в ЧС
+                                        {% endif %}
+                                    </a>
+
+                                </div>
                             </td>
                         </tr>
                     {% empty %}
