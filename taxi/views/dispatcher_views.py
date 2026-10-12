@@ -9,15 +9,10 @@ from django.db import models
 from taxi.utils import log_action
 from openpyxl.styles import Font, PatternFill, Alignment
 from .helpers import dispatcher_required
-from taxi.views.excel_reports import (
-    autofit_columns,
-    create_workbook,
-    workbook_response,
-)
 
 @login_required
 @dispatcher_required
-def dispatcher_dashboard(request):
+def dashboard(request):
     return render(request, "dispatcher/dashboard.html")
 
 
@@ -404,7 +399,7 @@ def toggle_client_blacklist(request, client_id):
 
 @login_required
 @dispatcher_required
-def dispatcher_open_shift(request, shift_id):
+def open_shift(request, shift_id):
     shift = Shift.objects.get(pk=shift_id)
 
     if shift.opened_user is None:
@@ -426,7 +421,7 @@ def dispatcher_open_shift(request, shift_id):
 
 @login_required
 @dispatcher_required
-def dispatcher_close_shift(request, shift_id):
+def close_shift(request, shift_id):
     shift = Shift.objects.get(pk=shift_id)
 
     if shift.opened_user is not None and shift.closed_user is None:
@@ -498,7 +493,7 @@ def orders_list(request):
 
 @login_required
 @dispatcher_required
-def dispatcher_add_order(request):
+def add_order(request):
     if request.method == "POST":
         client_id = request.POST.get("client")
         street_from_id = request.POST.get("street_from")
@@ -667,7 +662,7 @@ def edit_order(request, order_id):
 
 @login_required
 @dispatcher_required
-def dispatcher_assign_driver(request, order_id):
+def assign_driver(request, order_id):
     order = Order.objects.get(pk=order_id)
 
     if order.status == "Завершен":
@@ -704,7 +699,7 @@ def dispatcher_assign_driver(request, order_id):
 
 @login_required
 @dispatcher_required
-def dispatcher_complete_order(request, order_id):
+def complete_order(request, order_id):
     order = Order.objects.get(pk=order_id)
 
     if order.status == "Завершен":
@@ -869,9 +864,6 @@ def edit_street(request, street_id):
         "street": street,
         "districts": districts,
     })
-
-
-
 
 
 @login_required

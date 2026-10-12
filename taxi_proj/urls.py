@@ -4,13 +4,13 @@ from taxi.views.auth_views import (CustomLoginView, logout_view)
 from taxi.views import (
     admin_panel,)
 from taxi.views.dispatcher_views import (
-    dispatcher_dashboard, drivers_list, clients_list, add_client, shifts_list, add_shift,  audit_logs_list,
-    edit_client,  dispatcher_open_shift, dispatcher_close_shift,  orders_list, dispatcher_add_order, edit_order,
-    dispatcher_assign_driver, dispatcher_complete_order,  districts_list, edit_district, 
+    dashboard, drivers_list, clients_list, add_client, shifts_list, add_shift,  audit_logs_list,
+    edit_client,  open_shift, close_shift,  orders_list, add_order, edit_order,
+    assign_driver, complete_order,  districts_list, edit_district, 
     add_district, streets_list, add_street, edit_street, tariffs_list, add_tariff, edit_tariff, toggle_tariff_archive, add_driver, edit_driver,
     toggle_driver_blacklist, toggle_driver_archive, toggle_client_blacklist, edit_shift)
-from taxi.views.report_views import (orders_report_page, export_orders_report, drivers_report_page, dispatcher_shift_report, export_dispatcher_shift_report,
-    export_drivers_report, clients_report_page,  export_clients_report, shifts_report_page, export_shifts_report, export_revenue_report, 
+from taxi.views.report_views import (orders_report_page, export_orders_report, drivers_report_page, shift_report,
+    export_drivers_report, clients_report_page,  export_clients_report, shifts_report_page, export_shifts_report, export_shift_report, export_revenue_report, 
     revenue_report_page, audit_report_page, export_audit_report)
 
 
@@ -23,14 +23,6 @@ urlpatterns = [
     path("logout/", logout_view, name="logout"),
     
     path("admin/", admin_panel, name="admin_panel"),   
-    path("shifts/add/", add_shift, name="add_shift"),
-    
-    path("shifts-report/", shifts_report_page, name="shifts_report_page"),
-    path("shifts-report/export/", export_shifts_report, name="export_shifts_report"),
-
-    
-
-    
 
     path("orders/", orders_list, name="orders_list"),
     path("orders/<int:order_id>/edit/", edit_order, name="edit_order"),
@@ -40,7 +32,7 @@ urlpatterns = [
     path("revenue-report/", revenue_report_page, name="revenue_report_page"),
     path("revenue-report/export/", export_revenue_report, name="export_revenue_report"),
 
-    path("dashboard/", dispatcher_dashboard, name="dispatcher_dashboard"),
+    path("dashboard/", dashboard, name="dashboard"),
     path("dashboard/drivers/", drivers_list, name="drivers_list"),
     path("dashboard/drivers/add/", add_driver, name="add_driver"),
     path("dashboard/drivers/<int:driver_id>/edit/", edit_driver, name="edit_driver"),
@@ -59,24 +51,28 @@ urlpatterns = [
     path("dashboard/shifts/", shifts_list, name="shifts_list"),
     path("dashboard/shifts/add/", add_shift, name="add_shift"),
     path("dashboard/shifts/<int:shift_id>/edit/", edit_shift, name="edit_shift"),
-    path("dashboard/shifts/<int:shift_id>/open/", dispatcher_open_shift, name="dispatcher_open_shift",),
-    path("dashboard/shifts/<int:shift_id>/close/", dispatcher_close_shift, name="dispatcher_close_shift",),
-    path("dispatcher/shift-report/", dispatcher_shift_report, name="dispatcher_shift_report"),
-    path("dispatcher/shift-report/export/", export_dispatcher_shift_report, name="export_dispatcher_shift_report"),
+    path("dashboard/shifts/<int:shift_id>/open/", open_shift, name="open_shift",),
+    path("dashboard/shifts/<int:shift_id>/close/", close_shift, name="close_shift",),
+    path("dispatcher/shift-report/", shift_report, name="shift_report"),
+    path("dispatcher/shift-report/export/", export_shift_report, name="export_shift_report"),
+    path("dashboard/shifts-report/", shifts_report_page, name="shifts_report_page"),
+    path("dashboard/shifts-report/export/", export_shifts_report, name="export_shifts_report"),
 
     path("dashboard/orders/", orders_list, name="orders_list"),
-    path("dashboard/orders/add/", dispatcher_add_order, name="dispatcher_add_order"),
+    path("dashboard/orders/add/", add_order, name="add_order"),
     path("dashboard/orders/<int:order_id>/edit/", edit_order, name="edit_order"),
-    path("dashboard/orders/<int:order_id>/assign-driver/", dispatcher_assign_driver, name="dispatcher_assign_driver"),
-    path("dashboard/orders/<int:order_id>/complete/", dispatcher_complete_order, name="dispatcher_complete_order"),
+    path("dashboard/orders/<int:order_id>/assign-driver/", assign_driver, name="assign_driver"),
+    path("dashboard/orders/<int:order_id>/complete/", complete_order, name="complete_order"),
 
   
     path("dashboard/districts/", districts_list, name="districts_list"),
     path("dashboard/districts/add/", add_district, name="add_district"),
     path("dashboard/districts/<int:district_id>/edit/", edit_district, name="edit_district"),
+
     path("dashboard/streets/", streets_list, name="streets_list"),
     path("dashboard/streets/add/", add_street, name="add_street"),
     path("dashboard/streets/<int:street_id>/edit/", edit_street, name="edit_street"), 
+
     path("dashboard/tariffs/", tariffs_list, name="tariffs_list"),
     path("dashboard/tariffs/add/", add_tariff, name="add_tariff"),
     path("dashboard/tariffs/<int:tariff_id>/edit/", edit_tariff, name="edit_tariff"),

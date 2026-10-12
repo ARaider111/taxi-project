@@ -203,7 +203,7 @@
                                     {% if not s.opened_user %}
                                         <form
                                             method="post"
-                                            action="{% url 'dispatcher_open_shift' s.shift_id %}"
+                                            action="{% url 'open_shift' s.shift_id %}"
                                             class="dispatcher-shift-action-form"
                                         >
                                             {% csrf_token %}
@@ -218,7 +218,7 @@
                                     {% elif not s.closed_user %}
                                         <form
                                             method="post"
-                                            action="{% url 'dispatcher_close_shift' s.shift_id %}"
+                                            action="{% url 'close_shift' s.shift_id %}"
                                             class="dispatcher-shift-action-form"
                                         >
                                             {% csrf_token %}

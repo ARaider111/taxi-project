@@ -31,7 +31,7 @@
         </div>
 
         <a
-            href="{% url 'dispatcher_add_order' %}"
+            href="{% url 'add_order' %}"
             class="orders-add"
         >
             <span>+</span>
@@ -246,7 +246,7 @@
 
                                         {% if not o.driver %}
                                             <a
-                                                href="{% url 'dispatcher_assign_driver' o.order_id %}"
+                                                href="{% url 'assign_driver' o.order_id %}"
                                                 class="order-action order-action-assign"
                                             >
                                                 Назначить водителя
@@ -255,7 +255,7 @@
 
                                         {% if o.driver %}
                                             <a
-                                                href="{% url 'dispatcher_complete_order' o.order_id %}"
+                                                href="{% url 'complete_order' o.order_id %}"
                                                 class="order-action order-action-complete"
                                                 onclick="return confirm('Завершить заказ?')"
                                             >

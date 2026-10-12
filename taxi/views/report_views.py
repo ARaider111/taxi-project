@@ -262,7 +262,7 @@ def export_clients_report(request):
 
 
 @login_required
-@admin_required
+@dispatcher_required
 def shifts_report_page(request):
     drivers = Driver.objects.filter(is_archive=False)
 
@@ -272,7 +272,7 @@ def shifts_report_page(request):
 
 
 @login_required
-@admin_required
+@dispatcher_required
 def export_shifts_report(request):
     driver_filter = request.GET.get("driver", "")
 
@@ -586,7 +586,7 @@ def export_audit_report(request):
 
 @login_required
 @dispatcher_required
-def dispatcher_shift_report(request):
+def shift_report(request):
     user_shifts = Shift.objects.filter(
         models.Q(opened_user=request.user) | models.Q(closed_user=request.user)
     ).distinct()
@@ -598,7 +598,7 @@ def dispatcher_shift_report(request):
 
 @login_required
 @dispatcher_required
-def export_dispatcher_shift_report(request):
+def export_shift_report(request):
     shift_filter = request.GET.get("shift", "")
    
     user_shifts = Shift.objects.filter(
