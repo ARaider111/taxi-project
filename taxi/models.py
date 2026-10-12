@@ -12,11 +12,6 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, login, password=None, **extra_fields):
-        extra_fields.setdefault("is_active", True)
-        extra_fields.setdefault("role", "admin")
-        return self.create_user(login, password, **extra_fields)
-
 
 class User(AbstractBaseUser, PermissionsMixin):
     user_id = models.AutoField("ID", primary_key=True)
@@ -30,17 +25,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     is_active = models.BooleanField("Активен", default=True)
     is_archive = models.BooleanField("В архиве", default=False)
-
-    ROLE_CHOICES = [
-        ("admin", "Admin"),
-        ("dispatcher", "Dispatcher"),
-    ]
-    role = models.CharField(
-        "Роль",
-        max_length=16,
-        choices=ROLE_CHOICES,
-        default="dispatcher",
-    )
 
     objects = UserManager()
 

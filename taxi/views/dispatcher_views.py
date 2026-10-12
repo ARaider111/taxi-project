@@ -7,17 +7,13 @@ from django.utils import timezone
 from django.db.models import Q
 from django.db import models
 from taxi.utils import log_action
-from openpyxl.styles import Font, PatternFill, Alignment
-from .helpers import dispatcher_required
 
 @login_required
-@dispatcher_required
 def dashboard(request):
-    return render(request, "dispatcher/dashboard.html")
+    return render(request, "dashboard.html")
 
 
 @login_required
-@dispatcher_required
 def drivers_list(request):
     drivers = Driver.objects.all()
 
@@ -49,7 +45,7 @@ def drivers_list(request):
 
     statuses = Driver.STATUS_CHOICES
 
-    return render(request, "dispatcher/drivers_list.html", {
+    return render(request, "drivers_list.html", {
         "drivers": drivers,
         "statuses": statuses,
         "query": query,
@@ -59,7 +55,6 @@ def drivers_list(request):
     })
 
 @login_required
-@dispatcher_required
 def add_driver(request):
     if request.method == "POST":
         lname = request.POST.get("lname")
@@ -90,11 +85,10 @@ def add_driver(request):
         )
         return redirect("drivers_list")
 
-    return render(request, "dispatcher/add_driver.html")
+    return render(request, "add_driver.html")
 
 
 @login_required
-@dispatcher_required
 def edit_driver(request, driver_id):
 
     driver = Driver.objects.get(pk=driver_id)
@@ -130,11 +124,10 @@ def edit_driver(request, driver_id):
         )
         return redirect("drivers_list")
 
-    return render(request, "dispatcher/edit_driver.html", {"driver": driver})
+    return render(request, "edit_driver.html", {"driver": driver})
 
 
 @login_required
-@dispatcher_required
 def toggle_driver_archive(request, driver_id):
 
     driver = Driver.objects.get(pk=driver_id)
@@ -155,7 +148,6 @@ def toggle_driver_archive(request, driver_id):
     return redirect("drivers_list")
 
 @login_required
-@dispatcher_required
 def toggle_driver_blacklist(request, driver_id):
 
     driver = Driver.objects.get(pk=driver_id)
@@ -176,7 +168,6 @@ def toggle_driver_blacklist(request, driver_id):
     return redirect("drivers_list")
 
 @login_required
-@dispatcher_required
 def clients_list(request):
     clients = Client.objects.all()
 
@@ -194,14 +185,13 @@ def clients_list(request):
     elif blacklist == "0":
         clients = clients.filter(is_blacklist=False)
 
-    return render(request, "dispatcher/clients_list.html", {
+    return render(request, "clients_list.html", {
         "clients": clients,
         "query": query,
         "current_blacklist": blacklist,
     })
 
 @login_required
-@dispatcher_required
 def shifts_list(request):
     shifts = Shift.objects.select_related(
         "driver", "opened_user", "closed_user"
@@ -228,14 +218,13 @@ def shifts_list(request):
     elif status == "closed":
         shifts = shifts.filter(closed_user__isnull=False)
 
-    return render(request, "dispatcher/shifts_list.html", {
+    return render(request, "shifts_list.html", {
         "shifts": shifts,
         "query": query,
         "current_status": status,
     })
 
 @login_required
-@dispatcher_required
 def add_shift(request):
 
     if request.method == "POST":
@@ -261,11 +250,10 @@ def add_shift(request):
         return redirect("shifts_list")
 
     drivers = Driver.objects.filter(is_archive=False)
-    return render(request, "dispatcher/add_shift.html", {"drivers": drivers})
+    return render(request, "add_shift.html", {"drivers": drivers})
 
 
 @login_required
-@dispatcher_required
 def edit_shift(request, shift_id):
 
     shift = Shift.objects.get(pk=shift_id)
@@ -305,7 +293,7 @@ def edit_shift(request, shift_id):
 
     drivers = Driver.objects.filter(is_archive=False)
     users = User.objects.filter(is_archive=False)
-    return render(request, "dispatcher/edit_shift.html", {
+    return render(request, "edit_shift.html", {
         "shift": shift,
         "drivers": drivers,
         "users": users,
@@ -313,9 +301,7 @@ def edit_shift(request, shift_id):
 
 
 
-
 @login_required
-@dispatcher_required
 def add_client(request):
     if request.method == "POST":
         lname = request.POST.get("lname")
@@ -341,11 +327,10 @@ def add_client(request):
         )
         return redirect("dispatcher_clients")
 
-    return render(request, "dispatcher/add_client.html")
+    return render(request, "add_client.html")
 
 
 @login_required
-@dispatcher_required
 def edit_client(request, client_id):
     client = Client.objects.get(pk=client_id)
 
@@ -374,11 +359,10 @@ def edit_client(request, client_id):
         )
         return redirect("clients_list")
 
-    return render(request, "dispatcher/edit_client.html", {"client": client})
+    return render(request, "edit_client.html", {"client": client})
 
 
 @login_required
-@dispatcher_required
 def toggle_client_blacklist(request, client_id):
 
     client = Client.objects.get(pk=client_id)
@@ -398,7 +382,6 @@ def toggle_client_blacklist(request, client_id):
     return redirect("clients_list")
 
 @login_required
-@dispatcher_required
 def open_shift(request, shift_id):
     shift = Shift.objects.get(pk=shift_id)
 
@@ -416,11 +399,10 @@ def open_shift(request, shift_id):
             ip_address=request.META.get("REMOTE_ADDR"),
         )
 
-    return redirect("dispatcher_shifts")
+    return redirect("shifts_list")
 
 
 @login_required
-@dispatcher_required
 def close_shift(request, shift_id):
     shift = Shift.objects.get(pk=shift_id)
 
@@ -438,12 +420,11 @@ def close_shift(request, shift_id):
             ip_address=request.META.get("REMOTE_ADDR"),
         )
 
-    return redirect("dispatcher_shifts")
+    return redirect("shifts_list")
 
 
 
 @login_required
-@dispatcher_required
 def orders_list(request):
 
     query = request.GET.get("q", "")
@@ -488,11 +469,10 @@ def orders_list(request):
         "drivers": drivers,
     }
 
-    return render(request, "dispatcher/orders_list.html", context)
+    return render(request, "orders_list.html", context)
 
 
 @login_required
-@dispatcher_required
 def add_order(request):
     if request.method == "POST":
         client_id = request.POST.get("client")
@@ -539,7 +519,7 @@ def add_order(request):
     streets = Street.objects.select_related("district").all()
     tariffs = Tariff.objects.filter(is_archive=False)
 
-    return render(request, "dispatcher/add_order.html", {
+    return render(request, "add_order.html", {
         "clients": clients,
         "streets": streets,
         "tariffs": tariffs,
@@ -547,7 +527,6 @@ def add_order(request):
 
 
 @login_required
-@dispatcher_required
 def edit_order(request, order_id):
 
     order = Order.objects.select_related(
@@ -651,7 +630,7 @@ def edit_order(request, order_id):
     tariffs = Tariff.objects.filter(is_archive=False)
     drivers = Driver.objects.filter(is_archive=False)
 
-    return render(request, "dispatcher/edit_order.html", {
+    return render(request, "edit_order.html", {
         "order": order,
         "clients": clients,
         "streets": streets,
@@ -661,7 +640,6 @@ def edit_order(request, order_id):
 
 
 @login_required
-@dispatcher_required
 def assign_driver(request, order_id):
     order = Order.objects.get(pk=order_id)
 
@@ -686,11 +664,11 @@ def assign_driver(request, order_id):
             ip_address=request.META.get("REMOTE_ADDR"),
         )
 
-        return redirect("dispatcher_orders_list")
+        return redirect("orders_list")
 
     drivers = Driver.objects.filter(status="В ожидании", is_blacklist=False, is_archive=False)
 
-    return render(request, "dispatcher/assign_driver.html", {
+    return render(request, "assign_driver.html", {
         "order": order,
         "drivers": drivers,
     })
@@ -698,7 +676,6 @@ def assign_driver(request, order_id):
 
 
 @login_required
-@dispatcher_required
 def complete_order(request, order_id):
     order = Order.objects.get(pk=order_id)
 
@@ -718,22 +695,17 @@ def complete_order(request, order_id):
         ip_address=request.META.get("REMOTE_ADDR"),
     )
 
-    return redirect("dispatcher_orders_list")
-
-
-
+    return redirect("orders_list")
 
 
 @login_required
-@dispatcher_required
 def districts_list(request):
 
     districts = District.objects.all()
-    return render(request, "dispatcher/districts_list.html", {"districts": districts})
+    return render(request, "districts_list.html", {"districts": districts})
 
 
 @login_required
-@dispatcher_required
 def add_district(request):
 
     if request.method == "POST":
@@ -756,11 +728,10 @@ def add_district(request):
         )
         return redirect("districts_list")
 
-    return render(request, "dispatcher/add_district.html")
+    return render(request, "add_district.html")
 
 
 @login_required
-@dispatcher_required
 def edit_district(request, district_id):
 
     district = District.objects.get(pk=district_id)
@@ -784,12 +755,11 @@ def edit_district(request, district_id):
         )
         return redirect("districts_list")
 
-    return render(request, "dispatcher/edit_district.html", {"district": district})
+    return render(request, "edit_district.html", {"district": district})
 
 
 
 @login_required
-@dispatcher_required
 def streets_list(request):
 
     streets = Street.objects.select_related("district").all()
@@ -800,14 +770,13 @@ def streets_list(request):
             Q(name__icontains=query)
         )
 
-    return render(request, "dispatcher/streets_list.html", {
+    return render(request, "streets_list.html", {
         "streets": streets,
         "query": query,
     })
 
 
 @login_required
-@dispatcher_required
 def add_street(request):
 
     if request.method == "POST":
@@ -830,11 +799,10 @@ def add_street(request):
         return redirect("streets_list")
 
     districts = District.objects.all()
-    return render(request, "dispatcher/add_street.html", {"districts": districts})
+    return render(request, "add_street.html", {"districts": districts})
 
 
 @login_required
-@dispatcher_required
 def edit_street(request, street_id):
 
     street = Street.objects.get(pk=street_id)
@@ -860,22 +828,20 @@ def edit_street(request, street_id):
         return redirect("streets_list")
 
     districts = District.objects.all()
-    return render(request, "dispatcher/edit_street.html", {
+    return render(request, "edit_street.html", {
         "street": street,
         "districts": districts,
     })
 
 
 @login_required
-@dispatcher_required
 def tariffs_list(request):
 
     tariffs = Tariff.objects.all()
-    return render(request, "dispatcher/tariffs_list.html", {"tariffs": tariffs})
+    return render(request, "tariffs_list.html", {"tariffs": tariffs})
 
 
 @login_required
-@dispatcher_required
 def add_tariff(request):
 
     if request.method == "POST":
@@ -906,13 +872,12 @@ def add_tariff(request):
         )
         return redirect("tariffs_list")
 
-    return render(request, "dispatcher/add_tariff.html", {
+    return render(request, "add_tariff.html", {
         "days_choices": Tariff.DAYS_OF_WEEK_CHOICES,
     })
 
 
 @login_required
-@dispatcher_required
 def edit_tariff(request, tariff_id):
 
     tariff = Tariff.objects.get(pk=tariff_id)
@@ -953,14 +918,13 @@ def edit_tariff(request, tariff_id):
         )
         return redirect("tariffs_list")
 
-    return render(request, "dispatcher/edit_tariff.html", {
+    return render(request, "edit_tariff.html", {
         "tariff": tariff,
         "days_choices": Tariff.DAYS_OF_WEEK_CHOICES,
         "selected_days": selected_days,
     })
 
 @login_required
-@dispatcher_required
 def toggle_tariff_archive(request, tariff_id):
 
     tariff = Tariff.objects.get(pk=tariff_id)
@@ -982,7 +946,6 @@ def toggle_tariff_archive(request, tariff_id):
 
 
 @login_required
-@dispatcher_required
 def audit_logs_list(request):
 
     logs = AuditLog.objects.select_related("user").all()
@@ -1003,7 +966,7 @@ def audit_logs_list(request):
 
     users = User.objects.filter(is_archive=False)
 
-    return render(request, "dispatcher/audit_logs_list.html", {
+    return render(request, "audit_logs_list.html", {
         "logs": logs,
         "users": users,
         "current_user": user_filter,

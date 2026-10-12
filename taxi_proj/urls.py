@@ -1,8 +1,5 @@
-from django.contrib import admin
 from django.urls import path
 from taxi.views.auth_views import (CustomLoginView, logout_view)
-from taxi.views import (
-    admin_panel,)
 from taxi.views.dispatcher_views import (
     dashboard, drivers_list, clients_list, add_client, shifts_list, add_shift,  audit_logs_list,
     edit_client,  open_shift, close_shift,  orders_list, add_order, edit_order,
@@ -21,9 +18,7 @@ urlpatterns = [
         name="login",
     ),
     path("logout/", logout_view, name="logout"),
-    
-    path("admin/", admin_panel, name="admin_panel"),   
-
+       
     path("orders/", orders_list, name="orders_list"),
     path("orders/<int:order_id>/edit/", edit_order, name="edit_order"),
     path("orders-report/", orders_report_page, name="orders_report_page"),

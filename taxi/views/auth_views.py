@@ -1,5 +1,4 @@
 from django.contrib.auth import logout
-from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LoginView
 from django.shortcuts import redirect
 
@@ -25,13 +24,7 @@ class CustomLoginView(LoginView):
             ip_address=self.request.META.get("REMOTE_ADDR"),
         )
         
-        if hasattr(user, "role") and user.role == "admin":
-            return redirect("admin_panel")
-
-        if hasattr(user, "role") and user.role == "dispatcher":
-            return redirect("dispatcher_dashboard")
-
-        return redirect("index")
+        return redirect("dashboard")
 
 
 def logout_view(request):

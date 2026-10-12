@@ -1,0 +1,113 @@
+{% extends "base_dispatcher.html" %}
+{% load static %}
+
+{% block title %}Редактировать район — Taxi Control{% endblock %}
+
+{% block extra_head %}
+<link
+    rel="stylesheet"
+    href="{% static 'css/district_edit.css' %}?v=2"
+>
+{% endblock %}
+
+{% block content %}
+<div class="district-edit-page">
+    <div class="district-edit-header">
+        <div>
+            <span class="district-edit-label">
+                СПРАВОЧНИК ТЕРРИТОРИЙ
+            </span>
+
+            <h1>
+                Редактировать район
+            </h1>
+
+            <p class="district-edit-subtitle">
+                Измените название района и базовый коэффициент
+            </p>
+        </div>
+
+        <a
+            href="{% url 'districts_list' %}"
+            class="district-edit-back"
+        >
+            ← Назад к районам
+        </a>
+    </div>
+
+    <div class="district-edit-card">
+        <div class="district-edit-card-header">
+            <div>
+                <h2>
+                    Данные района
+                </h2>
+
+                <span>
+                    Обновите параметры района
+                </span>
+            </div>
+
+            <div class="district-edit-id">
+                ID: {{ district.district_id }}
+            </div>
+        </div>
+
+        <form method="post" class="district-edit-form">
+            {% csrf_token %}
+
+            <div class="district-edit-grid">
+                <div class="district-edit-field">
+                    <label for="name">
+                        Название района
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        required
+                        maxlength="128"
+                        value="{{ district.name }}"
+                        placeholder="Введите название района"
+                    >
+                </div>
+
+                <div class="district-edit-field">
+                    <label for="base_coefficient">
+                        Базовый коэффициент
+                        <span>*</span>
+                    </label>
+
+                    <input
+                        type="number"
+                        id="base_coefficient"
+                        name="base_coefficient"
+                        required
+                        min="0"
+                        step="0.01"
+                        value="{{ district.base_coefficient }}"
+                        placeholder="Например, 1.00"
+                    >
+                </div>
+            </div>
+
+            <div class="district-edit-footer">
+                <a
+                    href="{% url 'districts_list' %}"
+                    class="district-edit-btn district-edit-cancel"
+                >
+                    Отмена
+                </a>
+
+                <button
+                    type="submit"
+                    class="district-edit-btn district-edit-save"
+                >
+                    Сохранить изменения
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
