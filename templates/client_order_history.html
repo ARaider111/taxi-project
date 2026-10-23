@@ -1,0 +1,56 @@
+{% extends "base_dispatcher.html" %}
+
+{% block title %}История заказов — {{ client.lname }} {{ client.fname }}{% endblock %}
+
+{% block content %}
+
+<h1>История заказов</h1>
+<p>
+    Клиент: <strong>{{ client.lname }} {{ client.fname }}</strong>
+    ({{ client.phone }})
+</p>
+
+<p>
+    <a href="{% url 'clients_list' %}">← Назад к списку клиентов</a>
+</p>
+
+{% if orders %}
+<table>
+    <thead>
+        <tr>
+            <th>Номер</th>
+            <th>Дата создания</th>
+            <th>Откуда</th>
+            <th>Куда</th>
+            <th>Тариф</th>
+            <th>Цена</th>
+            <th>Статус</th>
+            <th>Водитель</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for o in orders %}
+        <tr>
+            <td>{{ o.order_number }}</td>
+            <td>{{ o.created_at|date:"d.m.Y H:i" }}</td>
+            <td>{{ o.street_from.name }}, {{ o.house_from }}</td>
+            <td>{{ o.street_to.name }}, {{ o.house_to }}</td>
+            <td>{{ o.tariff.name }}</td>
+            <td>{{ o.price }} руб.</td>
+            <td>{{ o.status }}</td>
+            <td>
+                {% if o.driver %}
+                    {{ o.driver.lname }} {{ o.driver.fname }}
+                {% else %}
+                    Не назначен
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<p>У клиента пока нет заказов.</p>
+{% endif %}
+
+{% endblock %}

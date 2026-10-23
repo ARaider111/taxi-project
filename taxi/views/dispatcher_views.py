@@ -1,12 +1,14 @@
-import openpyxl
-from django.http import HttpResponse
-from django.shortcuts import redirect, render
+import random
+from django.http import HttpResponse, JsonResponse
+from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from taxi.models import Driver, Client, Shift, Street, Tariff, Order, District, AuditLog, User
 from django.utils import timezone
 from django.db.models import Q
 from django.db import models
 from taxi.utils import log_action
+from datetime import timedelta
+from django.urls import reverse
 
 @login_required
 def dashboard(request):
@@ -473,57 +475,62 @@ def orders_list(request):
 
 
 @login_required
-def add_order(request):
-    if request.method == "POST":
-        client_id = request.POST.get("client")
-        street_from_id = request.POST.get("street_from")
-        house_from = request.POST.get("house_from")
-        street_to_id = request.POST.get("street_to")
-        house_to = request.POST.get("house_to")
-        tariff_id = request.POST.get("tariff")
+def simulate_order(request):
+    client = Client.objects.order_by("?").first()
 
-        client = Client.objects.get(pk=client_id)
-        street_from = Street.objects.select_related("district").get(pk=street_from_id)
-        street_to = Street.objects.select_related("district").get(pk=street_to_id)
-        tariff = Tariff.objects.get(pk=tariff_id)
+    streets = list(Street.objects.select_related("district"))
+    street_from, street_to = random.sample(streets, 2)
 
-        coef_from = street_from.district.base_coefficient
-        coef_to = street_to.district.base_coefficient
-        price = tariff.price * ((coef_from + coef_to) / 2)
+    house_from = str(random.randint(1, 100))
+    house_to = str(random.randint(1, 100))
 
-        order = Order.objects.create(
-            client=client,
-            street_from=street_from,
-            house_from=house_from,
-            street_to=street_to,
-            house_to=house_to,
-            tariff=tariff,
-            price=price,
-            created_by=request.user,
-            status="Новый",
-        )
+    tariff = Tariff.objects.filter(is_archive=False).order_by("?").first()
 
-        log_action(
-            user=request.user,
-            action="CREATE",
-            object_type="Order",
-            object_id=order.order_id,
-            description=f"Создан заказ {order.order_number} для клиента {client}",
-            ip_address=request.META.get("REMOTE_ADDR"),
-        )
+    coef = (
+        street_from.district.base_coefficient
+        + street_to.district.base_coefficient
+    ) / 2
+    price = tariff.price * coef
 
-        return redirect("dispatcher_orders_list")
+    free_driver = Driver.objects.filter(
+        status="В ожидании",
+        is_blacklist=False,
+        is_archive=False,
+    ).order_by("?").first()
 
-   
-    clients = Client.objects.all()
-    streets = Street.objects.select_related("district").all()
-    tariffs = Tariff.objects.filter(is_archive=False)
+    if free_driver:
+        status = "Назначен водитель"
+        free_driver.status = "В работе"
+        free_driver.save()
+    else:
+        status = "Новый"
 
-    return render(request, "add_order.html", {
-        "clients": clients,
-        "streets": streets,
-        "tariffs": tariffs,
-    })
+    order = Order.objects.create(
+        client=client,
+        street_from=street_from,
+        house_from=house_from,
+        street_to=street_to,
+        house_to=house_to,
+        tariff=tariff,
+        price=price,
+        driver=free_driver if free_driver else None,
+        created_by=request.user,
+        status=status,
+    )
+
+    log_action(
+        user=request.user,
+        action="SIMULATE_ORDER",
+        object_type="Order",
+        object_id=order.order_id,
+        description=(
+            f"Смоделирован заказ {order.order_number}"
+            + (f", назначен водитель {free_driver}" if free_driver else "")
+        ),
+        ip_address=request.META.get("REMOTE_ADDR"),
+    )
+
+    return redirect(f"{reverse('orders_list')}?new_order=1")
 
 
 @login_required
@@ -924,6 +931,7 @@ def edit_tariff(request, tariff_id):
         "selected_days": selected_days,
     })
 
+
 @login_required
 def toggle_tariff_archive(request, tariff_id):
 
@@ -975,3 +983,33 @@ def audit_logs_list(request):
         "date_to": date_to,
         "action_choices": AuditLog.ACTION_CHOICES,
     })
+
+@login_required
+def check_new_orders(request):
+    recent = Order.objects.filter(
+        status="Новый",
+        created_at__gte=timezone.now() - timedelta(seconds=30),
+    ).count()
+
+    return JsonResponse({"new_orders": recent})
+
+
+@login_required
+def client_order_history(request, client_id):
+    client = get_object_or_404(Client, pk=client_id)
+
+    orders = (
+        Order.objects
+        .filter(client=client)
+        .select_related("driver", "tariff", "street_from", "street_to")
+        .order_by("-created_at")
+    )
+
+    return render(
+        request,
+        "client_order_history.html",
+        {
+            "client": client,
+            "orders": orders,
+        },
+    )

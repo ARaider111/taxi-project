@@ -219,6 +219,11 @@
 
                           <td>
                                 <div class="client-actions">
+                                   <a href="{% url 'client_order_history' c.client_id %}"
+                                        class="btn btn-details">
+                                        Подробнее
+                                    </a>
+                                    
                                     <a
                                         href="{% url 'edit_client' c.client_id %}"
                                         class="client-action client-action-edit"

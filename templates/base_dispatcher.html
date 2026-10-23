@@ -18,8 +18,9 @@
     {% endblock %}
 </head>
 
-<body>
 
+
+<body>
 <div class="admin-page">
 
     <header class="admin-header">
@@ -119,5 +120,57 @@
 
 </div>
 
+<div id="order-notification" style="
+    display:none;
+    position:fixed;
+    top:20px;
+    right:20px;
+    background:#ffc107;
+    color:#111;
+    padding:15px 20px;
+    border-radius:8px;
+    font-weight:bold;
+    box-shadow:0 4px 15px rgba(0,0,0,0.3);
+    z-index:9999;
+">
+    Новый заказ поступил!
+</div>
+
+<script>
+let lastCount = null;
+
+function checkNewOrders() {
+    fetch("{% url 'check_new_orders' %}")
+        .then(response => response.json())
+        .then(data => {
+            if (lastCount !== null && data.new_orders > lastCount) {
+                showNotification();
+            }
+            lastCount = data.new_orders;
+        })
+        .catch(err => console.error("Ошибка:", err));
+}
+
+function showNotification() {
+    const notif = document.getElementById("order-notification");
+    notif.style.display = "block";
+    setTimeout(() => {
+        notif.style.display = "none";
+    }, 15000);
+}
+
+setInterval(checkNewOrders, 10000);
+checkNewOrders();
+</script>
+
+{% if request.GET.new_order %}
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        showNotification();
+    });
+</script>
+{% endif %}
+
 </body>
+
 </html>
