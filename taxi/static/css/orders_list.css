@@ -554,3 +554,39 @@ button.order-action {
     color: #737d86;
     font-size: 12px;
 }
+
+.urgency-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 8px;
+    vertical-align: middle;
+}
+
+.urgency-dot-green {
+    background: #2ecc71;
+    box-shadow: 0 0 6px rgba(46, 204, 113, 0.6);
+}
+
+.urgency-dot-yellow {
+    background: #f1c40f;
+    box-shadow: 0 0 6px rgba(241, 196, 15, 0.6);
+}
+
+.urgency-dot-red {
+    background: #e74c3c;
+    box-shadow: 0 0 6px rgba(231, 76, 60, 0.6);
+}
+
+.urgency-dot-none {
+    background: transparent;
+}
+
+tr.urgency-yellow {
+    background: rgba(241, 196, 15, 0.05);
+}
+
+tr.urgency-red {
+    background: rgba(231, 76, 60, 0.08);
+}

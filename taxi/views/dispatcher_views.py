@@ -4,11 +4,13 @@ from django.shortcuts import redirect, render, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from taxi.models import Driver, Client, Shift, Street, Tariff, Order, District, AuditLog, User
 from django.utils import timezone
-from django.db.models import Q
+from django.db.models import Q, Count,  Sum, DecimalField
+from django.db.models.functions import Coalesce
 from django.db import models
-from taxi.utils import log_action
+from taxi.utils import log_action, get_order_urgency
 from datetime import timedelta
 from django.urls import reverse
+from decimal import Decimal
 
 @login_required
 def dashboard(request):
@@ -18,6 +20,21 @@ def dashboard(request):
 @login_required
 def drivers_list(request):
     drivers = Driver.objects.all()
+
+    drivers = drivers.annotate(
+        completed_count=Count(
+            "orders",                                  
+            filter=Q(orders__status="Завершен"),       
+            distinct=True,
+        ),
+        completed_revenue=Coalesce(
+            Sum("orders__price", filter=Q(orders__status="Завершен")),
+            Decimal("0"),
+            output_field=DecimalField(max_digits=12, decimal_places=2),
+        ),
+    )
+
+    
 
     query = request.GET.get("q", "").strip()
     if query:
@@ -460,6 +477,10 @@ def orders_list(request):
 
     drivers = Driver.objects.filter(is_archive=False)
 
+
+    for order in orders:
+        order.urgency = get_order_urgency(order)
+
     context = {
         "orders": orders,
         "query": query,
@@ -472,7 +493,6 @@ def orders_list(request):
     }
 
     return render(request, "orders_list.html", context)
-
 
 @login_required
 def simulate_order(request):
@@ -568,6 +588,10 @@ def edit_order(request, order_id):
             order.completed_at = timezone.now()
             order.save()
 
+            if order.driver:
+                order.driver.status = "В ожидании"
+                order.driver.save()
+
             log_action(
                 user=request.user,
                 action="COMPLETE_ORDER",
@@ -647,40 +671,60 @@ def edit_order(request, order_id):
 
 
 @login_required
-def assign_driver(request, order_id):
-    order = Order.objects.get(pk=order_id)
-
-    if order.status == "Завершен":
-        return HttpResponse("Нельзя изменить завершённый заказ", status=403)
+def transfer_order(request, order_id):
+    order = get_object_or_404(
+        Order.objects.select_related("client", "driver", "tariff",
+                                     "street_from", "street_to"),
+        pk=order_id,
+    )
 
     if request.method == "POST":
-        driver_id = request.POST.get("driver")
-        driver = Driver.objects.get(pk=driver_id)
+        new_driver_id = request.POST.get("driver")
+        if new_driver_id:
+            old_driver = order.driver
+            new_driver = get_object_or_404(Driver, pk=new_driver_id)
 
-        old_driver = order.driver
-        order.driver = driver
-        order.status = "Назначен водитель"
-        order.save()
-        log_action(
-            user=request.user,
-            action="ASSIGN_DRIVER",
-            object_type="Order",
-            object_id=order.order_id,
-            description=f"Назначен водитель {order.driver} на заказ {order.order_number}",
-            extra_data={"old_driver": str(old_driver), "new_driver": str(order.driver)},
-            ip_address=request.META.get("REMOTE_ADDR"),
-        )
+            order.driver = new_driver
+            order.save()
 
+            if old_driver and old_driver != new_driver:
+                old_driver.status = "Свободен"
+                old_driver.save()
+
+            new_driver.status = "В работе"
+            new_driver.save()
+
+            log_action(
+                user=request.user,
+                action="TRANSFER_ORDER",
+                object_type="Order",
+                object_id=order.order_id,
+                description=(
+                    f"Заказ {order.order_number} передан "
+                    f"от {old_driver} к {new_driver}"
+                ),
+                extra_data={
+                    "old_driver": str(old_driver),
+                    "new_driver": str(new_driver),
+                },
+                ip_address=request.META.get("REMOTE_ADDR"),
+            )
         return redirect("orders_list")
 
-    drivers = Driver.objects.filter(status="В ожидании", is_blacklist=False, is_archive=False)
+    drivers = Driver.objects.filter(
+        status="Свободен",
+        is_blacklist=False,
+        is_archive=False,
+    ).exclude(pk=order.driver_id)
 
-    return render(request, "assign_driver.html", {
-        "order": order,
-        "drivers": drivers,
-    })
-
-
+    return render(
+        request,
+        "transfer_order.html",
+        {
+            "order": order,
+            "drivers": drivers,
+        },
+    )
 
 @login_required
 def complete_order(request, order_id):
@@ -692,6 +736,12 @@ def complete_order(request, order_id):
     order.status = "Завершен"
     order.completed_at = timezone.now()
     order.save()
+
+    if order.driver:
+        order.driver.status = "В ожидании"
+        order.driver.save()
+
+    
 
     log_action(
         user=request.user,

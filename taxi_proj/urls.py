@@ -3,7 +3,7 @@ from taxi.views.auth_views import (CustomLoginView, logout_view)
 from taxi.views.dispatcher_views import (
     dashboard, drivers_list, clients_list, add_client, shifts_list, add_shift,  audit_logs_list,
     edit_client,  open_shift, close_shift,  orders_list, simulate_order, edit_order,
-    assign_driver, complete_order,  districts_list, edit_district, check_new_orders, client_order_history,
+    transfer_order, complete_order,  districts_list, edit_district, check_new_orders, client_order_history,
     add_district, streets_list, add_street, edit_street, tariffs_list, add_tariff, edit_tariff, toggle_tariff_archive, add_driver, edit_driver,
     toggle_driver_blacklist, toggle_driver_archive, toggle_client_blacklist, edit_shift)
 from taxi.views.report_views import (orders_report_page, export_orders_report, drivers_report_page, shift_report,
@@ -57,9 +57,9 @@ urlpatterns = [
     path("dashboard/orders/", orders_list, name="orders_list"),
     path("dashboard/orders/simulate/", simulate_order, name="simulate_order"),
     path("dashboard/orders/<int:order_id>/edit/", edit_order, name="edit_order"),
-    path("dashboard/orders/<int:order_id>/assign-driver/", assign_driver, name="assign_driver"),
     path("dashboard/orders/<int:order_id>/complete/", complete_order, name="complete_order"),
     path("dashboard/orders/check-new/", check_new_orders, name="check_new_orders"),
+    path("orders/<int:order_id>/transfer/", transfer_order, name="transfer_order",),
 
   
     path("dashboard/districts/", districts_list, name="districts_list"),

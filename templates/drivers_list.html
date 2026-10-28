@@ -260,6 +260,21 @@
                                 {% endif %}
                             </td>
 
+                            <td class="dispatcher-driver-completed">
+                                {% if d.completed_count %}
+                                    <span
+                                        class="driver-completed-badge"
+                                        title="Завершённых заказов: {{ d.completed_count }}"
+                                    >
+                                        {{ d.completed_count }}
+                                    </span>
+                                {% else %}
+                                    <span class="driver-completed-badge is-zero">
+                                        0
+                                    </span>
+                                {% endif %}
+                            </td>
+
                              <td>
                                 <div class="driver-actions">
 

@@ -165,8 +165,9 @@
 
                 <tbody>
                     {% for o in orders %}
-                        <tr>
+                        <tr class="urgency-{{ o.urgency|default:'none' }}">
                             <td class="order-number">
+                                <span class="urgency-dot urgency-dot-{{ o.urgency|default:'none' }}"></span>
                                 #{{ o.order_number }}
                             </td>
 
@@ -240,12 +241,12 @@
                                             Редактировать
                                         </a>
 
-                                        {% if not o.driver %}
+                                        {% if o.status == "Назначен водитель" %}
                                             <a
-                                                href="{% url 'assign_driver' o.order_id %}"
+                                                href="{% url 'transfer_order' o.order_id %}"
                                                 class="order-action order-action-assign"
                                             >
-                                                Назначить водителя
+                                                Передать заказ
                                             </a>
                                         {% endif %}
 
